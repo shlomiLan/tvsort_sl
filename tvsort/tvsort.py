@@ -124,18 +124,15 @@ def main():
                         new_path = settings.movies_path
 
                     if is_file_exists(new_path):
+                        logger.info('Removing file: FROM {}'.format(file_path, new_path))
                         os.remove(new_path)
 
                     if settings.move_files:
                         logger.info('Moving file: FROM {} TO {}'.format(file_path, new_path))
-                        winshell.move_file(file_path, new_path,
-                                           allow_undo=True, no_confirm=False, rename_on_collision=True, silent=False,
-                                           hWnd=None)
+                        winshell.move_file(file_path, new_path, allow_undo=True, no_confirm=False, silent=False, hWnd=None)  # noqa
                     else:
                         logger.info('Copying file: FROM {} TO {}'.format(file_path, new_path))
-                        winshell.copy_file(file_path, new_path,
-                                           allow_undo=True, no_confirm=False, rename_on_collision=True, silent=False,
-                                           hWnd=None)
+                        winshell.copy_file(file_path, new_path, allow_undo=True, no_confirm=False, silent=False, hWnd=None)  # noqa
 
             except AttributeError:
                 logger.error(traceback.print_exc())
