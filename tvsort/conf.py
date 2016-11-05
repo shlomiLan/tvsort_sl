@@ -8,9 +8,9 @@ class SortSettings(object):
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
 
-    tv_path         = "D:\\private\\tv"
-    movies_path     = "D:\\private\\movies"
-    unsorted_path   = '\\\\MOVIES-PC\\Unsortted'
+    tv_path         = 'G:\\TVShows'
+    movies_path     = 'G:\\Movies'
+    unsorted_path   = 'G:\\Unsortted'
     move_files      = False
     dummy_file_path = '{}\{}'.format(unsorted_path, 'dummy.txt')
     test_file_path  = '{}\{}'.format(unsorted_path, 'test.txt')
