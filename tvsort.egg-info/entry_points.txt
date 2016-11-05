@@ -1,0 +1,3 @@
+[console_scripts]
+tvsort = tvsort.tvsort:main.command
+

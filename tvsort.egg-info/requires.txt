@@ -1,0 +1,7 @@
+opster
+guessit
+winshell
+patool
+
+[win32]
+pywin32
