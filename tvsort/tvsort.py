@@ -4,7 +4,6 @@ import winshell
 from guessit import guessit
 from opster import command
 import os
-import shutil
 import patoolib
 import logging
 
@@ -12,11 +11,19 @@ from conf import settings
 
 
 def is_compressed(path):
-    return any(path.lower().endswith(ext) for ext in settings.compress_exts)
+    return bool(get_file_ext(path) in settings.compress_exts)
 
 
 def is_media(path):
-    return any(path.lower().endswith(ext) for ext in settings.media_exts)
+    return bool(get_file_ext(path) in settings.media_exts)
+
+
+def is_garbage_file(path):
+    return bool(path.split('\\')[-1] != settings.dummy_file_name and get_file_ext(path) in settings.garbage_exts)
+
+
+def get_file_ext(file_name):
+    return file_name.split('.')[-1]
 
 
 def get_files(path):
@@ -44,13 +51,7 @@ def is_movie(guess):
 
 
 def is_file_exists(file_path):
-    try:
-        os.remove(file_path)
-        old_file = open(file_path, 'w')
-        old_file.close()
-        return True
-    except:
-        return False
+    return os.path.isfile(file_path)
 
 
 def create_folder(show_name, base_path=settings.BASE_DIR):
@@ -123,16 +124,19 @@ def main():
                     elif is_movie(guess):
                         new_path = settings.movies_path
 
-                    if is_file_exists(new_path):
-                        logger.info('Removing file: FROM {}'.format(file_path, new_path))
-                        os.remove(new_path)
+                    file_name = file_path.split('\\')[-1]
+                    file_new_path = '{}\{}'.format(new_path, file_name)
 
                     if settings.move_files:
-                        logger.info('Moving file: FROM {} TO {}'.format(file_path, new_path))
-                        winshell.move_file(file_path, new_path, allow_undo=True, no_confirm=False, silent=False, hWnd=None)  # noqa
+                        logger.info('Moving file: FROM {} TO {}'.format(file_path, file_new_path))
+                        winshell.move_file(file_path, new_path, allow_undo=True, no_confirm=True, silent=False, hWnd=None)  # noqa
                     else:
-                        logger.info('Copying file: FROM {} TO {}'.format(file_path, new_path))
-                        winshell.copy_file(file_path, new_path, allow_undo=True, no_confirm=False, silent=False, hWnd=None)  # noqa
+                        logger.info('Copying file: FROM {} TO {}'.format(file_path, file_new_path))
+                        winshell.copy_file(file_path, new_path, allow_undo=True, no_confirm=True, silent=False, hWnd=None)  # noqa
+
+                else:
+                    if is_garbage_file(file_path):
+                        winshell.delete_file(file_path, allow_undo=True, no_confirm=True, silent=False, hWnd=None)
 
             except AttributeError:
                 logger.error(traceback.print_exc())
