@@ -110,6 +110,7 @@ def main():
                 remove_file(file_path)
 
         for file_path in get_files(path):
+            logger.info('Checking file: {}'.format(file_path))
             try:
                 if is_media(file_path):
                     guess = guessit(file_path)
@@ -136,6 +137,7 @@ def main():
 
                 else:
                     if is_garbage_file(file_path):
+                        logger.info('Removing file: {}'.format(file_path))
                         winshell.delete_file(file_path, allow_undo=True, no_confirm=True, silent=False, hWnd=None)
 
             except AttributeError:
@@ -144,6 +146,8 @@ def main():
                 logger.error('Unexpected error: {}'.format(traceback.print_exc()))
 
         remove_file(dummy_file_path)
+
+        # todo: add support for updating the XBMC library
 
     else:
         logger.info('Proses already running')
