@@ -14,7 +14,7 @@ setup(
     },
     install_requires = [
         'opster',
-        'guessit==2.0.5',
+        'guessit==2.1',
         'winshell',
         'patool'
     ],

@@ -1,2 +1,5 @@
 .idea
-.log
+log
+build
+dist
+tvsort.egg-info
