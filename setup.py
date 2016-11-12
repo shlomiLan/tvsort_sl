@@ -16,7 +16,8 @@ setup(
         'opster',
         'guessit==2.1',
         'winshell',
-        'patool'
+        'patool',
+        'kodi-json'
     ],
     extras_require={
         'win32': 'pywin32'

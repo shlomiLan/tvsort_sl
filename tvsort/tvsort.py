@@ -2,6 +2,7 @@ import traceback
 
 import winshell
 from guessit import guessit
+from kodijson import Kodi
 from opster import command
 import os
 import patoolib
@@ -147,7 +148,12 @@ def main():
 
         remove_file(dummy_file_path)
 
-        # todo: add support for updating the XBMC library
+        # Login with custom credentials
+        kodi = Kodi("http://192.168.1.31:12345/jsonrpc", "root", "libreelec")
+
+        # Update XBMC
+        logger.info('Update XBMC')
+        kodi.execute(method='VideoLibrary.Scan')
 
     else:
         logger.info('Proses already running')

@@ -1,5 +1,5 @@
 .idea
-log
 build
 dist
 tvsort.egg-info
+/log
