@@ -1,8 +1,10 @@
 import traceback
+
+import re
 import requests
 
-import PTN
 import winshell
+from guessit import guessit
 from opster import command
 import os
 import patoolib
@@ -92,8 +94,16 @@ def is_process_already_run(file_path):
 def transform_to_path_name(string):
     if isinstance(string, int):
         string = str(string)
-    string_as_list = [x.capitalize() for x in string.split(' ')]
-    return '.'.join(string_as_list)
+    return re.sub(' ', '.', string)
+
+
+def get_show_name(guess):
+    show_name = guess.get('title')
+    if show_name == 'This.Is':
+        show_name += '.Us'
+        if guess.get('country'):
+            del guess['country']
+    return show_name
 
 
 @command()
@@ -116,14 +126,18 @@ def main():
 
         for file_name in get_files(path):
             logger.info('Checking file: {}'.format(file_name))
+            file_path = '{}\{}'.format(path, file_name)
+
             try:
                 if is_media(file_name):
-                    guess = PTN.parse(file_name)
+                    guess = guessit(file_name)
                     new_path = None
                     if is_tv_show(guess):
                         base = settings.tv_path
                         # TODO: fix 'this is us' and 'Shameless' logic
-                        show_name = guess.get('title')
+                        show_name = get_show_name(guess)
+                        if guess.get('country'):
+                            show_name += '.{}'.format(guess.get('country'))
                         show_name = transform_to_path_name(show_name)
                         create_folder(show_name, base)
                         new_path = '{}\{}'.format(base, show_name)
@@ -131,7 +145,6 @@ def main():
                     elif is_movie(guess):
                         new_path = settings.movies_path
 
-                    file_path = '{}\{}'.format(path, file_name)
                     new_file_path = '{}\{}'.format(new_path, file_name)
 
                     if settings.move_files:
@@ -148,8 +161,6 @@ def main():
 
             except AttributeError:
                 logger.error(traceback.print_exc())
-            except:
-                logger.error('Unexpected error: {}'.format(traceback.print_exc()))
 
         # Update XBMC
         logger.info('Update XBMC')

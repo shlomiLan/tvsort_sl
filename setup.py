@@ -13,10 +13,7 @@ setup(
         ],
     },
     install_requires=[
-        'opster',
-        'winshell',
-        'patool',
-        'parse-torrent-name'
+        'opster', 'winshell', 'patool', 'guessit', 'requests'
     ],
     extras_require={
         'win32': 'pywin32'
