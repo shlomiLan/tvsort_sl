@@ -24,6 +24,16 @@ class TvSortTest(unittest.TestCase):
         string = 1
         self.assertEquals(transform_to_path_name(string), '1')
 
+    def test_not_tv_show(self):
+        file_name = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK'
+        guess = PTN.parse(file_name)
+        self.assertFalse(is_tv_show(guess))
+
+    def test_is_tv_show(self):
+        file_name = 'Mr Robot S01E05 HDTV x264-KILLERS[ettv]'
+        guess = PTN.parse(file_name)
+        self.assertTrue(is_tv_show(guess))
+
     @staticmethod
     def test_copy_file():
         if not is_file_exists(settings.test_file_path):
