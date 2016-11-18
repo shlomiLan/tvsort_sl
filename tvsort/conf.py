@@ -13,7 +13,7 @@ class SortSettings(object):
     unsorted_path   = 'G:\\Unsortted'
     move_files      = True
     dummy_file_name = 'dummy.txt'
-    dummy_file_path = '{}\{}'.format(unsorted_path, dummy_file_name)
+    dummy_file_path = '{}\{}'.format(tv_path, dummy_file_name)
     test_file_path  = '{}\{}'.format(unsorted_path, 'test.txt')
     test_file_path_in_tv = '{}\{}'.format(tv_path, 'test.txt')
     log_path        = '{}\\log\\tvsort.log'.format(BASE_DIR)

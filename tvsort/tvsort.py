@@ -94,7 +94,8 @@ def is_process_already_run(file_path):
 def transform_to_path_name(string):
     if isinstance(string, int):
         string = str(string)
-    return re.sub(' ', '.', string)
+    string = re.sub(' ', '.', string)
+    return '.'.join([str(x).capitalize() for x in string.split('.')])
 
 
 def get_show_name(guess):
@@ -106,6 +107,15 @@ def get_show_name(guess):
     return show_name
 
 
+def create_dummy_file(dummy_file_path):
+    dummy_file = open(dummy_file_path, 'w')
+    dummy_file.close()
+
+
+def delete_dummy_file(dummy_file_path):
+    remove_file(dummy_file_path)
+
+
 @command()
 def main():
     logger = create_logger()
@@ -114,8 +124,7 @@ def main():
 
     # TODO: improve this logic
     if not is_process_already_run(dummy_file_path):
-        dummy_file = open(dummy_file_path, 'w')
-        dummy_file.close()
+        create_dummy_file(dummy_file_path)
 
         for file_name in get_files(path):
             if is_compressed(file_name):
@@ -168,7 +177,7 @@ def main():
         data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
         requests.post(url, json=data)
 
-        remove_file(dummy_file_path)
+        delete_dummy_file(dummy_file_path)
     else:
         logger.info('Proses already running')
 

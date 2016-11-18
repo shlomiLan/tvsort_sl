@@ -12,12 +12,18 @@ class TvSortTest(unittest.TestCase):
         create_test_file()
         self.assertTrue(is_file_exists(settings.test_file_path))
 
-    def test_is_process_already_run(self):
+    def test_process_not_running(self):
         self.assertFalse(is_process_already_run(settings.dummy_file_path))
+
+    def test_process_is_running(self):
+        dummy_file_path = settings.dummy_file_path
+        create_dummy_file(dummy_file_path)
+        self.assertTrue(is_process_already_run(settings.dummy_file_path))
+        delete_dummy_file(dummy_file_path)
 
     def test_transform_to_path_name(self):
         original_text = 'This is a string with space.s and dots.'
-        new_text = 'This.Is.A.String.With.Space.s.And.Dots.'
+        new_text = 'This.Is.A.String.With.Space.S.And.Dots.'
         self.assertEquals(transform_to_path_name(original_text), new_text)
 
     def test_replace_space_with_dots_int_input(self):
@@ -26,12 +32,12 @@ class TvSortTest(unittest.TestCase):
 
     def test_not_tv_show(self):
         file_name = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK'
-        guess = PTN.parse(file_name)
+        guess = guessit(file_name)
         self.assertFalse(is_tv_show(guess))
 
     def test_is_tv_show(self):
         file_name = 'Mr Robot S01E05 HDTV x264-KILLERS[ettv]'
-        guess = PTN.parse(file_name)
+        guess = guessit(file_name)
         self.assertTrue(is_tv_show(guess))
 
     @staticmethod
