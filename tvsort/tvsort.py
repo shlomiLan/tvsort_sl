@@ -13,16 +13,20 @@ import logging
 from conf import settings
 
 
-def is_compressed(path):
-    return bool(get_file_ext(path) in settings.compress_exts)
+def is_compressed(file_name):
+    return is_file_ext_in_list(get_file_ext(file_name), settings.compress_exts)
 
 
-def is_media(path):
-    return bool(get_file_ext(path) in settings.media_exts)
+def is_media(file_name):
+    return is_file_ext_in_list(get_file_ext(file_name), settings.media_exts)
 
 
-def is_garbage_file(path):
-    return bool(path.split('\\')[-1] != settings.dummy_file_name and get_file_ext(path) in settings.garbage_exts)
+def is_garbage_file(file_name):
+    return is_file_ext_in_list(get_file_ext(file_name), settings.garbage_exts)
+
+
+def is_file_ext_in_list(file_ext, ext_list):
+    return bool(file_ext in ext_list)
 
 
 def get_file_ext(file_name):
@@ -31,8 +35,6 @@ def get_file_ext(file_name):
 
 def get_files(path):
     files = []
-    # if os.path.isfile(path):
-    #     files.append(path)
 
     for root, dirs, walk_files in os.walk(path):
         for f in walk_files:
@@ -84,11 +86,7 @@ def remove_file(file_path):
 
 
 def is_process_already_run(file_path):
-    # TODO: fix this logic
-    if is_file_exists(file_path):
-        return True
-    else:
-        return False
+    return is_file_exists(file_path)
 
 
 def transform_to_path_name(string):
@@ -104,6 +102,7 @@ def get_show_name(guess):
         show_name += '.Us'
         if guess.get('country'):
             del guess['country']
+
     return show_name
 
 
