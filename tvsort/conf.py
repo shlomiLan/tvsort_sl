@@ -21,6 +21,6 @@ class SortSettings(object):
     # extensions
     compress_exts = ['r00', 'rar', 'zip']
     media_exts    = ['mkv', 'avi', 'mp4', 'wemb', 'ogg', 'mov', 'wmv', 'm4v', 'm4p', 'mpg', 'mpeg', 'ogm']
-    garbage_exts  = ['nfo', 'txt', 'db', 'pdf', 'jpg', 'png', 'str']
+    garbage_exts  = ['nfo', 'txt', 'db', 'pdf', 'jpg', 'png', 'srt']
 
 settings = SortSettings()

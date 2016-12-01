@@ -24,8 +24,7 @@ def is_media(file_name):
 
 
 def is_garbage_file(file_name):
-    # TODO: add check that file doesn't have the word 'sample' in it
-    return is_file_ext_in_list(get_file_ext(file_name), settings.garbage_exts)
+    return is_file_ext_in_list(get_file_ext(file_name), settings.garbage_exts) or 'sample' in file_name.lower()
 
 
 def is_file_ext_in_list(file_ext, ext_list):
@@ -41,7 +40,7 @@ def get_file_name(file_path):
 
 
 def get_folder_name(file_path):
-    return file_path.split('\\')[-2]
+    return '\\'.join(file_path.split('\\')[:-1])
 
 
 def get_files(path):
