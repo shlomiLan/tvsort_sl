@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import traceback
 
 import re
@@ -22,6 +24,7 @@ def is_media(file_name):
 
 
 def is_garbage_file(file_name):
+    # TODO: add check that file doesn't have the word 'sample' in it
     return is_file_ext_in_list(get_file_ext(file_name), settings.garbage_exts)
 
 
@@ -33,16 +36,20 @@ def get_file_ext(file_name):
     return file_name.split('.')[-1]
 
 
+def get_file_name(file_path):
+    return file_path.split('\\')[-1]
+
+
+def get_folder_name(file_path):
+    return file_path.split('\\')[-2]
+
+
 def get_files(path):
     files = []
 
     for root, dirs, walk_files in os.walk(path):
         for f in walk_files:
-            f_path = os.path.join(root, f)
-            if "sample" in f_path.lower():
-                continue
-            else:
-                files.append(f)
+            files.append(os.path.join(root, f))
     
     return sorted(files)
 
@@ -59,8 +66,8 @@ def is_file_exists(file_path):
     return os.path.isfile(file_path)
 
 
-def create_folder(show_name, base_path=settings.BASE_DIR):
-    new_dir_path = '{}\{}'.format(base_path, show_name)
+def create_folder(folder_name, base_path=settings.BASE_DIR):
+    new_dir_path = '{}\{}'.format(base_path, folder_name)
     if not os.path.exists(new_dir_path):
         os.makedirs(new_dir_path)
 
@@ -73,16 +80,6 @@ def create_logger():
     logger.addHandler(logging.FileHandler(filename=settings.log_path))
 
     return logger
-
-
-# TODO: improve this logic
-def remove_file(file_path):
-    try:
-        os.remove(file_path)
-    except:
-        return False
-
-    return True
 
 
 def is_process_already_run(file_path):
@@ -106,13 +103,17 @@ def get_show_name(guess):
     return show_name
 
 
-def create_dummy_file(dummy_file_path):
-    dummy_file = open(dummy_file_path, 'w')
+def create_file(file_path):
+    dummy_file = open(file_path, 'w')
     dummy_file.close()
 
 
-def delete_dummy_file(dummy_file_path):
-    remove_file(dummy_file_path)
+def delete_dummy_file(file_path):
+    winshell.delete_file(file_path, no_confirm=True)
+
+
+def folder_empty(folder_path):
+    return not bool(get_files(folder_path))
 
 
 @command()
@@ -121,28 +122,27 @@ def main():
     path = settings.unsorted_path
     dummy_file_path = settings.dummy_file_path
 
-    # TODO: improve this logic
     if not is_process_already_run(dummy_file_path):
-        create_dummy_file(dummy_file_path)
+        try:
+            create_file(dummy_file_path)
 
-        for file_name in get_files(path):
-            if is_compressed(file_name):
-                # TODO: fix this part
-                logger.info("Extracting {}".format(file_name))
-                patoolib.extract_archive(file_name, outdir=path)
-                remove_file(file_name)
+            for file_path in get_files(path):
+                if is_compressed(file_path):
+                    logger.info("Extracting {}".format(file_path))
+                    patoolib.extract_archive(file_path, outdir=path)
+                    winshell.delete_file(file_path, no_confirm=True)
 
-        for file_name in get_files(path):
-            logger.info('Checking file: {}'.format(file_name))
-            file_path = '{}\{}'.format(path, file_name)
+            for file_path in get_files(path):
+                logger.info('Checking file: {}'.format(file_path))
 
-            try:
-                if is_media(file_name):
-                    guess = guessit(file_name)
+                if is_garbage_file(file_path):
+                    logger.info('Removing file: {}'.format(file_path))
+                    winshell.delete_file(file_path, no_confirm=True)
+                elif is_media(file_path):
+                    guess = guessit(file_path)
                     new_path = None
                     if is_tv_show(guess):
                         base = settings.tv_path
-                        # TODO: fix 'this is us' and 'Shameless' logic
                         show_name = get_show_name(guess)
                         if guess.get('country'):
                             show_name += '.{}'.format(guess.get('country'))
@@ -153,30 +153,31 @@ def main():
                     elif is_movie(guess):
                         new_path = settings.movies_path
 
-                    new_file_path = '{}\{}'.format(new_path, file_name)
+                    new_file_path = '{}\{}'.format(new_path, get_file_name(file_path))
 
                     if settings.move_files:
                         logger.info('Moving file: FROM {} TO {}'.format(file_path, new_file_path))
-                        winshell.move_file(file_path, new_path, allow_undo=True, no_confirm=True, silent=False, hWnd=None)  # noqa
+                        winshell.move_file(file_path, new_path, no_confirm=True)
                     else:
                         logger.info('Copying file: FROM {} TO {}'.format(file_path, new_file_path))
-                        winshell.copy_file(file_path, new_path, allow_undo=True, no_confirm=True, silent=False, hWnd=None)  # noqa
+                        winshell.copy_file(file_path, new_path, no_confirm=True)
 
-                else:
-                    if is_garbage_file(file_path):
-                        logger.info('Removing file: {}'.format(file_path))
-                        winshell.delete_file(file_path, allow_undo=True, no_confirm=True, silent=False, hWnd=None)
+                folder_path = get_folder_name(file_path)
+                if folder_empty(folder_path):
+                    os.rmdir(folder_path)
 
-            except AttributeError:
-                logger.error(traceback.print_exc())
+            # Update XBMC
+            logger.info('Update XBMC')
+            url = 'http://192.168.1.31:12345/jsonrpc'
+            data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
+            requests.post(url, json=data)
 
-        # Update XBMC
-        logger.info('Update XBMC')
-        url = 'http://192.168.1.31:12345/jsonrpc'
-        data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
-        requests.post(url, json=data)
+        except Exception as e:
+            logger.error(e)
+            logger.error(traceback.print_exc())
 
-        delete_dummy_file(dummy_file_path)
+        finally:
+            winshell.delete_file(dummy_file_path, no_confirm=True)
     else:
         logger.info('Proses already running')
 
