@@ -102,6 +102,12 @@ def get_show_name(guess):
     return show_name
 
 
+def add_missing_country(guess, show_name):
+    if show_name.lower() == 'house of cards':
+        if not guess.get('country'):
+            guess['country'] = 'US'
+
+
 def create_file(file_path):
     dummy_file = open(file_path, 'w')
     dummy_file.close()
@@ -142,10 +148,10 @@ def main():
                     new_path = None
                     if is_tv_show(guess):
                         base = settings.tv_path
-                        show_name = get_show_name(guess)
+                        show_name = transform_to_path_name(get_show_name(guess))
+                        add_missing_country(guess, show_name)
                         if guess.get('country'):
                             show_name += '.{}'.format(guess.get('country'))
-                        show_name = transform_to_path_name(show_name)
                         create_folder(show_name, base)
                         new_path = '{}\{}'.format(base, show_name)
 

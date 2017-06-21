@@ -5,7 +5,8 @@ import winshell
 from guessit import guessit
 
 from tvsort import is_file_exists, create_file, is_process_already_run, transform_to_path_name, is_tv_show, \
-    is_movie, is_compressed, is_file_ext_in_list, is_garbage_file, is_media, get_show_name, create_folder, folder_empty
+    is_movie, is_compressed, is_file_ext_in_list, is_garbage_file, is_media, get_show_name, create_folder, folder_empty, \
+    add_missing_country
 
 from conf import settings
 
@@ -89,6 +90,12 @@ class TvSortTest(unittest.TestCase):
         self.assertFalse(folder_empty(folder_path))
         winshell.delete_file(file_path, no_confirm=True)
         os.rmdir(folder_path)
+
+    def test_wrong_series_name(self):
+        guess = guessit('House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv')
+        show_name = get_show_name(guess)
+        add_missing_country(guess, show_name)
+        self.assertEquals(guess.get('country'), 'US')
 
     @staticmethod
     def test_copy_file():
