@@ -3,3 +3,6 @@ build
 dist
 tvsort.egg-info
 log
+
+
+*.py[co]
