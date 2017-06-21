@@ -109,7 +109,7 @@ def add_missing_country(guess, show_name):
 
 
 def create_file(file_path):
-    dummy_file = open(file_path, 'w')
+    dummy_file = open(file_path, str('w'))
     dummy_file.close()
 
 
