@@ -16,15 +16,15 @@ from conf import settings
 
 
 def is_compressed(file_name):
-    return is_file_ext_in_list(get_file_ext(file_name), settings.compress_exts)
+    return is_file_ext_in_list(get_file_ext(file_name), settings.COMPRESS_EXTS)
 
 
 def is_media(file_name):
-    return is_file_ext_in_list(get_file_ext(file_name), settings.media_exts)
+    return is_file_ext_in_list(get_file_ext(file_name), settings.MEDIA_EXTS)
 
 
 def is_garbage_file(file_name):
-    return is_file_ext_in_list(get_file_ext(file_name), settings.garbage_exts) or 'sample' in file_name.lower()
+    return is_file_ext_in_list(get_file_ext(file_name), settings.GARBAGE_EXTS) or 'sample' in file_name.lower()
 
 
 def is_file_ext_in_list(file_ext, ext_list):
@@ -76,7 +76,7 @@ def create_logger():
     logger.level = logging.DEBUG
     logger.addHandler(logging.StreamHandler())
     create_folder('log')
-    logger.addHandler(logging.FileHandler(filename=settings.log_path))
+    logger.addHandler(logging.FileHandler(filename=settings.LOG_PATH))
 
     return logger
 
@@ -124,8 +124,8 @@ def folder_empty(folder_path):
 @command()
 def main():
     logger = create_logger()
-    path = settings.unsorted_path
-    dummy_file_path = settings.dummy_file_path
+    path = settings.UNSORTED_PATH
+    dummy_file_path = settings.DUMMY_FILE_PATH
 
     if not is_process_already_run(dummy_file_path):
         try:
@@ -147,7 +147,7 @@ def main():
                     guess = guessit(file_path)
                     new_path = None
                     if is_tv_show(guess):
-                        base = settings.tv_path
+                        base = settings.TV_PATH
                         show_name = transform_to_path_name(get_show_name(guess))
                         add_missing_country(guess, show_name)
                         if guess.get('country'):
@@ -156,11 +156,11 @@ def main():
                         new_path = '{}\{}'.format(base, show_name)
 
                     elif is_movie(guess):
-                        new_path = settings.movies_path
+                        new_path = settings.MOVIES_PATH
 
                     new_file_path = '{}\{}'.format(new_path, get_file_name(file_path))
 
-                    if settings.move_files:
+                    if settings.MOVE_FILES:
                         logger.info('Moving file: FROM {} TO {}'.format(file_path, new_file_path))
                         winshell.move_file(file_path, new_path, no_confirm=True)
                     else:
@@ -173,7 +173,8 @@ def main():
 
             # Update XBMC
             logger.info('Update XBMC')
-            url = 'http://192.168.1.31:12345/jsonrpc'
+
+            url = '{}/jsonrpc'.format(settings.KODI_IP)
             data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
             requests.post(url, json=data)
 
@@ -188,5 +189,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # add filemode="w" to overwrite
     main()

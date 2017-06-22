@@ -4,7 +4,7 @@ import unittest
 import winshell
 from guessit import guessit
 
-import tvsort as app_logic
+import tvsort_sl as app_logic
 
 from conf import settings
 

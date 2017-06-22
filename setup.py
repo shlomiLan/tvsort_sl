@@ -1,21 +1,14 @@
-from setuptools import setup
-
+from distutils.core import setup
 setup(
-    version='0.1.8',
-    name="tvsort",
-    packages=['tvsort'],
-    description='Sort TV episodes and Movies',
+    name='tvsort_sl',
+    packages=['tvsort_sl'],
+    install_requires=['requests', 'winshell', 'guessit', 'opster', 'patool'],
+    version='0.2',
+    description='Sort movies and TV-shows files',
     author='Shlomi Lanton',
-    package_dir={'tvsort': 'tvsort'},
-    entry_points={
-        'console_scripts': [
-            'tvsort = tvsort.tvsort:main.command',
-        ],
-    },
-    install_requires=[
-        'opster', 'winshell', 'patool', 'guessit', 'requests'
-    ],
-    extras_require={
-        'win32': 'pywin32'
-    },
+    author_email='shlomilanton@gmail.com',
+    url='https://github.com/shlomiLan/tvsort_sl',
+    download_url='https://github.com/shlomiLan/tvsort_sl/archive/0.1.zip',
+    keywords=['sort', 'tv', 'show', 'movie'],
+    classifiers=[],
 )

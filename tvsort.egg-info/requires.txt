@@ -1,7 +1,0 @@
-opster
-guessit==2.0.5
-winshell
-patool
-
-[win32]
-pywin32
