@@ -11,19 +11,19 @@ from conf import settings
 
 class TvSortTest(unittest.TestCase):
     def test_is_file_exists(self):
-        file_path = settings.test_file_path
+        file_path = settings.TEST_FILE_PATH
         self.assertFalse(app_logic.is_file_exists(file_path))
         app_logic.create_file(file_path)
         self.assertTrue(app_logic.is_file_exists(file_path))
         winshell.delete_file(file_path, no_confirm=True)
 
     def test_process_not_running(self):
-        self.assertFalse(app_logic.is_process_already_run(settings.dummy_file_path))
+        self.assertFalse(app_logic.is_process_already_run(settings.DUMMY_FILE_PATH))
 
     def test_process_is_running(self):
-        dummy_file_path = settings.dummy_file_path
+        dummy_file_path = settings.DUMMY_FILE_PATH
         app_logic.create_file(dummy_file_path)
-        self.assertTrue(app_logic.is_process_already_run(settings.dummy_file_path))
+        self.assertTrue(app_logic.is_process_already_run(settings.DUMMY_FILE_PATH))
         winshell.delete_file(dummy_file_path, no_confirm=True)
 
     def test_transform_to_path_name(self):
@@ -59,10 +59,10 @@ class TvSortTest(unittest.TestCase):
         self.assertFalse(app_logic.is_compressed(file_name))
 
     def test_file_in_ext_list(self):
-        self.assertTrue(app_logic.is_file_ext_in_list('zip', settings.compress_exts))
+        self.assertTrue(app_logic.is_file_ext_in_list('zip', settings.COMPRESS_EXTS))
 
     def test_file_not_in_ext_list(self):
-        self.assertFalse(app_logic.is_file_ext_in_list('avi', settings.compress_exts))
+        self.assertFalse(app_logic.is_file_ext_in_list('avi', settings.COMPRESS_EXTS))
 
     def test_garbage_file(self):
         self.assertFalse(app_logic.is_garbage_file('test.avi'))
@@ -102,18 +102,18 @@ class TvSortTest(unittest.TestCase):
 
     @staticmethod
     def test_copy_file():
-        file_path = settings.test_file_path
+        file_path = settings.TEST_FILE_PATH
         if not app_logic.is_file_exists(file_path):
             app_logic.create_file(file_path)
 
-        winshell.copy_file(file_path, settings.tv_path,
+        winshell.copy_file(file_path, settings.TV_PATH,
                            allow_undo=True, no_confirm=False, rename_on_collision=True, silent=False, hWnd=None)
         winshell.delete_file(file_path, allow_undo=True, no_confirm=True, silent=True, hWnd=None)
-        winshell.delete_file(settings.test_file_path_in_tv, allow_undo=True, no_confirm=True, silent=True, hWnd=None)
+        winshell.delete_file(settings.TEST_FILE_PATH_IN_TV, allow_undo=True, no_confirm=True, silent=True, hWnd=None)
 
 
 def create_dummy_folder():
-    base_path = settings.unsorted_path
+    base_path = settings.UNSORTED_PATH
     folder_name = 'dummy_folder'
     app_logic.create_folder(folder_name, base_path)
     return '{}\{}'.format(base_path, folder_name)
