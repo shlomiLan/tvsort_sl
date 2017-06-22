@@ -12,21 +12,22 @@ Installation
 
 Config
 ------
--  Initial run
+-  Setup
+
 	First you need to set the path of the main 3 folders and the KODI IP (if needed):
-	- TV_PATH => folder for all TV-Shows, each show will be in a separate folder
-    - MOVIES_PATH => folder for all NON TV-Shows files, all files will be in the same directory
-    - UNSORTED_PATH => origin folder that contains all files that needs to be sorted
-    - KODI_IP (optional) => IP for the KODI device
+    	- TV_PATH => folder for all TV-Shows, each show will be in a separate folder
+    	- MOVIES_PATH => folder for all NON TV-Shows files, all files will be in the same directory
+    	- UNSORTED_PATH => origin folder that contains all files that needs to be sorted
+    	- KODI_IP (optional) => IP for the KODI device
 
--  Run tvsort
-::
+-  Run
 
-    python tvsort_sl.py
+	`python tvsort_sl.py`
 
 - Error handling
-	If you get the
+
+	If you get this erroe message:
 	::
 		Proses already running
-	error message after the process was stuck (or any other reason) and you are sure that there isn't a process that
-	is already running, you can manually remove the 'dummy.txt' file from the 'TV_PATH' folder and than try again to run the process
+	and you are sure that there isn't another process already running, it means that in the last time the process run it was stuck,
+	so you can manually remove the 'dummy.txt' file from the 'TV_PATH' folder and than try again to run the process
