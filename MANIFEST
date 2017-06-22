@@ -4,4 +4,4 @@ setup.py
 tvsort_sl\__init__.py
 tvsort_sl\conf.py
 tvsort_sl\test.py
-tvsort_sl\tvsort.py
+tvsort_sl\tvsort_sl.py
