@@ -113,8 +113,27 @@ def create_file(file_path):
     dummy_file.close()
 
 
-def delete_dummy_file(file_path):
-    winshell.delete_file(file_path, no_confirm=True)
+def delete_file(file_path, no_confirm=True):
+    try:
+        winshell.delete_file(file_path, no_confirm=no_confirm)
+        return True
+    except:
+        return False
+
+
+def copy_file(old_path, new_path, new_file_path, logger=None, move_file=True, no_confirm=True):
+    if logger:
+        action = 'Moving' if move_file else 'Copying'
+        logger.info('{} file: FROM {} TO {}'.format(action, old_path, new_file_path))
+
+    try:
+        if move_file:
+            winshell.move_file(old_path, new_path, no_confirm=no_confirm)
+        else:
+            winshell.copy_file(old_path, new_path, no_confirm=no_confirm)
+        return True
+    except:
+        return False
 
 
 def folder_empty(folder_path):
@@ -135,14 +154,14 @@ def main():
                 if is_compressed(file_path):
                     logger.info("Extracting {}".format(file_path))
                     patoolib.extract_archive(file_path, outdir=path)
-                    winshell.delete_file(file_path, no_confirm=True)
+                    delete_file(file_path)
 
             for file_path in get_files(path):
                 logger.info('Checking file: {}'.format(file_path))
 
                 if is_garbage_file(file_path):
                     logger.info('Removing file: {}'.format(file_path))
-                    winshell.delete_file(file_path, no_confirm=True)
+                    delete_file(file_path)
                 elif is_media(file_path):
                     guess = guessit(file_path)
                     new_path = None
@@ -159,13 +178,7 @@ def main():
                         new_path = settings.MOVIES_PATH
 
                     new_file_path = '{}\{}'.format(new_path, get_file_name(file_path))
-
-                    if settings.MOVE_FILES:
-                        logger.info('Moving file: FROM {} TO {}'.format(file_path, new_file_path))
-                        winshell.move_file(file_path, new_path, no_confirm=True)
-                    else:
-                        logger.info('Copying file: FROM {} TO {}'.format(file_path, new_file_path))
-                        winshell.copy_file(file_path, new_path, no_confirm=True)
+                    copy_file(file_path, new_path, new_file_path, logger, move_file=settings.MOVE_FILES)
 
                 folder_path = get_folder_name(file_path)
                 if folder_empty(folder_path):

@@ -10,6 +10,8 @@ from conf import settings
 
 
 class TvSortTest(unittest.TestCase):
+    logger = app_logic.create_logger()
+
     def test_is_file_exists(self):
         file_path = settings.TEST_FILE_PATH
         self.assertFalse(app_logic.is_file_exists(file_path))
@@ -100,16 +102,28 @@ class TvSortTest(unittest.TestCase):
         file_ext = app_logic.get_file_ext(file_name)
         self.assertEquals('mkv', file_ext)
 
-    @staticmethod
-    def test_copy_file():
-        file_path = settings.TEST_FILE_PATH
-        if not app_logic.is_file_exists(file_path):
-            app_logic.create_file(file_path)
+    def test_delete_file(self):
+        dummy_file_path = settings.DUMMY_FILE_PATH
+        app_logic.create_file(dummy_file_path)
+        self.assertTrue(app_logic.delete_file(dummy_file_path))
 
-        winshell.copy_file(file_path, settings.TV_PATH,
-                           allow_undo=True, no_confirm=False, rename_on_collision=True, silent=False, hWnd=None)
-        winshell.delete_file(file_path, allow_undo=True, no_confirm=True, silent=True, hWnd=None)
-        winshell.delete_file(settings.TEST_FILE_PATH_IN_TV, allow_undo=True, no_confirm=True, silent=True, hWnd=None)
+    def test_delete_file_fail(self):
+        dummy_file_path = settings.DUMMY_FILE_PATH
+        self.assertFalse(app_logic.delete_file(dummy_file_path))
+
+    def test_copy_file(self):
+        test_file_path = settings.TEST_FILE_PATH
+        app_logic.create_file(test_file_path)
+        new_path = settings.TV_PATH
+        new_test_file_path = '{}\{}'.format(new_path, app_logic.get_file_name(test_file_path))
+        self.assertTrue(app_logic.copy_file(test_file_path, new_path, new_test_file_path))
+        app_logic.delete_file(new_test_file_path)
+
+    def test_copy_file_fail(self):
+        test_file_path = settings.TEST_FILE_PATH
+        new_path = settings.TV_PATH
+        new_test_file_path = '{}\{}'.format(new_path, app_logic.get_file_name(test_file_path))
+        self.assertFalse(app_logic.copy_file(test_file_path, new_path, new_test_file_path))
 
 
 def create_dummy_folder():
