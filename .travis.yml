@@ -1,4 +1,10 @@
 language: python
 python:
   - "2.7"
-script: python -m unittest test
+script:
+  - python -m unittest test
+  - coverage run --source=tvsort_sl tvsort_sl.py test
+install:
+  - pip install coveralls
+after_success:
+  coveralls
