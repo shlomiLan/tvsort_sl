@@ -31,3 +31,7 @@ Config
 		Proses already running
 	and you are sure that there isn't another process already running, it means that in the last time the process run it was stuck,
 	so you can manually remove the 'dummy.txt' file from the 'TV_PATH' folder and than try again to run the process
+
+.. image:: https://coveralls.io/repos/github/shlomiLan/tvsort_sl/badge.svg?branch=master
+:target: https://coveralls.io/github/shlomiLan/tvsort_sl?branch=master
+
