@@ -2,8 +2,7 @@ from distutils.core import setup
 setup(
     name='tvsort_sl',
     packages=['tvsort_sl'],
-    install_requires=['requests', 'winshell', 'guessit', 'opster', 'patool'],
-    version='0.2',
+    version='0.4',
     description='Sort movies and TV-shows files',
     author='Shlomi Lanton',
     author_email='shlomilanton@gmail.com',
