@@ -3,7 +3,7 @@ python:
   - "2.7"
 script:
   - python -m unittest test
-#  - coverage run --source=tvsort_sl tvsort_sl/tvsort_sl.py test
+  - coverage run --source=tvsort_sl tvsort_sl/tvsort_sl.py test
 after_success:
   coveralls
 notifications:
@@ -11,4 +11,3 @@ notifications:
     on_success: never
 os:
   - "win"
-  - "windows"
