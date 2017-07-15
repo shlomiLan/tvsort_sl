@@ -5,4 +5,3 @@ opster==4.1
 patool==1.12
 python-coveralls==2.9
 coveralls==1.1
-pypiwin32>=1
