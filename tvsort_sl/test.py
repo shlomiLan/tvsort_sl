@@ -1,7 +1,6 @@
 import os
 import unittest
 
-import winshell
 from guessit import guessit
 
 import tvsort_sl as app_logic
@@ -17,7 +16,7 @@ class TvSortTest(unittest.TestCase):
         self.assertFalse(app_logic.is_file_exists(file_path))
         app_logic.create_file(file_path)
         self.assertTrue(app_logic.is_file_exists(file_path))
-        winshell.delete_file(file_path, no_confirm=True)
+        app_logic.delete_file(file_path)
 
     def test_process_not_running(self):
         self.assertFalse(app_logic.is_process_already_run(settings.DUMMY_FILE_PATH))
@@ -26,7 +25,7 @@ class TvSortTest(unittest.TestCase):
         dummy_file_path = settings.DUMMY_FILE_PATH
         app_logic.create_file(dummy_file_path)
         self.assertTrue(app_logic.is_process_already_run(settings.DUMMY_FILE_PATH))
-        winshell.delete_file(dummy_file_path, no_confirm=True)
+        app_logic.delete_file(dummy_file_path)
 
     def test_transform_to_path_name(self):
         original_text = 'This is a string with space.s and dots.'
@@ -88,7 +87,7 @@ class TvSortTest(unittest.TestCase):
         file_path = '{}\{}'.format(folder_path, file_name)
         app_logic.create_file(file_path)
         self.assertFalse(app_logic.folder_empty(folder_path))
-        winshell.delete_file(file_path, no_confirm=True)
+        app_logic.delete_file(file_path)
         os.rmdir(folder_path)
 
     def test_wrong_series_name(self):
@@ -111,12 +110,23 @@ class TvSortTest(unittest.TestCase):
         dummy_file_path = settings.DUMMY_FILE_PATH
         self.assertFalse(app_logic.delete_file(dummy_file_path))
 
-    def test_copy_file(self):
+    def test_move_file(self):
         test_file_path = settings.TEST_FILE_PATH
         app_logic.create_file(test_file_path)
         new_path = settings.TV_PATH
         new_test_file_path = '{}\{}'.format(new_path, app_logic.get_file_name(test_file_path))
         self.assertTrue(app_logic.copy_file(test_file_path, new_path, new_test_file_path))
+        # Clean-up
+        app_logic.delete_file(new_test_file_path)
+
+    def test_copy_file(self):
+        test_file_path = settings.TEST_FILE_PATH
+        app_logic.create_file(test_file_path)
+        new_path = settings.TV_PATH
+        new_test_file_path = '{}\{}'.format(new_path, app_logic.get_file_name(test_file_path))
+        self.assertTrue(app_logic.copy_file(test_file_path, new_path, new_test_file_path, move_file=False))
+        # Delete both files
+        app_logic.delete_file(test_file_path)
         app_logic.delete_file(new_test_file_path)
 
     def test_copy_file_fail(self):

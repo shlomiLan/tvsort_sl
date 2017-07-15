@@ -113,11 +113,13 @@ def create_file(file_path):
     dummy_file.close()
 
 
-def delete_file(file_path, no_confirm=True):
+def delete_file(file_path, logger=None, no_confirm=True):
     try:
         winshell.delete_file(file_path, no_confirm=no_confirm)
         return True
-    except:
+    except Exception as e:
+        if logger:
+            logger.error("Unexpected error: {}".format(e))
         return False
 
 
@@ -132,7 +134,9 @@ def copy_file(old_path, new_path, new_file_path, logger=None, move_file=True, no
         else:
             winshell.copy_file(old_path, new_path, no_confirm=no_confirm)
         return True
-    except:
+    except Exception as e:
+        if logger:
+            logger.error("Unexpected error: {}".format(e))
         return False
 
 
@@ -154,14 +158,14 @@ def main():
                 if is_compressed(file_path):
                     logger.info("Extracting {}".format(file_path))
                     patoolib.extract_archive(file_path, outdir=path)
-                    delete_file(file_path)
+                    delete_file(file_path, logger=logger)
 
             for file_path in get_files(path):
                 logger.info('Checking file: {}'.format(file_path))
 
                 if is_garbage_file(file_path):
                     logger.info('Removing file: {}'.format(file_path))
-                    delete_file(file_path)
+                    delete_file(file_path, logger=logger)
                 elif is_media(file_path):
                     guess = guessit(file_path)
                     new_path = None
@@ -196,7 +200,7 @@ def main():
             logger.error(traceback.print_exc())
 
         finally:
-            winshell.delete_file(dummy_file_path, no_confirm=True)
+            delete_file(dummy_file_path, logger=logger)
     else:
         logger.info('Proses already running')
 
