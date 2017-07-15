@@ -11,3 +11,4 @@ notifications:
     on_success: never
 os:
   - "win"
+  - "windows"
