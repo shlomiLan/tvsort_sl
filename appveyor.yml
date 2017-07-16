@@ -10,4 +10,5 @@ init:
 install:
     - "%PYTHON%/Scripts/pip.exe install coverage"
 test_script:
-    - "%PYTHON%\\python.exe setup.py"
+    - "cd tvsort_sl"
+    - "python setup.py -m unittest test"
