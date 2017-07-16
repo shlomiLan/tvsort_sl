@@ -10,4 +10,4 @@ init:
 install:
     - "%PYTHON%/Scripts/pip.exe install coverage"
 test_script:
-    - "%PYTHON%\\python.exe setup.py test"
+    - "%PYTHON%\\python.exe setup.py"
