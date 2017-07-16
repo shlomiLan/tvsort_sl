@@ -12,4 +12,4 @@ init:
 install:
   - "%PYTHON%/Scripts/pip.exe install coverage
 test_script:
-  - “python -m unittest test”
+  - "python -m unittest test"
