@@ -65,6 +65,10 @@ def is_file_exists(file_path):
     return os.path.isfile(file_path)
 
 
+def is_folder_exists(file_path):
+    return os.path.isdir(file_path)
+
+
 def create_folder(folder_name, base_path=settings.BASE_DIR):
     new_dir_path = '{}\{}'.format(base_path, folder_name)
     if not os.path.exists(new_dir_path):

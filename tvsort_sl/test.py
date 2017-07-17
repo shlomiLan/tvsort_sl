@@ -76,6 +76,12 @@ class TvSortTest(unittest.TestCase):
         show_name = app_logic.get_show_name(guess)
         self.assertEquals(show_name, 'Anger Management')
 
+    def test_folder_existes(self):
+        folder_path = settings.DUMMY_PATH
+        self.assertFalse(app_logic.is_folder_exists(folder_path))
+        folder_path = settings.TV_PATH
+        self.assertTrue(app_logic.is_folder_exists(folder_path))
+
     def test_empty_folder(self):
         folder_path = create_dummy_folder()
         self.assertTrue(app_logic.folder_empty(folder_path))

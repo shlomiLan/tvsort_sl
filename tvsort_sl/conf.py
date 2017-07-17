@@ -11,6 +11,7 @@ class SortSettings(object):
     TV_PATH              = '\\\movies-pc\\TVShows'
     MOVIES_PATH          = '\\\movies-pc\\Movies'
     UNSORTED_PATH        = '\\\movies-pc\\Unsortted'
+    DUMMY_PATH           = '\\\movies-pc\\Unsortted'
 
     KODI_IP = 'http://192.168.1.31:12345'
 
