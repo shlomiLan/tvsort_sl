@@ -1,15 +1,28 @@
-import os
+# coding=utf-8
+from __future__ import unicode_literals
+
 import unittest
 
 from guessit import guessit
 
 import tvsort_sl as app_logic
-
-from conf import settings
+from test_s import settings
 
 
 class TvSortTest(unittest.TestCase):
     logger = app_logic.create_logger()
+
+    def setUp(self):
+        app_logic.create_folder(settings.TV_PATH)
+        app_logic.create_folder(settings.DUMMY_PATH)
+        app_logic.create_folder(settings.MOVIES_PATH)
+        app_logic.create_folder(settings.UNSORTED_PATH)
+
+    def tearDown(self):
+        app_logic.delete_folder(settings.TV_PATH, logger=self.logger)
+        app_logic.delete_folder(settings.DUMMY_PATH, logger=self.logger)
+        app_logic.delete_folder(settings.MOVIES_PATH, logger=self.logger)
+        app_logic.delete_folder(settings.UNSORTED_PATH, logger=self.logger)
 
     def test_is_file_exists(self):
         file_path = settings.TEST_FILE_PATH
@@ -37,17 +50,17 @@ class TvSortTest(unittest.TestCase):
         self.assertEquals(app_logic.transform_to_path_name(string), '1')
 
     def test_not_tv_show(self):
-        file_name = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK'
+        file_name = str('San Andreas 2015 720p WEB-DL x264 AAC-JYK')
         guess = guessit(file_name)
         self.assertFalse(app_logic.is_tv_show(guess))
 
     def test_is_tv_show(self):
-        file_name = 'Mr Robot S01E05 HDTV x264-KILLERS[ettv]'
+        file_name = str('Mr Robot S01E05 HDTV x264-KILLERS[ettv]')
         guess = guessit(file_name)
         self.assertTrue(app_logic.is_tv_show(guess))
 
     def test_is_movie(self):
-        file_name = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK'
+        file_name = str('San Andreas 2015 720p WEB-DL x264 AAC-JYK')
         guess = guessit(file_name)
         self.assertTrue(app_logic.is_movie(guess))
 
@@ -72,32 +85,30 @@ class TvSortTest(unittest.TestCase):
         self.assertTrue(app_logic.is_media('test.avi'))
 
     def test_show_name(self):
-        guess = guessit('Anger.Management.S01E01.720p.HDTV.x264-IMMERSE.mkv')
+        guess = guessit(str('Anger.Management.S01E01.720p.HDTV.x264-IMMERSE.mkv'))
         show_name = app_logic.get_show_name(guess)
         self.assertEquals(show_name, 'Anger Management')
 
-    def test_folder_existes(self):
-        folder_path = settings.DUMMY_PATH
+    def test_folder_exist(self):
+        folder_path = settings.FAKE_PATH
         self.assertFalse(app_logic.is_folder_exists(folder_path))
         folder_path = settings.TV_PATH
         self.assertTrue(app_logic.is_folder_exists(folder_path))
 
     def test_empty_folder(self):
-        folder_path = create_dummy_folder()
+        folder_path = settings.DUMMY_PATH
         self.assertTrue(app_logic.folder_empty(folder_path))
-        os.rmdir(folder_path)
 
     def test_not_empty_folder(self):
         file_name = 'dummy1.txt'
-        folder_path = create_dummy_folder()
+        folder_path = settings.DUMMY_PATH
         file_path = '{}\{}'.format(folder_path, file_name)
         app_logic.create_file(file_path)
         self.assertFalse(app_logic.folder_empty(folder_path))
         app_logic.delete_file(file_path)
-        os.rmdir(folder_path)
 
     def test_wrong_series_name(self):
-        guess = guessit('House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv')
+        guess = guessit(str('House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'))
         show_name = app_logic.get_show_name(guess)
         app_logic.add_missing_country(guess, show_name)
         self.assertEquals(guess.get('country'), 'US')
@@ -140,10 +151,3 @@ class TvSortTest(unittest.TestCase):
         new_path = settings.TV_PATH
         new_test_file_path = '{}\{}'.format(new_path, app_logic.get_file_name(test_file_path))
         self.assertFalse(app_logic.copy_file(test_file_path, new_path, new_test_file_path))
-
-
-def create_dummy_folder():
-    base_path = settings.UNSORTED_PATH
-    folder_name = 'dummy_folder'
-    app_logic.create_folder(folder_name, base_path)
-    return '{}\{}'.format(base_path, folder_name)

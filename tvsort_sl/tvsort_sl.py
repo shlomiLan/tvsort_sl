@@ -1,3 +1,4 @@
+# coding=utf-8
 from __future__ import unicode_literals
 
 import traceback
@@ -69,18 +70,31 @@ def is_folder_exists(file_path):
     return os.path.isdir(file_path)
 
 
-def create_folder(folder_name, base_path=settings.BASE_DIR):
-    new_dir_path = '{}\{}'.format(base_path, folder_name)
-    if not os.path.exists(new_dir_path):
-        os.makedirs(new_dir_path)
+def create_folder(folder_path):
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+
+def delete_folder(folder_path, logger=None):
+    try:
+        if folder_empty(folder_path):
+            os.rmdir(folder_path)
+            return True
+        else:
+            if logger:
+                logger.error("Folder is not empty")
+            return False
+    except Exception as e:
+        if logger:
+            logger.error("Folder can't be deleted, Unexpected error: {}".format(e))
+        return False
 
 
 def create_logger():
     logger = logging.getLogger('tvshow')
     logger.level = logging.DEBUG
     logger.addHandler(logging.StreamHandler())
-    create_folder('log')
-    logger.addHandler(logging.FileHandler(filename=settings.LOG_PATH))
+    logger.addHandler(logging.FileHandler(filename=settings.LOG_FILE_PATH))
 
     return logger
 

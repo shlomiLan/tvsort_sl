@@ -4,29 +4,36 @@ import os
 
 
 class SortSettings(object):
+    # This should be overwrite by prod OR test settings
+    base_drive = ''
     # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
 
-    TV_PATH              = '\\\movies-pc\\TVShows'
-    MOVIES_PATH          = '\\\movies-pc\\Movies'
-    UNSORTED_PATH        = '\\\movies-pc\\Unsortted'
-    DUMMY_PATH           = '\\\movies-pc\\Unsortted'
-
     KODI_IP = 'http://192.168.1.31:12345'
 
     # move OR copy files
-    MOVE_FILES           = True
+    MOVE_FILES = True
 
-    DUMMY_FILE_NAME      = 'dummy.txt'
-    DUMMY_FILE_PATH      = '{}\{}'.format(TV_PATH, DUMMY_FILE_NAME)
-    TEST_FILE_PATH       = '{}\{}'.format(UNSORTED_PATH, 'test.txt')
-    TEST_FILE_PATH_IN_TV = '{}\{}'.format(TV_PATH, 'test.txt')
-    LOG_PATH             = '{}\\log\\tvsort.log'.format(BASE_DIR)
+    DUMMY_FILE_NAME = 'dummy.txt'
 
     # extensions
     COMPRESS_EXTS = ['r00', 'rar', 'zip']
     MEDIA_EXTS    = ['mkv', 'avi', 'mp4', 'wemb', 'ogg', 'mov', 'wmv', 'm4v', 'm4p', 'mpg', 'mpeg', 'ogm']
     GARBAGE_EXTS  = ['nfo', 'txt', 'db', 'pdf', 'jpg', 'png', 'srt']
+
+    def __init__(self):
+        self.TV_PATH       = '{}\\TVShows'.format(self.base_drive)
+        self.MOVIES_PATH   = '{}\\Movies'.format(self.base_drive)
+        self.UNSORTED_PATH = '{}\\Unsortted'.format(self.base_drive)
+        self.DUMMY_PATH    = '{}\\Dummy'.format(self.base_drive)
+        self.LOG_PATH      = '{}\\log'.format(self.BASE_DIR)
+        # This folder should have any files init
+        self.FAKE_PATH     = '{}\\xxx'.format(self.base_drive)
+
+        self.DUMMY_FILE_PATH      = '{}\{}'.format(self.TV_PATH, self.DUMMY_FILE_NAME)
+        self.TEST_FILE_PATH       = '{}\{}'.format(self.UNSORTED_PATH, 'test.txt')
+        self.TEST_FILE_PATH_IN_TV = '{}\{}'.format(self.TV_PATH, 'test.txt')
+        self.LOG_FILE_PATH        = '{}\{}'.format(self.BASE_DIR, 'tvsort.log')
 
 settings = SortSettings()

@@ -1,4 +1,9 @@
+# coding=utf-8
+from __future__ import unicode_literals
+
 from distutils.core import setup
+
+
 setup(
     name='tvsort_sl',
     packages=['tvsort_sl'],

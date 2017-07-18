@@ -4,6 +4,7 @@ dist
 tvsort.egg-info
 log
 *.log
+tvsort_sl/prod.py
 
 
 *.py[co]
