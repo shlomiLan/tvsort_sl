@@ -1,7 +1,7 @@
 .. image:: 
    https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl?svg=true 
    :width: 300 
-   :target: https://ci.appveyor.com/project/CatalystAdmin/hcpytools 
+   :target: https://ci.appveyor.com/project/shlomiLan/tvsort-sl
    :alt: Appveyor build status
 
 =================
