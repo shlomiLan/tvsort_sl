@@ -2,10 +2,13 @@
 from __future__ import unicode_literals
 import os
 
+try:
+    from settings import *
+except ImportError:
+    raise Exception("You need to create a tvsort_sl/settings.py - use _local_settings/settings.py as a reference.")
+
 
 class SortSettings(object):
-    # This should be overwrite by prod OR test settings
-    base_drive = ''
     # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
@@ -22,7 +25,9 @@ class SortSettings(object):
     MEDIA_EXTS    = ['mkv', 'avi', 'mp4', 'wemb', 'ogg', 'mov', 'wmv', 'm4v', 'm4p', 'mpg', 'mpeg', 'ogm']
     GARBAGE_EXTS  = ['nfo', 'txt', 'db', 'pdf', 'jpg', 'png', 'srt']
 
-    def __init__(self):
+    def __init__(self, is_test=False):
+        # This should be overwrite by prod OR test settings
+        self.base_drive = 'c:' if is_test else base_drive
         self.TV_PATH       = '{}\\TVShows'.format(self.base_drive)
         self.MOVIES_PATH   = '{}\\Movies'.format(self.base_drive)
         self.UNSORTED_PATH = '{}\\Unsortted'.format(self.base_drive)
@@ -35,5 +40,3 @@ class SortSettings(object):
         self.TEST_FILE_PATH       = '{}\{}'.format(self.UNSORTED_PATH, 'test.txt')
         self.TEST_FILE_PATH_IN_TV = '{}\{}'.format(self.TV_PATH, 'test.txt')
         self.LOG_FILE_PATH        = '{}\{}'.format(self.BASE_DIR, 'tvsort.log')
-
-settings = SortSettings()

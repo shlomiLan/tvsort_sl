@@ -1,15 +1,9 @@
 .idea
-build
 dist
-tvsort.egg-info
-log
-*.log
-tvsort_sl/prod.py
-
+**log
+settings.py
 
 *.py[co]
 
 # Unit test / coverage reports
 .coverage
-.tox
-coverage

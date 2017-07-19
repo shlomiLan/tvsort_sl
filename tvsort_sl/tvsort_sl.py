@@ -12,8 +12,9 @@ from opster import command
 import os
 import patoolib
 import logging
+from conf import SortSettings
 
-from conf import settings
+settings = SortSettings()
 
 
 def is_compressed(file_name):
@@ -168,6 +169,8 @@ def main():
     path = settings.UNSORTED_PATH
     dummy_file_path = settings.DUMMY_FILE_PATH
 
+    print(settings.TV_PATH)
+
     if not is_process_already_run(dummy_file_path):
         try:
             create_file(dummy_file_path)
@@ -193,7 +196,7 @@ def main():
                         add_missing_country(guess, show_name)
                         if guess.get('country'):
                             show_name += '.{}'.format(guess.get('country'))
-                        create_folder(show_name, base)
+                        create_folder(show_name)
                         new_path = '{}\{}'.format(base, show_name)
 
                     elif is_movie(guess):

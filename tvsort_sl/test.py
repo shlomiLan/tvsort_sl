@@ -6,38 +6,41 @@ import unittest
 from guessit import guessit
 
 import tvsort_sl as app_logic
-from test_s import settings
+from conf import SortSettings
 
 
 class TvSortTest(unittest.TestCase):
     logger = app_logic.create_logger()
+    settings = SortSettings(is_test=True)
+
+    print(settings.TV_PATH)
 
     def setUp(self):
-        app_logic.create_folder(settings.TV_PATH)
-        app_logic.create_folder(settings.DUMMY_PATH)
-        app_logic.create_folder(settings.MOVIES_PATH)
-        app_logic.create_folder(settings.UNSORTED_PATH)
+        app_logic.create_folder(self.settings.TV_PATH)
+        app_logic.create_folder(self.settings.DUMMY_PATH)
+        app_logic.create_folder(self.settings.MOVIES_PATH)
+        app_logic.create_folder(self.settings.UNSORTED_PATH)
 
     def tearDown(self):
-        app_logic.delete_folder(settings.TV_PATH, logger=self.logger)
-        app_logic.delete_folder(settings.DUMMY_PATH, logger=self.logger)
-        app_logic.delete_folder(settings.MOVIES_PATH, logger=self.logger)
-        app_logic.delete_folder(settings.UNSORTED_PATH, logger=self.logger)
+        app_logic.delete_folder(self.settings.TV_PATH, logger=self.logger)
+        app_logic.delete_folder(self.settings.DUMMY_PATH, logger=self.logger)
+        app_logic.delete_folder(self.settings.MOVIES_PATH, logger=self.logger)
+        app_logic.delete_folder(self.settings.UNSORTED_PATH, logger=self.logger)
 
     def test_is_file_exists(self):
-        file_path = settings.TEST_FILE_PATH
+        file_path = self.settings.TEST_FILE_PATH
         self.assertFalse(app_logic.is_file_exists(file_path))
         app_logic.create_file(file_path)
         self.assertTrue(app_logic.is_file_exists(file_path))
         app_logic.delete_file(file_path)
 
     def test_process_not_running(self):
-        self.assertFalse(app_logic.is_process_already_run(settings.DUMMY_FILE_PATH))
+        self.assertFalse(app_logic.is_process_already_run(self.settings.DUMMY_FILE_PATH))
 
     def test_process_is_running(self):
-        dummy_file_path = settings.DUMMY_FILE_PATH
+        dummy_file_path = self.settings.DUMMY_FILE_PATH
         app_logic.create_file(dummy_file_path)
-        self.assertTrue(app_logic.is_process_already_run(settings.DUMMY_FILE_PATH))
+        self.assertTrue(app_logic.is_process_already_run(self.settings.DUMMY_FILE_PATH))
         app_logic.delete_file(dummy_file_path)
 
     def test_transform_to_path_name(self):
@@ -73,10 +76,10 @@ class TvSortTest(unittest.TestCase):
         self.assertFalse(app_logic.is_compressed(file_name))
 
     def test_file_in_ext_list(self):
-        self.assertTrue(app_logic.is_file_ext_in_list('zip', settings.COMPRESS_EXTS))
+        self.assertTrue(app_logic.is_file_ext_in_list('zip', self.settings.COMPRESS_EXTS))
 
     def test_file_not_in_ext_list(self):
-        self.assertFalse(app_logic.is_file_ext_in_list('avi', settings.COMPRESS_EXTS))
+        self.assertFalse(app_logic.is_file_ext_in_list('avi', self.settings.COMPRESS_EXTS))
 
     def test_garbage_file(self):
         self.assertFalse(app_logic.is_garbage_file('test.avi'))
@@ -90,18 +93,18 @@ class TvSortTest(unittest.TestCase):
         self.assertEquals(show_name, 'Anger Management')
 
     def test_folder_exist(self):
-        folder_path = settings.FAKE_PATH
+        folder_path = self.settings.FAKE_PATH
         self.assertFalse(app_logic.is_folder_exists(folder_path))
-        folder_path = settings.TV_PATH
+        folder_path = self.settings.TV_PATH
         self.assertTrue(app_logic.is_folder_exists(folder_path))
 
     def test_empty_folder(self):
-        folder_path = settings.DUMMY_PATH
+        folder_path = self.settings.DUMMY_PATH
         self.assertTrue(app_logic.folder_empty(folder_path))
 
     def test_not_empty_folder(self):
         file_name = 'dummy1.txt'
-        folder_path = settings.DUMMY_PATH
+        folder_path = self.settings.DUMMY_PATH
         file_path = '{}\{}'.format(folder_path, file_name)
         app_logic.create_file(file_path)
         self.assertFalse(app_logic.folder_empty(folder_path))
@@ -119,27 +122,27 @@ class TvSortTest(unittest.TestCase):
         self.assertEquals('mkv', file_ext)
 
     def test_delete_file(self):
-        dummy_file_path = settings.DUMMY_FILE_PATH
+        dummy_file_path = self.settings.DUMMY_FILE_PATH
         app_logic.create_file(dummy_file_path)
         self.assertTrue(app_logic.delete_file(dummy_file_path))
 
     def test_delete_file_fail(self):
-        dummy_file_path = settings.DUMMY_FILE_PATH
+        dummy_file_path = self.settings.DUMMY_FILE_PATH
         self.assertFalse(app_logic.delete_file(dummy_file_path))
 
     def test_move_file(self):
-        test_file_path = settings.TEST_FILE_PATH
+        test_file_path = self.settings.TEST_FILE_PATH
         app_logic.create_file(test_file_path)
-        new_path = settings.TV_PATH
+        new_path = self.settings.TV_PATH
         new_test_file_path = '{}\{}'.format(new_path, app_logic.get_file_name(test_file_path))
         self.assertTrue(app_logic.copy_file(test_file_path, new_path, new_test_file_path))
         # Clean-up
         app_logic.delete_file(new_test_file_path)
 
     def test_copy_file(self):
-        test_file_path = settings.TEST_FILE_PATH
+        test_file_path = self.settings.TEST_FILE_PATH
         app_logic.create_file(test_file_path)
-        new_path = settings.TV_PATH
+        new_path = self.settings.TV_PATH
         new_test_file_path = '{}\{}'.format(new_path, app_logic.get_file_name(test_file_path))
         self.assertTrue(app_logic.copy_file(test_file_path, new_path, new_test_file_path, move_file=False))
         # Delete both files
@@ -147,7 +150,7 @@ class TvSortTest(unittest.TestCase):
         app_logic.delete_file(new_test_file_path)
 
     def test_copy_file_fail(self):
-        test_file_path = settings.TEST_FILE_PATH
-        new_path = settings.TV_PATH
+        test_file_path = self.settings.TEST_FILE_PATH
+        new_path = self.settings.TV_PATH
         new_test_file_path = '{}\{}'.format(new_path, app_logic.get_file_name(test_file_path))
         self.assertFalse(app_logic.copy_file(test_file_path, new_path, new_test_file_path))
