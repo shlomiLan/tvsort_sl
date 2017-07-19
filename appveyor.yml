@@ -10,6 +10,8 @@ init:
 install:
   - "pip install pypiwin32"
   - "pip install -r requirements.txt"
+  - "pip install codecov"
 test_script:
   - "cd tvsort_sl"
   - "python -m unittest test"
+  - "codecov"
