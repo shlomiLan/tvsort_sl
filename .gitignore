@@ -1,9 +1,10 @@
 .idea
 dist
 **log
-settings.py
+tvsort_sl/settings.py
 
 *.py[co]
 
 # Unit test / coverage reports
 .coverage
+
