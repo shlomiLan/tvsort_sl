@@ -7,7 +7,7 @@
 .. image:: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl/total.svg   
    :target: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl
 .. image:: https://img.shields.io/pypi/dm/tvsort_sl.svg   
-   :target: 
+   :target: https://img.shields.io/pypi/dm/tvsort_sl.
 =================
 tvsort_sl
 =================
