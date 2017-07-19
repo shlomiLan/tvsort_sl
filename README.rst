@@ -1,16 +1,13 @@
-.. image:: 
-   https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl?svg=true 
-   :width: 300 
+.. image:: https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl?svg=true  
    :target: https://ci.appveyor.com/project/shlomiLan/tvsort-sl
-   :alt: Appveyor build status
 .. image:: https://badge.fury.io/py/tvsort_sl.svg
-    :target: https://badge.fury.io/py/tvsort_sl   
+   :target: https://badge.fury.io/py/tvsort_sl   
 .. image:: https://codecov.io/gh/shlomiLan/tvsort_sl/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/shlomiLan/tvsort_sl
+   :target: https://codecov.io/gh/shlomiLan/tvsort_sl
 .. image:: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl/total.svg   
-  :target: 
+   :target: 
 .. image:: https://img.shields.io/pypi/dm/tvsort_sl.svg   
-  :target: 
+   :target: 
 =================
 tvsort_sl
 =================
