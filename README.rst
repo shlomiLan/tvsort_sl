@@ -34,4 +34,6 @@ Config
 
 .. image:: https://coveralls.io/repos/github/shlomiLan/tvsort_sl/badge.svg?branch=master
 :target: https://coveralls.io/github/shlomiLan/tvsort_sl?branch=master
+https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl
+[![Build status](https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl?svg=true)](https://ci.appveyor.com/project/shlomiLan/tvsort-sl)
 
