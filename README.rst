@@ -7,8 +7,10 @@
     :target: https://badge.fury.io/py/tvsort_sl   
 .. image:: https://codecov.io/gh/shlomiLan/tvsort_sl/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/shlomiLan/tvsort_sl
-.. image:: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl/total.svg   :target: 
-.. image:: https://img.shields.io/pypi/dm/tvsort_sl.svg   :target: 
+.. image:: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl/total.svg   
+  :target: 
+.. image:: https://img.shields.io/pypi/dm/tvsort_sl.svg   
+  :target: 
 =================
 tvsort_sl
 =================
