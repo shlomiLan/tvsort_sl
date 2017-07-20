@@ -11,6 +11,7 @@ environment:
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 install:
+  - "copy C:\tvsort_sl\_local_settings\settings.py C:\tvsort_sl\settings.py"
   - "pip install pypiwin32"
   - "pip install -r requirements.txt"
   - "pip install codecov"
