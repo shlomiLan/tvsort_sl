@@ -13,7 +13,7 @@ init:
 install:
   - "cd tvsort_sl"
   - "dir"
-  - "copy C:\\tvsort_sl\\tvsort_sl\\_local_settings\\settings.py C:\\tvsort_sl\\tvsort_sl\\settings.py"
+  - "copy C:\\projects\\tvsort-sl\\tvsort_sl\\_local_settings\\settings.py C:\\projects\\tvsort-sl\\tvsort_sl\\settings.py"
   - "pip install pypiwin32"
   - "pip install -r requirements.txt"
   - "pip install codecov"
