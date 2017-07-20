@@ -11,6 +11,7 @@ environment:
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 install:
+  - "dir"
   - "copy C:\\projects\\tvsort_sl\\tvsort_sl\\_local_settings\\settings.py C:\\projects\\tvsort_sl\\tvsort_sl\\settings.py"
   - "pip install pypiwin32"
   - "pip install -r requirements.txt"
