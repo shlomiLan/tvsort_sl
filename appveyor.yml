@@ -18,5 +18,5 @@ install:
 test_script:
   - "cd tvsort_sl"
   - "python -m unittest test"
-  - "coverage run test.py"
+  - "coverage run -m unittest test"
   - "codecov"
