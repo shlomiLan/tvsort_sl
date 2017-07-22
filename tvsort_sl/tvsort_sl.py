@@ -169,8 +169,6 @@ def main():
     path = settings.UNSORTED_PATH
     dummy_file_path = settings.DUMMY_FILE_PATH
 
-    print(settings.TV_PATH)
-
     if not is_process_already_run(dummy_file_path):
         try:
             create_file(dummy_file_path)

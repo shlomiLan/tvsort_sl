@@ -13,8 +13,6 @@ class TvSortTest(unittest.TestCase):
     logger = app_logic.create_logger()
     settings = SortSettings(is_test=True)
 
-    print(settings.TV_PATH)
-
     def setUp(self):
         app_logic.create_folder(self.settings.TV_PATH)
         app_logic.create_folder(self.settings.DUMMY_PATH)
