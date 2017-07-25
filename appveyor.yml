@@ -19,4 +19,5 @@ test_script:
   - "cd tvsort_sl"
   - "python -m unittest test"
   - "coverage run -m unittest test"
+  - "cd.."
   - "codecov"
