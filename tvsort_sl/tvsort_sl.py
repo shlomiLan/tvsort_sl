@@ -52,8 +52,7 @@ class TvSort(object):
                         elif utils.is_movie(guess):
                             new_path = self.settings.get('MOVIES_PATH')
 
-                        new_file_path = '{}\{}'.format(new_path, utils.get_file_name(file_path))
-                        utils.copy_file(file_path, new_path, new_file_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
+                        utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
 
                     folder_path = utils.get_folder_path_from_file_path(file_path)
                     if utils.folder_empty(folder_path):

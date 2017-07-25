@@ -29,7 +29,7 @@ class TvSortTest(unittest.TestCase):
         test_file_path = '{}\{}'.format(self.settings.get('TEST_FILES'), test_file_name)
         new_test_file_folder = self.settings.get('UNSORTED_PATH')
         new_test_file_path = '{}\{}'.format(new_test_file_folder, test_file_name)
-        utils.copy_file(test_file_path, new_test_file_folder, None, self.logger, move_file=False)
+        utils.copy_file(test_file_path, new_test_file_folder, self.logger, move_file=False)
         # self.assertTrue(utils.run())
         utils.delete_file(new_test_file_path, self.logger)
 
@@ -152,7 +152,7 @@ class TvSortTest(unittest.TestCase):
         utils.create_file(test_file_path)
         new_path = self.settings.get('TV_PATH')
         new_test_file_path = '{}\{}'.format(new_path, utils.get_file_name(test_file_path))
-        self.assertTrue(utils.copy_file(test_file_path, new_path, new_test_file_path, self.logger))
+        self.assertTrue(utils.copy_file(test_file_path, new_path, self.logger))
         # Clean-up
         utils.delete_file(new_test_file_path, self.logger)
 
@@ -161,7 +161,7 @@ class TvSortTest(unittest.TestCase):
         utils.create_file(test_file_path)
         new_path = self.settings.get('TV_PATH')
         new_test_file_path = '{}\{}'.format(new_path, utils.get_file_name(test_file_path))
-        self.assertTrue(utils.copy_file(test_file_path, new_path, new_test_file_path, self.logger, move_file=False))
+        self.assertTrue(utils.copy_file(test_file_path, new_path, self.logger, move_file=False))
         # Delete both files
         utils.delete_file(test_file_path, self.logger)
         utils.delete_file(new_test_file_path, self.logger)

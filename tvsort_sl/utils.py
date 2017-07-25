@@ -147,14 +147,11 @@ def delete_file(file_path, logger, no_confirm=True):
         return False
 
 
-def copy_file(old_path, new_path, new_file_path, logger, move_file=True, no_confirm=True):
+def copy_file(old_path, new_path, logger, move_file=True, no_confirm=True):
     # TODO: remove the 'new_file_path' parameter
     action = 'Moving' if move_file else 'Copying'
-    logger.info('{} file: FROM {} TO {}'.format(action, old_path, new_file_path))
+    logger.info('{} file: FROM {} TO {}'.format(action, old_path, new_path))
 
-    print(old_path)
-    print(new_path)
-    print(new_file_path)
     try:
         if move_file:
             winshell.move_file(old_path, new_path, no_confirm=no_confirm)
