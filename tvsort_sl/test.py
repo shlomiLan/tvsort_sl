@@ -170,7 +170,7 @@ class TvSortTest(unittest.TestCase):
         test_file_path = self.settings.get('TEST_FILE_PATH')
         new_path = self.settings.get('TV_PATH')
         new_test_file_path = '{}\{}'.format(new_path, utils.get_file_name(test_file_path))
-        self.assertFalse(utils.copy_file(test_file_path, new_path, new_test_file_path, self.logger))
+        self.assertFalse(utils.copy_file(test_file_path, new_path, self.logger))
 
     def test_get_folder_name_from_path(self):
         folder_path = utils.get_folder_path_from_file_path(self.settings.get('DUMMY_FILE_PATH'))
