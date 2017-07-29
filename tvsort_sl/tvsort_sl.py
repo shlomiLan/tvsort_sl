@@ -33,7 +33,7 @@ class TvSort(object):
             try:
                 utils.create_file(self.settings.get('DUMMY_FILE_PATH'))
 
-                for file_path in utils.get_files(self.settings.get('PATH')):
+                for file_path in utils.get_files(self.settings.get('UNSORTED_PATH')):
                     if utils.is_compressed(file_path, self.logger):
                         self.logger.info("Extracting {}".format(file_path))
                         patoolib.extract_archive(file_path, outdir=self.settings.get('UNSORTED_PATH'))
