@@ -9,3 +9,4 @@ tvsort_sl/settings.py
 
 /tvsort_sl/settings/local.yml
 logs/
+tvsort_sl/settings/test.yml
