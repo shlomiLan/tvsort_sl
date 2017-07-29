@@ -5,6 +5,7 @@ import logging
 import unittest
 
 from guessit import guessit
+from mock import mock
 
 import utils
 from tvsort_sl import TvSort
@@ -26,13 +27,16 @@ class TvSortTest(unittest.TestCase):
         utils.delete_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger)
 
     def test_main(self):
-        test_file_name = self.tv_sort.settings.get('TEST_ZIP_name')
-        test_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), test_file_name)
-        new_test_file_folder = self.tv_sort.settings.get('UNSORTED_PATH')
-        new_test_file_path = '{}\{}'.format(new_test_file_folder, test_file_name)
-        utils.copy_file(test_file_path, new_test_file_folder, self.tv_sort.logger, move_file=False)
-        # self.assertTrue(utils.run())
-        utils.delete_file(new_test_file_path, self.tv_sort.logger)
+        zip_file_name = self.tv_sort.settings.get('TEST_ZIP_name')
+        zip_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), zip_file_name)
+        new_zip_file_folder = self.tv_sort.settings.get('UNSORTED_PATH')
+        new_test_file_path = '{}\{}'.format(new_zip_file_folder, zip_file_name)
+        utils.copy_file(zip_file_path, new_zip_file_folder, self.tv_sort.logger, move_file=False)
+        self.assertTrue(self.tv_sort.run())
+
+    @mock.patch('tvsort_sl.utils.is_folder_exists', return_value=False)
+    def test_no_logs_folder(self, is_folder_exists_function):
+        self.assertRaises(Exception, self.tv_sort.check_project_setup)
 
     def test_is_file_exists(self):
         file_path = self.tv_sort.settings.get('TEST_FILE_PATH')
