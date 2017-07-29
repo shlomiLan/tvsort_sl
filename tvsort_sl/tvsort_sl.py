@@ -15,11 +15,11 @@ import utils
 class TvSort(object):
     is_any_error = False
 
-    def __init__(self, is_test=False):
+    def __init__(self, is_test=False, **kwargs):
         self.settings = utils.load_settings(is_test=is_test)
 
         if self.check_project_setup():
-            self.logger = utils.create_logger(self.settings['LOG_PATH'], self.settings.get('PROJECT_NAME'))
+            self.logger = utils.create_logger(self.settings['LOG_PATH'], self.settings.get('PROJECT_NAME'), **kwargs)
 
     def check_project_setup(self):
         log_folder_path = self.settings.get('LOG_PATH')

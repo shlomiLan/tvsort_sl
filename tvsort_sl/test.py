@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+import logging
 import unittest
 
 from guessit import guessit
@@ -10,7 +11,7 @@ from tvsort_sl import TvSort
 
 
 class TvSortTest(unittest.TestCase):
-    tv_sort = TvSort(is_test=True)
+    tv_sort = TvSort(is_test=True, log_level=logging.FATAL)
 
     def setUp(self):
         utils.create_folder(self.tv_sort.settings.get('TV_PATH'), self.tv_sort.logger)
