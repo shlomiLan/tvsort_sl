@@ -17,7 +17,7 @@ class TvSort(object):
     is_any_error = False
     path = settings.get('UNSORTED_PATH')
     dummy_file_path = settings.get('DUMMY_FILE_PATH')
-    logger = utils.create_logger(settings['LOG_FILE_PATH'])
+    logger = utils.create_logger(settings['LOG_PATH'], settings.get('PROJECT_NAME'))
 
     def run(self):
         if not utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')):

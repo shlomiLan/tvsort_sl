@@ -1,23 +1,21 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+import logging
 import re
 import traceback
 
+import daiquiri as daiquiri
 import winshell
 import os
-import logging
 
 import yaml
 
 
-def create_logger(log_path):
-    logger = logging.getLogger('tvshow')
-    logger.level = logging.DEBUG
-    logger.addHandler(logging.StreamHandler())
-    logger.addHandler(logging.FileHandler(filename=log_path))
-
-    return logger
+def create_logger(log_path, log_name, level=logging.INFO):
+    daiquiri.setup(level=level,
+                   outputs=(daiquiri.output.File(directory=log_path, program_name=log_name), daiquiri.output.STDOUT,))
+    return daiquiri.getLogger()
 
 
 def is_compressed(file_name, setting):
@@ -86,7 +84,7 @@ def create_folder(folder_path, logger):
                 logger.error(traceback.print_exc())
                 print('Folder deletion failed, retrying...')
         else:
-            logging.error("Can't remove folder: {}".format(folder_path))
+            logger.error("Can't remove folder: {}".format(folder_path))
             return False
 
     return True
@@ -168,27 +166,26 @@ def folder_empty(folder_path):
 
 
 def load_settings(is_test=False):
-    settings_folder = 'settings'
+    configs = dict(PROJECT_NAME='tvsort_sl')
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    settings_folder = '{}\{}\settings'.format(base_dir, configs.get('PROJECT_NAME'))
     conf_files = ['conf.yml', 'local.yml']
     if is_test:
         conf_files.append('test.yml')
 
-    configs = dict()
-
     for file_name in conf_files:
         configs.update(yaml.load(open('{}\{}'.format(settings_folder, file_name))))
 
-    return build_settings(configs)
+    return build_settings(base_dir, configs)
 
 
-def build_settings(configs):
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+def build_settings(base_dir, configs):
     # This should be overwrite by prod OR test settings
     configs['TV_PATH']       = '{}\\TVShows'.format(configs['BASE_DRIVE'])
     configs['MOVIES_PATH']   = '{}\\Movies'.format(configs['BASE_DRIVE'])
     configs['UNSORTED_PATH'] = '{}\\Unsortted'.format(configs['BASE_DRIVE'])
     configs['DUMMY_PATH']    = '{}\\Dummy'.format(configs['BASE_DRIVE'])
-    configs['LOG_PATH']      = '{}\\log'.format(base_dir)
+    configs['LOG_PATH']      = '{}\\logs'.format(base_dir)
 
     configs['TEST_FILES']    = '{}\\tvsort_sl\\test_files'.format(base_dir)
     # This folder should have any files init
@@ -197,7 +194,6 @@ def build_settings(configs):
     configs['DUMMY_FILE_PATH']      = '{}\{}'.format(configs['TV_PATH'], configs['DUMMY_FILE_NAME'])
     configs['TEST_FILE_PATH']       = '{}\{}'.format(configs['UNSORTED_PATH'], 'test.txt')
     configs['TEST_FILE_PATH_IN_TV'] = '{}\{}'.format(configs['TV_PATH'], 'test.txt')
-    configs['LOG_FILE_PATH']        = '{}\{}'.format(base_dir, 'tvsort.log')
     configs['TEST_ZIP_name']        = 'zip_test.zip'
 
     return configs

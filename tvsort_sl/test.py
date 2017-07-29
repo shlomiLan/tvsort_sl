@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+import logging
 import unittest
 
 from guessit import guessit
@@ -10,7 +11,7 @@ import utils
 
 class TvSortTest(unittest.TestCase):
     settings = utils.load_settings(is_test=True)
-    logger = utils.create_logger(settings['LOG_FILE_PATH'])
+    logger = utils.create_logger(settings['LOG_PATH'], 'tests', level=logging.FATAL)
 
     def setUp(self):
         utils.create_folder(self.settings.get('TV_PATH'), self.logger)
@@ -169,7 +170,6 @@ class TvSortTest(unittest.TestCase):
     def test_copy_file_fail(self):
         test_file_path = self.settings.get('TEST_FILE_PATH')
         new_path = self.settings.get('TV_PATH')
-        new_test_file_path = '{}\{}'.format(new_path, utils.get_file_name(test_file_path))
         self.assertFalse(utils.copy_file(test_file_path, new_path, self.logger))
 
     def test_get_folder_name_from_path(self):
