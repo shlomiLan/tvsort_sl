@@ -114,6 +114,13 @@ class TvSortTest(unittest.TestCase):
         self.assertTrue(utils.delete_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger))
         utils.create_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger)
 
+    def test_create_folder(self):
+        utils.delete_folder(self.tv_sort.settings.get('DUMMY_PATH'), self.tv_sort.logger)
+        self.assertTrue(utils.create_folder(self.tv_sort.settings.get('DUMMY_PATH'), self.tv_sort.logger))
+
+    def test_create_folder_that_already_exists(self):
+        self.assertTrue(utils.create_folder(self.tv_sort.settings.get('DUMMY_PATH'), self.tv_sort.logger))
+
     def test_empty_folder(self):
         folder_path = self.tv_sort.settings.get('DUMMY_PATH')
         self.assertTrue(utils.folder_empty(folder_path))
