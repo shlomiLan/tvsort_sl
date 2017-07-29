@@ -1,54 +1,53 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-import logging
 import unittest
 
 from guessit import guessit
 
 import utils
+from tvsort_sl import TvSort
 
 
 class TvSortTest(unittest.TestCase):
-    settings = utils.load_settings(is_test=True)
-    logger = utils.create_logger(settings['LOG_PATH'], 'tests', level=logging.FATAL)
+    tv_sort = TvSort(is_test=True)
 
     def setUp(self):
-        utils.create_folder(self.settings.get('TV_PATH'), self.logger)
-        utils.create_folder(self.settings.get('DUMMY_PATH'), self.logger)
-        utils.create_folder(self.settings.get('MOVIES_PATH'), self.logger)
-        utils.create_folder(self.settings.get('UNSORTED_PATH'), self.logger)
+        utils.create_folder(self.tv_sort.settings.get('TV_PATH'), self.tv_sort.logger)
+        utils.create_folder(self.tv_sort.settings.get('DUMMY_PATH'), self.tv_sort.logger)
+        utils.create_folder(self.tv_sort.settings.get('MOVIES_PATH'), self.tv_sort.logger)
+        utils.create_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger)
 
     def tearDown(self):
-        utils.delete_folder(self.settings.get('TV_PATH'), self.logger)
-        utils.delete_folder(self.settings.get('DUMMY_PATH'), self.logger)
-        utils.delete_folder(self.settings.get('MOVIES_PATH'), self.logger)
-        utils.delete_folder(self.settings.get('UNSORTED_PATH'), self.logger)
+        utils.delete_folder(self.tv_sort.settings.get('TV_PATH'), self.tv_sort.logger)
+        utils.delete_folder(self.tv_sort.settings.get('DUMMY_PATH'), self.tv_sort.logger)
+        utils.delete_folder(self.tv_sort.settings.get('MOVIES_PATH'), self.tv_sort.logger)
+        utils.delete_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger)
 
     def test_main(self):
-        test_file_name = self.settings.get('TEST_ZIP_name')
-        test_file_path = '{}\{}'.format(self.settings.get('TEST_FILES'), test_file_name)
-        new_test_file_folder = self.settings.get('UNSORTED_PATH')
+        test_file_name = self.tv_sort.settings.get('TEST_ZIP_name')
+        test_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), test_file_name)
+        new_test_file_folder = self.tv_sort.settings.get('UNSORTED_PATH')
         new_test_file_path = '{}\{}'.format(new_test_file_folder, test_file_name)
-        utils.copy_file(test_file_path, new_test_file_folder, self.logger, move_file=False)
+        utils.copy_file(test_file_path, new_test_file_folder, self.tv_sort.logger, move_file=False)
         # self.assertTrue(utils.run())
-        utils.delete_file(new_test_file_path, self.logger)
+        utils.delete_file(new_test_file_path, self.tv_sort.logger)
 
     def test_is_file_exists(self):
-        file_path = self.settings.get('TEST_FILE_PATH')
+        file_path = self.tv_sort.settings.get('TEST_FILE_PATH')
         self.assertFalse(utils.is_file_exists(file_path))
         utils.create_file(file_path)
         self.assertTrue(utils.is_file_exists(file_path))
-        utils.delete_file(file_path, self.logger)
+        utils.delete_file(file_path, self.tv_sort.logger)
 
     def test_process_not_running(self):
-        self.assertFalse(utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')))
+        self.assertFalse(utils.is_process_already_running(self.tv_sort.settings.get('DUMMY_FILE_PATH')))
 
     def test_process_is_running(self):
-        dummy_file_path = self.settings.get('DUMMY_FILE_PATH')
+        dummy_file_path = self.tv_sort.settings.get('DUMMY_FILE_PATH')
         utils.create_file(dummy_file_path)
-        self.assertTrue(utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')))
-        utils.delete_file(dummy_file_path, self.logger)
+        self.assertTrue(utils.is_process_already_running(self.tv_sort.settings.get('DUMMY_FILE_PATH')))
+        utils.delete_file(dummy_file_path, self.tv_sort.logger)
 
     def test_transform_to_path_name(self):
         original_text = 'This is a string with space.s and dots.'
@@ -76,23 +75,23 @@ class TvSortTest(unittest.TestCase):
 
     def test_compressed_file(self):
         file_name = 'test.zip'
-        self.assertTrue(utils.is_compressed(file_name, self.settings))
+        self.assertTrue(utils.is_compressed(file_name, self.tv_sort.settings))
 
     def test_not_compressed_file(self):
         file_name = 'test.avi'
-        self.assertFalse(utils.is_compressed(file_name, self.settings))
+        self.assertFalse(utils.is_compressed(file_name, self.tv_sort.settings))
 
     def test_file_in_ext_list(self):
-        self.assertTrue(utils.is_file_ext_in_list('zip', self.settings.get('COMPRESS_EXTS')))
+        self.assertTrue(utils.is_file_ext_in_list('zip', self.tv_sort.settings.get('COMPRESS_EXTS')))
 
     def test_file_not_in_ext_list(self):
-        self.assertFalse(utils.is_file_ext_in_list('avi', self.settings.get('COMPRESS_EXTS')))
+        self.assertFalse(utils.is_file_ext_in_list('avi', self.tv_sort.settings.get('COMPRESS_EXTS')))
 
     def test_garbage_file(self):
-        self.assertFalse(utils.is_garbage_file('test.avi', self.settings))
+        self.assertFalse(utils.is_garbage_file('test.avi', self.tv_sort.settings))
 
     def test_media_file(self):
-        self.assertTrue(utils.is_media('test.avi', self.settings))
+        self.assertTrue(utils.is_media('test.avi', self.tv_sort.settings))
 
     def test_show_name(self):
         guess = guessit(str('Anger.Management.S01E01.720p.HDTV.x264-IMMERSE.mkv'))
@@ -100,28 +99,28 @@ class TvSortTest(unittest.TestCase):
         self.assertEquals(show_name, 'Anger Management')
 
     def test_folder_exist(self):
-        folder_path = self.settings.get('FAKE_PATH')
+        folder_path = self.tv_sort.settings.get('FAKE_PATH')
         self.assertFalse(utils.is_folder_exists(folder_path))
-        self.assertFalse(utils.delete_folder(folder_path, self.logger))
-        folder_path = self.settings.get('TV_PATH')
+        self.assertFalse(utils.delete_folder(folder_path, self.tv_sort.logger))
+        folder_path = self.tv_sort.settings.get('TV_PATH')
         self.assertTrue(utils.is_folder_exists(folder_path))
 
     def test_delete_folder(self):
-        self.assertTrue(utils.delete_folder(self.settings.get('UNSORTED_PATH'), self.logger))
-        utils.create_folder(self.settings.get('UNSORTED_PATH'), self.logger)
+        self.assertTrue(utils.delete_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger))
+        utils.create_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger)
 
     def test_empty_folder(self):
-        folder_path = self.settings.get('DUMMY_PATH')
+        folder_path = self.tv_sort.settings.get('DUMMY_PATH')
         self.assertTrue(utils.folder_empty(folder_path))
 
     def test_not_empty_folder(self):
         file_name = 'dummy1.txt'
-        folder_path = self.settings.get('DUMMY_PATH')
+        folder_path = self.tv_sort.settings.get('DUMMY_PATH')
         file_path = '{}\{}'.format(folder_path, file_name)
         utils.create_file(file_path)
         self.assertFalse(utils.folder_empty(folder_path))
-        self.assertFalse(utils.delete_folder(folder_path, self.logger))
-        utils.delete_file(file_path, self.logger)
+        self.assertFalse(utils.delete_folder(folder_path, self.tv_sort.logger))
+        utils.delete_file(file_path, self.tv_sort.logger)
 
     def test_wrong_series_name(self):
         guess = guessit(str('House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'))
@@ -140,38 +139,38 @@ class TvSortTest(unittest.TestCase):
         self.assertEquals('mkv', file_ext)
 
     def test_delete_file(self):
-        dummy_file_path = self.settings.get('DUMMY_FILE_PATH')
+        dummy_file_path = self.tv_sort.settings.get('DUMMY_FILE_PATH')
         utils.create_file(dummy_file_path)
-        self.assertTrue(utils.delete_file(dummy_file_path, self.logger))
+        self.assertTrue(utils.delete_file(dummy_file_path, self.tv_sort.logger))
 
     def test_delete_file_fail(self):
-        dummy_file_path = self.settings.get('DUMMY_FILE_PATH')
-        self.assertFalse(utils.delete_file(dummy_file_path, self.logger))
+        dummy_file_path = self.tv_sort.settings.get('DUMMY_FILE_PATH')
+        self.assertFalse(utils.delete_file(dummy_file_path, self.tv_sort.logger))
 
     def test_move_file(self):
-        test_file_path = self.settings.get('TEST_FILE_PATH')
+        test_file_path = self.tv_sort.settings.get('TEST_FILE_PATH')
         utils.create_file(test_file_path)
-        new_path = self.settings.get('TV_PATH')
+        new_path = self.tv_sort.settings.get('TV_PATH')
         new_test_file_path = '{}\{}'.format(new_path, utils.get_file_name(test_file_path))
-        self.assertTrue(utils.copy_file(test_file_path, new_path, self.logger))
+        self.assertTrue(utils.copy_file(test_file_path, new_path, self.tv_sort.logger))
         # Clean-up
-        utils.delete_file(new_test_file_path, self.logger)
+        utils.delete_file(new_test_file_path, self.tv_sort.logger)
 
     def test_copy_file(self):
-        test_file_path = self.settings.get('TEST_FILE_PATH')
+        test_file_path = self.tv_sort.settings.get('TEST_FILE_PATH')
         utils.create_file(test_file_path)
-        new_path = self.settings.get('TV_PATH')
+        new_path = self.tv_sort.settings.get('TV_PATH')
         new_test_file_path = '{}\{}'.format(new_path, utils.get_file_name(test_file_path))
-        self.assertTrue(utils.copy_file(test_file_path, new_path, self.logger, move_file=False))
+        self.assertTrue(utils.copy_file(test_file_path, new_path, self.tv_sort.logger, move_file=False))
         # Delete both files
-        utils.delete_file(test_file_path, self.logger)
-        utils.delete_file(new_test_file_path, self.logger)
+        utils.delete_file(test_file_path, self.tv_sort.logger)
+        utils.delete_file(new_test_file_path, self.tv_sort.logger)
 
     def test_copy_file_fail(self):
-        test_file_path = self.settings.get('TEST_FILE_PATH')
-        new_path = self.settings.get('TV_PATH')
-        self.assertFalse(utils.copy_file(test_file_path, new_path, self.logger))
+        test_file_path = self.tv_sort.settings.get('TEST_FILE_PATH')
+        new_path = self.tv_sort.settings.get('TV_PATH')
+        self.assertFalse(utils.copy_file(test_file_path, new_path, self.tv_sort.logger))
 
     def test_get_folder_name_from_path(self):
-        folder_path = utils.get_folder_path_from_file_path(self.settings.get('DUMMY_FILE_PATH'))
-        self.assertEquals(self.settings.get('TV_PATH'), folder_path)
+        folder_path = utils.get_folder_path_from_file_path(self.tv_sort.settings.get('DUMMY_FILE_PATH'))
+        self.assertEquals(self.tv_sort.settings.get('TV_PATH'), folder_path)

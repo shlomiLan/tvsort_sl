@@ -13,11 +13,20 @@ import utils
 
 
 class TvSort(object):
-    settings = utils.load_settings()
     is_any_error = False
-    path = settings.get('UNSORTED_PATH')
-    dummy_file_path = settings.get('DUMMY_FILE_PATH')
-    logger = utils.create_logger(settings['LOG_PATH'], settings.get('PROJECT_NAME'))
+
+    def __init__(self, is_test=False):
+        self.settings = utils.load_settings(is_test=is_test)
+
+        if self.check_project_setup():
+            self.logger = utils.create_logger(self.settings['LOG_PATH'], self.settings.get('PROJECT_NAME'))
+
+    def check_project_setup(self):
+        log_folder_path = self.settings.get('LOG_PATH')
+        if not utils.is_folder_exists(log_folder_path):
+            raise Exception('{} folder in missing'.format(log_folder_path))
+
+        return True
 
     def run(self):
         if not utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')):
