@@ -1,6 +1,5 @@
 .idea
 dist
-**log
 tvsort_sl/settings.py
 
 *.py[co]
@@ -8,3 +7,5 @@ tvsort_sl/settings.py
 # Unit test / coverage reports
 .coverage
 
+/tvsort_sl/settings/local.yml
+logs/
