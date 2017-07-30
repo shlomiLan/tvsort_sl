@@ -50,11 +50,21 @@ def get_folder_path_from_file_path(file_path):
 def get_files(path):
     files = []
 
-    for root, dirs, walk_files in os.walk(path):
+    for root, _, walk_files in os.walk(path):
         for f in walk_files:
             files.append(os.path.join(root, f))
 
     return sorted(files)
+
+
+def get_folders(path):
+    folders = []
+
+    for root, dirs, _ in os.walk(path):
+        for d in dirs:
+            folders.append(os.path.join(root, d))
+
+    return sorted(folders)
 
 
 def is_tv_show(guess):
@@ -91,8 +101,11 @@ def create_folder(folder_path, logger):
     return True
 
 
-def delete_folder(folder_path, logger):
+def delete_folder(folder_path, logger, force=False):
     try:
+        if force:
+            clean_folder(folder_path, logger)
+
         if folder_empty(folder_path):
             os.rmdir(folder_path)
             return True
@@ -102,6 +115,14 @@ def delete_folder(folder_path, logger):
     except Exception as e:
         logger.error("Folder can't be deleted, Unexpected error: {}".format(e))
         return False
+
+
+def clean_folder(folder_path, logger):
+    for file_path in get_files(folder_path):
+        delete_file(file_path, logger)
+
+    for sub_folder in get_folders(folder_path):
+        delete_folder(sub_folder, logger)
 
 
 def is_process_already_running(file_path):
@@ -203,6 +224,9 @@ def build_settings(base_dir, configs):
     configs['DUMMY_FILE_PATH']      = '{}\{}'.format(configs['TV_PATH'], configs['DUMMY_FILE_NAME'])
     configs['TEST_FILE_PATH']       = '{}\{}'.format(configs['UNSORTED_PATH'], 'test.txt')
     configs['TEST_FILE_PATH_IN_TV'] = '{}\{}'.format(configs['TV_PATH'], 'test.txt')
-    configs['TEST_ZIP_name']        = 'zip_test.zip'
+
+    # test files
+    configs['TEST_ZIP_NAME'] = 'zip_test.zip'
+    configs['TEST_TV_NAME']  = 'Mr.Robot.S01E01.720p.BluRay.x264.ShAaNiG.mkv'
 
     return configs
