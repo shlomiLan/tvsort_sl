@@ -6,6 +6,7 @@ import re
 import traceback
 
 import daiquiri as daiquiri
+import requests
 import winshell
 import os
 
@@ -177,6 +178,14 @@ def load_settings(is_test=False):
         configs.update(yaml.load(open('{}\{}'.format(settings_folder, file_name))))
 
     return build_settings(base_dir, configs)
+
+
+def update_xbmc(kodi_ip, logger):
+    logger.info('Update XBMC')
+
+    url = '{}/jsonrpc'.format(kodi_ip)
+    data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
+    return requests.post(url, json=data)
 
 
 def build_settings(base_dir, configs):

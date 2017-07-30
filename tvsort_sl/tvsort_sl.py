@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 import traceback
 
-import requests
-
 from guessit import guessit
 import os
 import patoolib
@@ -68,11 +66,7 @@ class TvSort(object):
                         os.rmdir(folder_path)
 
                 # Update XBMC
-                self.logger.info('Update XBMC')
-
-                url = '{}/jsonrpc'.format(self.settings.get('KODI_IP'))
-                data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
-                requests.post(url, json=data)
+                utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)
 
             except Exception as e:
                 utils.is_any_error = True
