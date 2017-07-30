@@ -40,10 +40,10 @@ class TvSort(object):
                 for file_path in utils.get_files(self.settings.get('UNSORTED_PATH')):
                     self.logger.info('Checking file: {}'.format(file_path))
 
-                    if utils.is_garbage_file(file_path, self.logger):
+                    if utils.is_garbage_file(file_path, self.settings):
                         self.logger.info('Removing file: {}'.format(file_path))
                         utils.delete_file(file_path, self.logger)
-                    elif utils.is_media(file_path, self.logger):
+                    elif utils.is_media(file_path, self.settings):
                         guess = guessit(file_path)
                         new_path = None
                         if utils.is_tv_show(guess):
