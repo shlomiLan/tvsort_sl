@@ -53,8 +53,9 @@ class TvSort(object):
                             utils.add_missing_country(guess, show_name)
                             if guess.get('country'):
                                 show_name += '.{}'.format(guess.get('country'))
-                                utils.create_folder(show_name, self.logger)
+
                             new_path = '{}\{}'.format(base, show_name)
+                            utils.create_folder(new_path, self.logger)
 
                         elif utils.is_movie(guess):
                             new_path = self.settings.get('MOVIES_PATH')
