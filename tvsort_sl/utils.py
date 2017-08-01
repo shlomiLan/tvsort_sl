@@ -228,5 +228,6 @@ def build_settings(base_dir, configs):
     # test files
     configs['TEST_ZIP_NAME'] = 'zip_test.zip'
     configs['TEST_TV_NAME']  = 'Mr.Robot.S01E01.720p.BluRay.x264.ShAaNiG.mkv'
+    configs['TEST_GARBAGE_NAME']  = 'test.nfo'
 
     return configs

@@ -21,21 +21,35 @@ class TvSortTest(unittest.TestCase):
         utils.create_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger)
 
     def tearDown(self):
-        utils.delete_folder(self.tv_sort.settings.get('TV_PATH'), self.tv_sort.logger)
-        utils.delete_folder(self.tv_sort.settings.get('DUMMY_PATH'), self.tv_sort.logger)
-        utils.delete_folder(self.tv_sort.settings.get('MOVIES_PATH'), self.tv_sort.logger)
-        utils.delete_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger)
+        utils.delete_folder(self.tv_sort.settings.get('TV_PATH'), self.tv_sort.logger, force=True)
+        utils.delete_folder(self.tv_sort.settings.get('DUMMY_PATH'), self.tv_sort.logger, force=True)
+        utils.delete_folder(self.tv_sort.settings.get('MOVIES_PATH'), self.tv_sort.logger, force=True)
+        utils.delete_folder(self.tv_sort.settings.get('UNSORTED_PATH'), self.tv_sort.logger, force=True)
 
-    def test_main(self):
-        zip_file_name = self.tv_sort.settings.get('TEST_ZIP_name')
+    @mock.patch('requests.post', return_value={'status_code': 200})
+    def test_main(self, _):
+        zip_file_name = self.tv_sort.settings.get('TEST_ZIP_NAME')
         zip_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), zip_file_name)
-        new_zip_file_folder = self.tv_sort.settings.get('UNSORTED_PATH')
-        new_test_file_path = '{}\{}'.format(new_zip_file_folder, zip_file_name)
-        utils.copy_file(zip_file_path, new_zip_file_folder, self.tv_sort.logger, move_file=False)
+        new_files_folder = self.tv_sort.settings.get('UNSORTED_PATH')
+        utils.copy_file(zip_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
+
+        garbage_file = self.tv_sort.settings.get('TEST_GARBAGE_NAME')
+        garbage_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), garbage_file)
+        new_files_folder = self.tv_sort.settings.get('UNSORTED_PATH')
+        utils.copy_file(garbage_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
+
+        tv_file_name = self.tv_sort.settings.get('TEST_TV_NAME')
+        tv_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), tv_file_name)
+        utils.copy_file(tv_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
+
         self.assertTrue(self.tv_sort.run())
 
+    @mock.patch('requests.post', return_value={'status_code': 200})
+    def test_update_xbmc(self, _):
+        utils.update_xbmc(self.tv_sort.settings.get('KODI_IP'), self.tv_sort.logger)
+
     @mock.patch('tvsort_sl.utils.is_folder_exists', return_value=False)
-    def test_no_logs_folder(self, is_folder_exists_function):
+    def test_no_logs_folder(self, _):
         self.assertRaises(Exception, self.tv_sort.check_project_setup)
 
     def test_is_file_exists(self):
