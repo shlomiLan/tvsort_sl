@@ -64,7 +64,8 @@ class TvSort(object):
 
                     folder_path = utils.get_folder_path_from_file_path(file_path)
                     if utils.folder_empty(folder_path):
-                        os.rmdir(folder_path)
+                        if not self.settings.get('UNSORTED_PATH'):
+                            os.rmdir(folder_path)
 
                 # Update XBMC
                 utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)

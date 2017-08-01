@@ -148,7 +148,7 @@ def remove_wrong_country_data(guess):
 
 
 def add_missing_country(guess, show_name):
-    if show_name.lower() == 'house of cards':
+    if show_name.lower() == 'house.of.cards':
         if not guess.get('country'):
             guess['country'] = 'US'
 
@@ -227,7 +227,9 @@ def build_settings(base_dir, configs):
 
     # test files
     configs['TEST_ZIP_NAME'] = 'zip_test.zip'
-    configs['TEST_TV_NAME']  = 'Mr.Robot.S01E01.720p.BluRay.x264.ShAaNiG.mkv'
+    configs['TEST_TV_NAME']  = 'House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'
+    configs['TEST_MOVIE']  = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv'
     configs['TEST_GARBAGE_NAME']  = 'test.nfo'
+    configs['TEST_FOLDER_NAME'] = 'test.nfo'
 
     return configs

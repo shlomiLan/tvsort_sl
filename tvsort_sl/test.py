@@ -28,21 +28,36 @@ class TvSortTest(unittest.TestCase):
 
     @mock.patch('requests.post', return_value={'status_code': 200})
     def test_main(self, _):
+        new_files_folder = self.tv_sort.settings.get('UNSORTED_PATH')
+
         zip_file_name = self.tv_sort.settings.get('TEST_ZIP_NAME')
         zip_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), zip_file_name)
-        new_files_folder = self.tv_sort.settings.get('UNSORTED_PATH')
         utils.copy_file(zip_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
         garbage_file = self.tv_sort.settings.get('TEST_GARBAGE_NAME')
         garbage_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), garbage_file)
-        new_files_folder = self.tv_sort.settings.get('UNSORTED_PATH')
         utils.copy_file(garbage_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
         tv_file_name = self.tv_sort.settings.get('TEST_TV_NAME')
         tv_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), tv_file_name)
         utils.copy_file(tv_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
+        movie_file_name = self.tv_sort.settings.get('TEST_MOVIE')
+        movie_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), movie_file_name)
+        utils.copy_file(movie_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
+
+        # test_folder_name = self.tv_sort.settings.get('TEST_FOLDER_NAME')
+        # test_folder_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), test_folder_name)
+        # utils.copy_file(test_folder_path, new_files_folder, self.tv_sort.logger, move_file=False)
+
         self.assertTrue(self.tv_sort.run())
+
+    @mock.patch('requests.post', return_value={'status_code': 200})
+    def test_main_process_running(self, _):
+        dummy_file_path = self.tv_sort.settings.get('DUMMY_FILE_PATH')
+        utils.create_file(dummy_file_path)
+        self.assertFalse(self.tv_sort.run())
+        utils.delete_file(dummy_file_path, self.tv_sort.logger)
 
     @mock.patch('requests.post', return_value={'status_code': 200})
     def test_update_xbmc(self, _):
@@ -58,15 +73,6 @@ class TvSortTest(unittest.TestCase):
         utils.create_file(file_path)
         self.assertTrue(utils.is_file_exists(file_path))
         utils.delete_file(file_path, self.tv_sort.logger)
-
-    def test_process_not_running(self):
-        self.assertFalse(utils.is_process_already_running(self.tv_sort.settings.get('DUMMY_FILE_PATH')))
-
-    def test_process_is_running(self):
-        dummy_file_path = self.tv_sort.settings.get('DUMMY_FILE_PATH')
-        utils.create_file(dummy_file_path)
-        self.assertTrue(utils.is_process_already_running(self.tv_sort.settings.get('DUMMY_FILE_PATH')))
-        utils.delete_file(dummy_file_path, self.tv_sort.logger)
 
     def test_transform_to_path_name(self):
         original_text = 'This is a string with space.s and dots.'
@@ -150,7 +156,7 @@ class TvSortTest(unittest.TestCase):
 
     def test_wrong_series_name(self):
         guess = guessit(str('House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'))
-        show_name = utils.get_show_name(guess)
+        show_name = utils.transform_to_path_name(utils.get_show_name(guess))
         utils.add_missing_country(guess, show_name)
         self.assertEquals(guess.get('country'), 'US')
 
