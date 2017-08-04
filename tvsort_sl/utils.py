@@ -168,7 +168,6 @@ def delete_file(file_path, logger, no_confirm=True):
 
 
 def copy_file(old_path, new_path, logger, move_file=True, no_confirm=True):
-    # TODO: remove the 'new_file_path' parameter
     action = 'Moving' if move_file else 'Copying'
     logger.info('{} file: FROM {} TO {}'.format(action, old_path, new_path))
 
