@@ -67,6 +67,9 @@ class TvSort(object):
                         if not self.settings.get('UNSORTED_PATH'):
                             os.rmdir(folder_path)
 
+                # download subtitles
+                utils.download_subtitles(tv_sort.settings)
+
                 # Update XBMC
                 utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)
 

@@ -11,6 +11,10 @@ import winshell
 import os
 
 import yaml
+from datetime import timedelta
+
+from babelfish import Language
+from subliminal import scan_videos, download_best_subtitles, save_subtitles, region, Video
 
 
 def create_logger(log_path, log_name, log_level=logging.INFO):
@@ -232,3 +236,27 @@ def build_settings(base_dir, configs):
     configs['TEST_FOLDER_NAME'] = 'test.nfo'
 
     return configs
+
+
+def download_subtitles(settings):
+    # configure the cache
+    region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
+
+    # scan for videos newer than 2 weeks and their existing subtitles in a folder
+    videos = scan_videos(settings.get('TV_PATH'), age=timedelta(days=3))
+
+    new_videos = []
+    # new_videos = [Video.fromname('The.Big.Bang.Theory.S05E18.HDTV.x264-LOL.mp4')]
+    for x in videos:
+        if x.episode == 4:
+            new_videos.append(x)
+
+    # download best subtitles
+    subtitles = download_best_subtitles(new_videos, set([Language('heb'), Language('eng')]))
+                                        # providers=['subscenter', 'podnapisi', 'thesubdb'])
+    #
+    # # # save them to disk, next to the video
+    for v in new_videos:
+        save_subtitles(v, subtitles[v])
+    #
+
