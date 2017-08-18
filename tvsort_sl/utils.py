@@ -7,9 +7,9 @@ import traceback
 
 import daiquiri as daiquiri
 import requests
-import winshell
 import os
 
+import shutil
 import yaml
 
 
@@ -160,24 +160,24 @@ def create_file(file_path):
     dummy_file.close()
 
 
-def delete_file(file_path, logger, no_confirm=True):
+def delete_file(file_path, logger):
     try:
-        winshell.delete_file(file_path, no_confirm=no_confirm)
+        os.remove(file_path)
         return True
     except Exception as e:
         logger.error("Unexpected error: {}".format(e))
         return False
 
 
-def copy_file(old_path, new_path, logger, move_file=True, no_confirm=True):
+def copy_file(old_path, new_path, logger, move_file=True):
     action = 'Moving' if move_file else 'Copying'
     logger.info('{} file: FROM {} TO {}'.format(action, old_path, new_path))
 
     try:
         if move_file:
-            winshell.move_file(old_path, new_path, no_confirm=no_confirm)
+            shutil.move(old_path, new_path)
         else:
-            winshell.copy_file(old_path, new_path, no_confirm=no_confirm)
+            shutil.copy(old_path, new_path)
         return True
     except Exception as e:
         logger.error("Unexpected error: {}".format(e))
