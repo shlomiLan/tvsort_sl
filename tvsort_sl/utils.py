@@ -17,7 +17,6 @@ def create_logger(log_path, log_name, log_level=logging.INFO):
     daiquiri.setup(outputs=(daiquiri.output.File(directory=log_path, program_name=log_name), daiquiri.output.STDOUT,))
 
     logger = daiquiri.getLogger(program_name=log_name)
-    logger.setLevel(log_level)
     return logger
 
 
