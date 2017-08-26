@@ -105,9 +105,11 @@ def create_folder(folder_path, logger):
 def delete_folder(folder_path, logger, force=False):
     try:
         if force:
+            logger.info('Cleaning folder: {}'.format(folder_path))
             clean_folder(folder_path, logger)
 
         if folder_empty(folder_path):
+            logger.info('Deleting folder: {}'.format(folder_path))
             os.rmdir(folder_path)
             return True
         else:
