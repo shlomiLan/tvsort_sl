@@ -6,4 +6,4 @@ DUMMY_FILE_NAME: 'dummy.txt'
 # extensions
 COMPRESS_EXTS: ['r00', 'rar', 'zip']
 MEDIA_EXTS: ['mkv', 'avi', 'mp4', 'wemb', 'ogg', 'mov', 'wmv', 'm4v', 'm4p', 'mpg', 'mpeg', 'ogm']
-GARBAGE_EXTS: ['nfo', 'txt', 'db', 'pdf', 'jpg', 'png', 'srt']
+GARBAGE_EXTS: ['nfo', 'txt', 'db', 'pdf', 'jpg', 'png', 'srt', 'dat']
