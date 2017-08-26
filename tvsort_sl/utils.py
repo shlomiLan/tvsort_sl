@@ -16,8 +16,8 @@ import yaml
 def create_logger(log_path, log_name, log_level=logging.INFO):
     daiquiri.setup(outputs=(daiquiri.output.File(directory=log_path, program_name=log_name), daiquiri.output.STDOUT,))
 
-    logger = daiquiri.getLogger(program_name=log_name)
-    return logger
+    daiquiri.getLogger(program_name=log_name).logger.level = log_level
+    return daiquiri.getLogger(program_name=log_name, log_level=log_level)
 
 
 def is_compressed(file_name, setting):
