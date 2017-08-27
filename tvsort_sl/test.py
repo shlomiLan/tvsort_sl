@@ -30,25 +30,28 @@ class TvSortTest(unittest.TestCase):
     def test_main(self, _):
         new_files_folder = self.tv_sort.settings.get('UNSORTED_PATH')
 
+        # Add ZIP file
         zip_file_name = self.tv_sort.settings.get('TEST_ZIP_NAME')
         zip_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), zip_file_name)
         utils.copy_file(zip_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
+        # Add garbage file
         garbage_file = self.tv_sort.settings.get('TEST_GARBAGE_NAME')
         garbage_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), garbage_file)
         utils.copy_file(garbage_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
+        # Add tv-show file
         tv_file_name = self.tv_sort.settings.get('TEST_TV_NAME')
         tv_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), tv_file_name)
         utils.copy_file(tv_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
+        # Add movie file
         movie_file_name = self.tv_sort.settings.get('TEST_MOVIE')
         movie_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), movie_file_name)
         utils.copy_file(movie_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
-        # test_folder_name = self.tv_sort.settings.get('TEST_FOLDER_NAME')
-        # test_folder_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), test_folder_name)
-        # utils.copy_file(test_folder_path, new_files_folder, self.tv_sort.logger, move_file=False)
+        # create empty folder
+        utils.create_folder(self.tv_sort.settings.get('TEST_FOLDER_IN_UNSORTED'), self.tv_sort.logger)
 
         self.assertTrue(self.tv_sort.run())
 

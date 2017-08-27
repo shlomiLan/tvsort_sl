@@ -86,18 +86,7 @@ def is_folder_exists(file_path):
 
 def create_folder(folder_path, logger):
     if not os.path.exists(folder_path):
-        # retry to delete folder 10 times
-        for retry in range(10):
-            try:
-                os.makedirs(folder_path)
-                return True
-            except Exception as e:
-                logger.error(e)
-                logger.error(traceback.print_exc())
-                print('Folder deletion failed, retrying...')
-        else:
-            logger.error("Can't remove folder: {}".format(folder_path))
-            return False
+        os.makedirs(folder_path)
 
     return True
 
@@ -238,5 +227,6 @@ def build_settings(base_dir, configs):
     configs['TEST_MOVIE']  = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv'
     configs['TEST_GARBAGE_NAME']  = 'test.nfo'
     configs['TEST_FOLDER_NAME'] = 'test.nfo'
+    configs['TEST_FOLDER_IN_UNSORTED'] = '{}\{}'.format(configs['UNSORTED_PATH'], 'empty_folder')
 
     return configs
