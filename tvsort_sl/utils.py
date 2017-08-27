@@ -33,7 +33,7 @@ def is_garbage_file(file_name, setting):
 
 
 def is_file_ext_in_list(file_ext, ext_list):
-    return bool(file_ext in ext_list)
+    return bool(file_ext.lower() in ext_list)
 
 
 def get_file_ext(file_name):
