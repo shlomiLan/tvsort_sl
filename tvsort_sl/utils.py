@@ -2,8 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-import re
-import traceback
 
 import daiquiri as daiquiri
 import requests
@@ -129,7 +127,7 @@ def is_process_already_running(file_path):
 def transform_to_path_name(string):
     if isinstance(string, int):
         string = str(string)
-    string = re.sub(' ', '.', string)
+    string = string.replace(' ', '.')
     return '.'.join([str(x).capitalize() for x in string.split('.')])
 
 
