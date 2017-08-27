@@ -63,11 +63,11 @@ class TvSort(object):
                         utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
 
                     folder_path = utils.get_folder_path_from_file_path(file_path)
-                    utils.delete_folder(folder_path, self.logger)
+                    utils.delete_folder_if_empty(folder_path, self.logger)
 
                 # clean up
                 for folder_path in utils.get_folders(self.settings.get('UNSORTED_PATH')):
-                    utils.delete_folder(folder_path, self.logger)
+                    utils.delete_folder_if_empty(folder_path, self.logger)
 
                 # Update XBMC
                 utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)

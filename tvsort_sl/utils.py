@@ -120,6 +120,11 @@ def delete_folder(folder_path, logger, force=False):
         return False
 
 
+def delete_folder_if_empty(folder_path, logger):
+    if folder_empty(folder_path):
+        delete_folder(folder_path, logger)
+
+
 def clean_folder(folder_path, logger):
     for file_path in get_files(folder_path):
         delete_file(file_path, logger)
