@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import traceback
 
 from guessit import guessit
-import os
 import patoolib
 
 import utils
