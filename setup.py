@@ -1,14 +1,15 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-from distutils.core import setup
+from setuptools import setup
 
 
 setup(
     name='tvsort_sl',
     packages=['tvsort_sl'],
-    version='0.5',
+    version='0.8',
     description='Sort movies and TV-shows files',
+    long_description=open('README.rst').read(),
     author='Shlomi Lanton',
     author_email='shlomilanton@gmail.com',
     url='https://github.com/shlomiLan/tvsort_sl',
