@@ -18,7 +18,6 @@ install:
   - "venv\\Scripts\\activate"
   - "pip install -r requirements.txt"
   - "mkdir logs"
-  - "pip install codecov"
 test_script:
   - "cd tvsort_sl"
   - "coverage run -m unittest test"
