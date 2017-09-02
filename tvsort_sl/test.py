@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import os
 import unittest
 
 from guessit import guessit
@@ -32,22 +33,22 @@ class TvSortTest(unittest.TestCase):
 
         # Add ZIP file
         zip_file_name = self.tv_sort.settings.get('TEST_ZIP_NAME')
-        zip_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), zip_file_name)
+        zip_file_path = os.path.join(self.tv_sort.settings.get('TEST_FILES'), zip_file_name)
         utils.copy_file(zip_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
         # Add garbage file
         garbage_file = self.tv_sort.settings.get('TEST_GARBAGE_NAME')
-        garbage_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), garbage_file)
+        garbage_file_path = os.path.join(self.tv_sort.settings.get('TEST_FILES'), garbage_file)
         utils.copy_file(garbage_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
         # Add tv-show file
         tv_file_name = self.tv_sort.settings.get('TEST_TV_NAME')
-        tv_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), tv_file_name)
+        tv_file_path = os.path.join(self.tv_sort.settings.get('TEST_FILES'), tv_file_name)
         utils.copy_file(tv_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
         # Add movie file
         movie_file_name = self.tv_sort.settings.get('TEST_MOVIE')
-        movie_file_path = '{}\{}'.format(self.tv_sort.settings.get('TEST_FILES'), movie_file_name)
+        movie_file_path = os.path.join(self.tv_sort.settings.get('TEST_FILES'), movie_file_name)
         utils.copy_file(movie_file_path, new_files_folder, self.tv_sort.logger, move_file=False)
 
         # create empty folder
@@ -151,7 +152,7 @@ class TvSortTest(unittest.TestCase):
     def test_not_empty_folder(self):
         file_name = 'dummy1.txt'
         folder_path = self.tv_sort.settings.get('DUMMY_PATH')
-        file_path = '{}\{}'.format(folder_path, file_name)
+        file_path = os.path.join(folder_path, file_name)
         utils.create_file(file_path)
         self.assertFalse(utils.folder_empty(folder_path))
         self.assertFalse(utils.delete_folder(folder_path, self.tv_sort.logger))
@@ -186,7 +187,7 @@ class TvSortTest(unittest.TestCase):
         test_file_path = self.tv_sort.settings.get('TEST_FILE_PATH')
         utils.create_file(test_file_path)
         new_path = self.tv_sort.settings.get('TV_PATH')
-        new_test_file_path = '{}\{}'.format(new_path, utils.get_file_name(test_file_path))
+        new_test_file_path = os.path.join(new_path, utils.get_file_name(test_file_path))
         self.assertTrue(utils.copy_file(test_file_path, new_path, self.tv_sort.logger))
         # Clean-up
         utils.delete_file(new_test_file_path, self.tv_sort.logger)
@@ -195,7 +196,7 @@ class TvSortTest(unittest.TestCase):
         test_file_path = self.tv_sort.settings.get('TEST_FILE_PATH')
         utils.create_file(test_file_path)
         new_path = self.tv_sort.settings.get('TV_PATH')
-        new_test_file_path = '{}\{}'.format(new_path, utils.get_file_name(test_file_path))
+        new_test_file_path = os.path.join(new_path, utils.get_file_name(test_file_path))
         self.assertTrue(utils.copy_file(test_file_path, new_path, self.tv_sort.logger, move_file=False))
         # Delete both files
         utils.delete_file(test_file_path, self.tv_sort.logger)

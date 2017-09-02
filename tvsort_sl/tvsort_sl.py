@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+import os
 import traceback
 
 from guessit import guessit
@@ -53,7 +54,7 @@ class TvSort(object):
                             if guess.get('country'):
                                 show_name += '.{}'.format(guess.get('country'))
 
-                            new_path = '{}\{}'.format(base, show_name)
+                            new_path = os.path.join(base, show_name)
                             utils.create_folder(new_path, self.logger)
 
                         elif utils.is_movie(guess):

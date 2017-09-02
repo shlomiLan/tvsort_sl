@@ -184,13 +184,13 @@ def folder_empty(folder_path):
 def load_settings(is_test=False):
     configs = dict(PROJECT_NAME='tvsort_sl')
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    settings_folder = '{}\{}\settings'.format(base_dir, configs.get('PROJECT_NAME'))
+    settings_folder = os.path.join(base_dir, configs.get('PROJECT_NAME'), 'settings')
     conf_files = ['conf.yml', 'local.yml']
     if is_test:
         conf_files.append('test.yml')
 
     for file_name in conf_files:
-        configs.update(yaml.load(open('{}\{}'.format(settings_folder, file_name))))
+        configs.update(yaml.load(open(os.path.join(settings_folder, file_name))))
 
     return build_settings(base_dir, configs)
 
@@ -205,19 +205,19 @@ def update_xbmc(kodi_ip, logger):
 
 def build_settings(base_dir, configs):
     # This should be overwrite by prod OR test settings
-    configs['TV_PATH']       = '{}\\TVShows'.format(configs['BASE_DRIVE'])
-    configs['MOVIES_PATH']   = '{}\\Movies'.format(configs['BASE_DRIVE'])
-    configs['UNSORTED_PATH'] = '{}\\Unsortted'.format(configs['BASE_DRIVE'])
-    configs['DUMMY_PATH']    = '{}\\Dummy'.format(configs['BASE_DRIVE'])
-    configs['LOG_PATH']      = '{}\\logs'.format(base_dir)
+    configs['TV_PATH']       = os.path.join(configs['BASE_DRIVE'], 'TVShows')
+    configs['MOVIES_PATH']   = os.path.join(configs['BASE_DRIVE'], 'Movies')
+    configs['UNSORTED_PATH'] = os.path.join(configs['BASE_DRIVE'], 'Unsortted')
+    configs['DUMMY_PATH']    = os.path.join(configs['BASE_DRIVE'], 'Dummy')
+    configs['LOG_PATH']      = os.path.join(base_dir, 'logs')
 
-    configs['TEST_FILES']    = '{}\\tvsort_sl\\test_files'.format(base_dir)
+    configs['TEST_FILES']    = os.path.join('base_dir', 'tvsort_sl', 'test_files')
     # This folder should have any files init
-    configs['FAKE_PATH']     = '{}\\xxx'.format(configs['BASE_DRIVE'])
+    configs['FAKE_PATH']     = os.path.join(configs['BASE_DRIVE'], 'xxx')
 
-    configs['DUMMY_FILE_PATH']      = '{}\{}'.format(configs['TV_PATH'], configs['DUMMY_FILE_NAME'])
-    configs['TEST_FILE_PATH']       = '{}\{}'.format(configs['UNSORTED_PATH'], 'test.txt')
-    configs['TEST_FILE_PATH_IN_TV'] = '{}\{}'.format(configs['TV_PATH'], 'test.txt')
+    configs['DUMMY_FILE_PATH']      = os.path.join(configs['TV_PATH'], configs['DUMMY_FILE_NAME'])
+    configs['TEST_FILE_PATH']       = os.path.join(configs['UNSORTED_PATH'], 'test.txt')
+    configs['TEST_FILE_PATH_IN_TV'] = os.path.join(configs['TV_PATH'], 'test.txt')
 
     # test files
     configs['TEST_ZIP_NAME'] = 'zip_test.zip'
@@ -225,6 +225,6 @@ def build_settings(base_dir, configs):
     configs['TEST_MOVIE']  = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv'
     configs['TEST_GARBAGE_NAME']  = 'test.nfo'
     configs['TEST_FOLDER_NAME'] = 'test.nfo'
-    configs['TEST_FOLDER_IN_UNSORTED'] = '{}\{}'.format(configs['UNSORTED_PATH'], 'empty_folder')
+    configs['TEST_FOLDER_IN_UNSORTED'] = os.path.join(configs['UNSORTED_PATH'], 'empty_folder')
 
     return configs
