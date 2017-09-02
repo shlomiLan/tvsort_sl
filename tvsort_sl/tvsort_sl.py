@@ -1,9 +1,13 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
+import logging
+
+import daiquiri
 import os
 import traceback
 
+import yaml
 from guessit import guessit
 import patoolib
 
@@ -12,19 +16,18 @@ import utils
 
 class TvSort(object):
     is_any_error = False
+    project_name = 'tvsort_sl'
+    settings = dict(PROJECT_NAME=project_name)
+    logger = None
 
     def __init__(self, is_test=False, **kwargs):
-        self.settings = utils.load_settings(is_test=is_test)
+        self.base_dir, self.settings_folder = self.get_settings_folders()
+        self.load_base_setting()
 
         if self.check_project_setup():
-            self.logger = utils.create_logger(self.settings['LOG_PATH'], self.settings.get('PROJECT_NAME'), **kwargs)
+            self.load_additional_settings(is_test=is_test)
 
-    def check_project_setup(self):
-        log_folder_path = self.settings.get('LOG_PATH')
-        if not utils.is_folder_exists(log_folder_path):
-            raise Exception('{} folder in missing'.format(log_folder_path))
-
-        return True
+            self.create_logger(**kwargs)
 
     def run(self):
         if not utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')):
@@ -83,6 +86,84 @@ class TvSort(object):
         else:
             self.logger.info('Proses already running')
             return False
+
+    def get_settings_folders(self):
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        settings_folder = os.path.join(base_dir, self.project_name, 'settings')
+
+        return base_dir, settings_folder
+
+    def load_base_setting(self):
+        conf_files = self.get_settings_file(self.settings_folder)
+        self.update_settings_from_file(conf_files)
+
+        self.build_base_settings()
+
+    def get_settings_file(self, is_base=True, is_test=False):
+        if is_base:
+            return [os.path.join(self.settings_folder, 'conf.yml')]
+        else:
+            conf_files = [os.path.join(self.settings_folder, 'local.yml')]
+            if is_test:
+                conf_files.append(os.path.join(self.settings_folder, 'test.yml'))
+
+    def update_settings_from_file(self, conf_files):
+        for file_path in conf_files:
+            self.settings.update(yaml.load(open(file_path)))
+
+    def build_base_settings(self):
+        self.settings['LOG_PATH'] = os.path.join(self.base_dir, 'logs')
+
+    def load_additional_settings(self, is_test=False):
+        conf_files = self.get_settings_file(is_base=False, is_test=is_test)
+        self.update_settings_from_file(conf_files)
+
+    def build_settings(self):
+        # This should be overwrite by prod OR test settings
+        self.settings['TV_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'TVShows')
+        self.settings['MOVIES_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'Movies')
+        self.settings['UNSORTED_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'Unsortted')
+        self.settings['DUMMY_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'Dummy')
+
+        self.settings['TEST_FILES'] = os.path.join('base_dir', 'tvsort_sl', 'test_files')
+        # This folder should have any files init
+        self.settings['FAKE_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'xxx')
+
+        self.settings['DUMMY_FILE_PATH'] = os.path.join(self.settings.get('TV_PATH'),
+                                                        self.settings.get('DUMMY_FILE_NAME'))
+        self.settings['TEST_FILE_PATH'] = os.path.join(self.settings.get('UNSORTED_PATH'), 'test.txt')
+        self.settings['TEST_FILE_PATH_IN_TV'] = os.path.join(self.settings.get('TV_PATH'), 'test.txt')
+
+        # test files
+        self.settings['TEST_ZIP_NAME'] = 'zip_test.zip'
+        self.settings['TEST_TV_NAME'] = 'House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'
+        self.settings['TEST_MOVIE'] = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv'
+        self.settings['TEST_GARBAGE_NAME'] = 'test.nfo'
+        self.settings['TEST_FOLDER_NAME'] = 'test.nfo'
+        self.settings['TEST_FOLDER_IN_UNSORTED'] = os.path.join(self.settings.get('UNSORTED_PATH'), 'empty_folder')
+
+    def check_project_setup(self):
+        log_folder_path = self.settings.get('LOG_PATH')
+        base_config_file = self.get_settings_file()
+        # Logs folder exists
+        if not utils.is_folder_exists(log_folder_path):
+            raise Exception('{} folder in missing'.format(log_folder_path))
+
+        # Configs files exists
+        for file_path in base_config_file:
+            if not utils.is_file_exists(file_path):
+                raise Exception('Missing config file, you must have local.yml and test.yml in settings folder.'
+                                'Use files in settings/templates for reference')
+
+        return True
+
+    def create_logger(self, log_level=logging.INFO):
+        daiquiri.setup(outputs=(
+            daiquiri.output.File(directory=self.settings.get('LOG_PATH'),
+                                 program_name=self.project_name), daiquiri.output.STDOUT,))
+
+        daiquiri.getLogger(program_name=self.project_name).logger.level = log_level
+        self.logger = daiquiri.getLogger(program_name=self.project_name, log_level=log_level)
 
 
 if __name__ == "__main__":

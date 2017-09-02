@@ -1,21 +1,10 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-import logging
-
-import daiquiri as daiquiri
 import requests
 import os
 
 import shutil
-import yaml
-
-
-def create_logger(log_path, log_name, log_level=logging.INFO):
-    daiquiri.setup(outputs=(daiquiri.output.File(directory=log_path, program_name=log_name), daiquiri.output.STDOUT,))
-
-    daiquiri.getLogger(program_name=log_name).logger.level = log_level
-    return daiquiri.getLogger(program_name=log_name, log_level=log_level)
 
 
 def is_compressed(file_name, setting):
@@ -84,6 +73,7 @@ def is_folder_exists(file_path):
 
 def create_folder(folder_path, logger):
     if not os.path.exists(folder_path):
+        logger.info('Creating folder: {}'.format(folder_path))
         os.makedirs(folder_path)
 
     return True
@@ -181,50 +171,9 @@ def folder_empty(folder_path):
     return not bool(get_files(folder_path))
 
 
-def load_settings(is_test=False):
-    configs = dict(PROJECT_NAME='tvsort_sl')
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    settings_folder = os.path.join(base_dir, configs.get('PROJECT_NAME'), 'settings')
-    conf_files = ['conf.yml', 'local.yml']
-    if is_test:
-        conf_files.append('test.yml')
-
-    for file_name in conf_files:
-        configs.update(yaml.load(open(os.path.join(settings_folder, file_name))))
-
-    return build_settings(base_dir, configs)
-
-
 def update_xbmc(kodi_ip, logger):
     logger.info('Update XBMC')
 
     url = '{}/jsonrpc'.format(kodi_ip)
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
     return requests.post(url, json=data)
-
-
-def build_settings(base_dir, configs):
-    # This should be overwrite by prod OR test settings
-    configs['TV_PATH']       = os.path.join(configs['BASE_DRIVE'], 'TVShows')
-    configs['MOVIES_PATH']   = os.path.join(configs['BASE_DRIVE'], 'Movies')
-    configs['UNSORTED_PATH'] = os.path.join(configs['BASE_DRIVE'], 'Unsortted')
-    configs['DUMMY_PATH']    = os.path.join(configs['BASE_DRIVE'], 'Dummy')
-    configs['LOG_PATH']      = os.path.join(base_dir, 'logs')
-
-    configs['TEST_FILES']    = os.path.join('base_dir', 'tvsort_sl', 'test_files')
-    # This folder should have any files init
-    configs['FAKE_PATH']     = os.path.join(configs['BASE_DRIVE'], 'xxx')
-
-    configs['DUMMY_FILE_PATH']      = os.path.join(configs['TV_PATH'], configs['DUMMY_FILE_NAME'])
-    configs['TEST_FILE_PATH']       = os.path.join(configs['UNSORTED_PATH'], 'test.txt')
-    configs['TEST_FILE_PATH_IN_TV'] = os.path.join(configs['TV_PATH'], 'test.txt')
-
-    # test files
-    configs['TEST_ZIP_NAME'] = 'zip_test.zip'
-    configs['TEST_TV_NAME']  = 'House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'
-    configs['TEST_MOVIE']  = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv'
-    configs['TEST_GARBAGE_NAME']  = 'test.nfo'
-    configs['TEST_FOLDER_NAME'] = 'test.nfo'
-    configs['TEST_FOLDER_IN_UNSORTED'] = os.path.join(configs['UNSORTED_PATH'], 'empty_folder')
-
-    return configs
