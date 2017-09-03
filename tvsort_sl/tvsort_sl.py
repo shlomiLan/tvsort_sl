@@ -109,7 +109,6 @@ class TvSort(object):
 
             return  conf_files
 
-
     def update_settings_from_file(self, conf_files):
         for file_path in conf_files:
             self.settings.update(yaml.load(open(file_path)))
@@ -120,6 +119,8 @@ class TvSort(object):
     def load_additional_settings(self, is_test=False):
         conf_files = self.get_settings_file(is_base=False, is_test=is_test)
         self.update_settings_from_file(conf_files)
+
+        self.build_settings()
 
     def build_settings(self):
         # This should be overwrite by prod OR test settings
