@@ -24,7 +24,7 @@ class TvSort(object):
         self.base_dir, self.settings_folder = self.get_settings_folders()
         self.load_base_setting()
 
-        if self.check_project_setup():
+        if self.check_project_setup(is_test):
             self.load_additional_settings(is_test=is_test)
 
             self.create_logger(**kwargs)
@@ -107,6 +107,9 @@ class TvSort(object):
             if is_test:
                 conf_files.append(os.path.join(self.settings_folder, 'test.yml'))
 
+            return  conf_files
+
+
     def update_settings_from_file(self, conf_files):
         for file_path in conf_files:
             self.settings.update(yaml.load(open(file_path)))
@@ -142,15 +145,15 @@ class TvSort(object):
         self.settings['TEST_FOLDER_NAME'] = 'test.nfo'
         self.settings['TEST_FOLDER_IN_UNSORTED'] = os.path.join(self.settings.get('UNSORTED_PATH'), 'empty_folder')
 
-    def check_project_setup(self):
+    def check_project_setup(self, is_test):
         log_folder_path = self.settings.get('LOG_PATH')
-        base_config_file = self.get_settings_file()
+        conf_files = self.get_settings_file(is_base=False, is_test=is_test)
         # Logs folder exists
         if not utils.is_folder_exists(log_folder_path):
-            raise Exception('{} folder in missing'.format(log_folder_path))
+            raise Exception('Logs folder is missing, should be at: {}'.format(log_folder_path))
 
         # Configs files exists
-        for file_path in base_config_file:
+        for file_path in conf_files:
             if not utils.is_file_exists(file_path):
                 raise Exception('Missing config file, you must have local.yml and test.yml in settings folder.'
                                 'Use files in settings/templates for reference')
