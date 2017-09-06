@@ -32,7 +32,7 @@ def get_file_name(file_path):
 
 
 def get_folder_path_from_file_path(file_path):
-    return '\\'.join(file_path.split('\\')[:-1])
+    return os.path.dirname(file_path)
 
 
 def get_files(path):
