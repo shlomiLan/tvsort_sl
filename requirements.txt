@@ -13,3 +13,6 @@ daiquiri==1.2.1
 
 # Tests
 pytest==3.2.2
+
+# Subtitiles
+subliminal==2.0.5
