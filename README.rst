@@ -1,3 +1,5 @@
+# coding=utf-8
+
 .. image:: https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl?svg=true
 	:target: https://ci.appveyor.com/project/shlomiLan/tvsort-sl
 .. image:: https://badge.fury.io/py/tvsort_sl.svg

@@ -12,3 +12,5 @@ logs/
 tvsort_sl/settings/test.yml
 htmlcov/
 venv/
+.DS_Store
+.cache/

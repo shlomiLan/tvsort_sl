@@ -1,5 +1,4 @@
 requests==2.11
-winshell==0.6
 guessit==2.1
 opster==4.1
 patool==1.12
@@ -7,6 +6,10 @@ python-coveralls==2.9
 coveralls==1.1
 mock==2.0.0
 PyYAML==3.12
+codecov==2.0.9
 
 # Logs
 daiquiri==1.2.1
+
+# Tests
+pytest==3.2.2
