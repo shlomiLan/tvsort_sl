@@ -8,8 +8,8 @@ import pytest
 from guessit import guessit
 from mock import mock
 
-import utils
-from tvsort_sl import TvSort
+import tvsort_sl.utils as utils
+from tvsort_sl.tvsort_sl import TvSort
 
 is_test = True
 tv_sort = TvSort(is_test=is_test, log_level=logging.FATAL)
