@@ -68,7 +68,7 @@ def test_update_xbmc(_):
     utils.update_xbmc(tv_sort.settings.get('KODI_IP'), tv_sort.logger)
 
 
-@mock.patch('utils.is_folder_exists', return_value=False)
+@mock.patch('tvsort_sl.utils.is_folder_exists', return_value=False)
 def test_no_logs_folder(_):
     with pytest.raises(Exception):
         tv_sort.check_project_setup(is_test)
