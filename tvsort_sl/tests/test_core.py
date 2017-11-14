@@ -8,7 +8,7 @@ from guessit import guessit
 from mock import mock
 
 import tvsort_sl.utils as utils
-from test_base import tv_sort, is_test
+from .test_base import tv_sort, is_test
 
 
 def setup_function(_):
@@ -68,7 +68,7 @@ def test_update_xbmc(_):
     utils.update_xbmc(tv_sort.settings.get('KODI_IP'), tv_sort.logger)
 
 
-@mock.patch('tvsort_sl.utils.is_folder_exists', return_value=False)
+@mock.patch('utils.is_folder_exists', return_value=False)
 def test_no_logs_folder(_):
     with pytest.raises(Exception):
         tv_sort.check_project_setup(is_test)
