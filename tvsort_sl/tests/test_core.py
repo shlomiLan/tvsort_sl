@@ -1,7 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
 
-import logging
 import os
 
 import pytest
@@ -9,10 +8,7 @@ from guessit import guessit
 from mock import mock
 
 import tvsort_sl.utils as utils
-from tvsort_sl.tvsort_sl import TvSort
-
-is_test = True
-tv_sort = TvSort(is_test=is_test, log_level=logging.FATAL)
+from test_base import tv_sort, is_test
 
 
 def setup_function(_):
