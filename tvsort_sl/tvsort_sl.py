@@ -11,7 +11,7 @@ import yaml
 from guessit import guessit
 import patoolib
 
-from tvsort_sl import utils
+import utils as utils
 
 
 class TvSort(object):
