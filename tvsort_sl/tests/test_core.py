@@ -8,7 +8,7 @@ from guessit import guessit
 from mock import mock
 
 import tvsort_sl.utils as utils
-from test_base import tv_sort, is_test
+from .test_base import tv_sort, is_test
 
 
 def setup_function(_):
