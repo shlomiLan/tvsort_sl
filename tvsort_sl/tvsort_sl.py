@@ -132,7 +132,7 @@ class TvSort(object):
         self.settings['UNSORTED_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'Unsortted')
         self.settings['DUMMY_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'Dummy')
 
-        self.settings['TEST_FILES'] = os.path.join('base_dir', 'tvsort_sl', 'tests', 'test_files')
+        self.settings['TEST_FILES'] = os.path.join(self.base_dir, 'tvsort_sl', 'tests', 'test_files')
         # This folder should have any files init
         self.settings['FAKE_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'xxx')
 
