@@ -26,6 +26,7 @@ def teardown_function(_):
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
+# TODO: fix this test, can run without any files
 def test_main(_):
     new_files_folder = tv_sort.settings.get('UNSORTED_PATH')
 
