@@ -110,7 +110,7 @@ class TvSort(object):
             if is_test:
                 conf_files.append(os.path.join(self.settings_folder, 'test.yml'))
 
-            return  conf_files
+            return conf_files
 
     def update_settings_from_file(self, conf_files):
         for file_path in conf_files:
