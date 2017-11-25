@@ -1,5 +1,7 @@
 requests==2.11
-guessit==2.1
+# guessit from my repository
+git+git://github.com/shlomiLan/guessit.git@wrong_country_match
+
 opster==4.1
 patool==1.12
 python-coveralls==2.9
