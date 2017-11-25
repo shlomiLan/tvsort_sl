@@ -6,11 +6,19 @@ tvsort_sl/settings.py
 
 # Unit test / coverage reports
 .coverage
-
-/tvsort_sl/settings/local.yml
-logs/
-tvsort_sl/settings/test.yml
 htmlcov/
+
+# config files
+/tvsort_sl/settings/local.yml
+tvsort_sl/settings/test.yml
+
+#virtual environment
 venv/
-.DS_Store
-.cache/
+
+# logs
+logs/
+
+# subliminal files
+cachefile.dbm.db
+cachefile.dbm.dogpile.lock
+cachefile.dbm.rw.lock
