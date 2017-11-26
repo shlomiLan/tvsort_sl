@@ -33,7 +33,7 @@ def get_file_ext(file_name):
 
 
 def get_file_name(file_path):
-    return file_path.split('\\')[-1]
+    return file_path.split(os.sep)[-1]
 
 
 def get_folder_path_from_file_path(file_path):
