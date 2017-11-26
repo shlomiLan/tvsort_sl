@@ -10,11 +10,15 @@ import traceback
 import yaml
 from guessit import guessit
 import patoolib
+from subliminal import scan_videos, region, Episode, Movie
 
 import utils as utils
 
 
 class TvSort(object):
+    # configure the cache
+    region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
+
     is_any_error = False
     project_name = 'tvsort_sl'
     settings = dict(PROJECT_NAME=project_name)
@@ -33,50 +37,67 @@ class TvSort(object):
         if not utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')):
             try:
                 utils.create_file(self.settings.get('DUMMY_FILE_PATH'))
+                unsorted_path = self.settings.get('UNSORTED_PATH')
 
-                for file_path in utils.get_files(self.settings.get('UNSORTED_PATH')):
-                    if utils.is_compressed(file_path, self.settings):
-                        self.logger.info("Extracting {}".format(file_path))
-                        patoolib.extract_archive(file_path, outdir=self.settings.get('UNSORTED_PATH'), verbosity=-1)
-                        utils.delete_file(file_path, self.logger)
+                # scan for videos in the unsorted foolder
+                # TODO: is the str() necessary???
+                videos = scan_videos(str(unsorted_path))
 
-                for file_path in utils.get_files(self.settings.get('UNSORTED_PATH')):
-                    self.logger.info('Checking file: {}'.format(file_path))
-
-                    if utils.is_garbage_file(file_path, self.settings):
-                        self.logger.info('Removing file: {}'.format(file_path))
-                        utils.delete_file(file_path, self.logger)
-                    elif utils.is_media(file_path, self.settings):
-                        guess = guessit(file_path)
+                for video in videos:
+                    if isinstance(video, (Episode, Movie)):
                         new_path = None
-                        if utils.is_tv_show(guess):
-                            base = self.settings.get('TV_PATH')
-                            utils.remove_wrong_country_data(guess)
-                            show_name = utils.transform_to_path_name(utils.get_show_name(guess))
-                            utils.add_missing_country(guess, show_name)
-                            if guess.get('country'):
-                                show_name += '.{}'.format(guess.get('country'))
+                        file_path = video.name
+                        file_name = utils.get_file_name(file_path)
+                        print('file name is: {}'.format(file_name))
+                        print(video.__dict__)
+                        self.logger.info('Checking file: {}'.format(file_path))
 
-                            new_path = os.path.join(base, show_name)
+                        # Episode
+                        if isinstance(video, Episode):
+                            video_name = utils.transform_to_path_name(video.series)
+                            if video.country:
+                                video_name += '.{}'.format(video.country)
+
+                            new_path = os.path.join(self.settings.get('TV_PATH'), video_name)
                             utils.create_folder(new_path, self.logger)
 
-                        elif utils.is_movie(guess):
+                        # Movie
+                        elif isinstance(video, Movie):
                             new_path = self.settings.get('MOVIES_PATH')
 
-                        utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
+                        # Copy / Move the video file
+                        # utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
 
-                    folder_path = utils.get_folder_path_from_file_path(file_path)
-                    utils.delete_folder_if_empty(folder_path, self.logger)
+                        # Change the video name (path)
+                        print('path is: {}'.format(new_path))
+                        video.name = os.path.join(new_path, file_name)
 
-                # clean up
-                for folder_path in utils.get_folders(self.settings.get('UNSORTED_PATH')):
-                    utils.delete_folder_if_empty(folder_path, self.logger)
+                    # GARBAGE_FILE
+                    # if utils.is_garbage_file(video.name, self.settings):
+                    #     self.logger.info('Removing file: {}'.format(file_path))
+                    #     utils.delete_file(file_path, self.logger)
+                    #     continue
 
-                # download subtitles
-                utils.download_subtitles(tv_sort.settings)
+                    # ARCHIVES
+                        # for file_path in utils.get_files(self.settings.get('UNSORTED_PATH')):
+                #     if utils.is_compressed(file_path, self.settings):
+                #         self.logger.info("Extracting {}".format(file_path))
+                #         patoolib.extract_archive(file_path, outdir=self.settings.get('UNSORTED_PATH'), verbosity=-1)
+                #         utils.delete_file(file_path, self.logger)
+                #
+                # CLEAN UP
+                #     folder_path = utils.get_folder_path_from_file_path(file_path)
+                #     utils.delete_folder_if_empty(folder_path, self.logger)
+                #
+                #
+                # for folder_path in utils.get_folders(self.settings.get('UNSORTED_PATH')):
+                #     utils.delete_folder_if_empty(folder_path, self.logger)
+                #
+                # DOWNLOAD SUBTITLES
+                utils.download_subtitles(videos)
 
-                # Update XBMC
-                utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)
+                # UPDATE XBMC
+                # utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)
 
             except Exception as e:
                 utils.is_any_error = True

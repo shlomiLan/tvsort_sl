@@ -184,26 +184,13 @@ def update_xbmc(kodi_ip, logger):
     return requests.post(url, json=data)
 
 
-def download_subtitles():
-    print('\n111111111')
-    # configure the cache
-    region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
-
-    # scan for videos newer than 2 weeks and their existing subtitles in a folder
-    # videos = scan_videos(settings.get('TV_PATH'), age=timedelta(days=3))
-
-    new_videos = []
-    new_videos = [Video.fromname('The.Big.Bang.Theory.S05E18.HDTV.x264-LOL.mp4')]
-    # for x in videos:
-    #     if x.episode == 4:
-    #         new_videos.append(x)
-
+def download_subtitles(videos):
     # download best subtitles
-    subtitles = download_best_subtitles(new_videos, set([Language('heb'), Language('eng')]),
-                                        providers=['subscenter', 'podnapisi', 'thesubdb'])
+    subtitles = download_best_subtitles(videos, {Language('heb'), Language('eng')})
 
-    # # save them to disk, next to the video
-    for v in new_videos:
+    # save them to disk, next to the video
+    for v in videos:
         save_subtitles(v, subtitles[v])
+
 
 
