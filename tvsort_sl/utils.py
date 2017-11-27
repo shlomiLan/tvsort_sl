@@ -137,10 +137,10 @@ def remove_wrong_country_data(guess):
             del guess['country']
 
 
-def add_missing_country(guess, show_name):
+def add_missing_country(video, show_name):
     if show_name.lower() == 'house.of.cards':
-        if not guess.get('country'):
-            guess['country'] = 'US'
+        if not video.country:
+            video.country = 'US'
 
 
 def create_file(file_path):
