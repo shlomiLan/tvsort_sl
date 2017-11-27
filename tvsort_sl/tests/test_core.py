@@ -40,8 +40,14 @@ def test_main(_):
     garbage_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), garbage_file)
     utils.copy_file(garbage_file_path, new_files_folder, tv_sort.logger, move_file=False)
 
-    # Add tv-show file
+    # Add tv-show files
     tv_file_name = tv_sort.settings.get('TEST_TV_NAME')
+    tv_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), tv_file_name)
+    utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    tv_file_name = tv_sort.settings.get('TEST_TV_2_NAME')
+    tv_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), tv_file_name)
+    utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    tv_file_name = tv_sort.settings.get('TEST_TV_3_NAME')
     tv_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), tv_file_name)
     utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
 
