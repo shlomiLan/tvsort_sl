@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 import os
 
 import pytest
-from guessit import guessit
 from mock import mock
+from subliminal import scan_video
 
 import tvsort_sl.utils as utils
 from .test_base import tv_sort, is_test
@@ -31,29 +31,23 @@ def test_main(_):
     new_files_folder = tv_sort.settings.get('UNSORTED_PATH')
 
     # Add ZIP file
-    zip_file_name = tv_sort.settings.get('TEST_ZIP_NAME')
-    zip_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), zip_file_name)
+    zip_file_path = tv_sort.settings.get('TEST_ZIP_PATH')
     utils.copy_file(zip_file_path, new_files_folder, tv_sort.logger, move_file=False)
 
     # Add garbage file
-    garbage_file = tv_sort.settings.get('TEST_GARBAGE_NAME')
-    garbage_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), garbage_file)
+    garbage_file_path = tv_sort.settings.get('TEST_GARBAGE_PATH')
     utils.copy_file(garbage_file_path, new_files_folder, tv_sort.logger, move_file=False)
 
     # Add tv-show files
-    tv_file_name = tv_sort.settings.get('TEST_TV_NAME')
-    tv_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), tv_file_name)
+    tv_file_path = tv_sort.settings.get('TEST_TV_PATH')
     utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
-    tv_file_name = tv_sort.settings.get('TEST_TV_2_NAME')
-    tv_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), tv_file_name)
+    tv_file_path = tv_sort.settings.get('TEST_TV_2_PATH')
     utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
-    tv_file_name = tv_sort.settings.get('TEST_TV_3_NAME')
-    tv_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), tv_file_name)
+    tv_file_path = tv_sort.settings.get('TEST_TV_3_PATH')
     utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
 
     # Add movie file
-    movie_file_name = tv_sort.settings.get('TEST_MOVIE')
-    movie_file_path = os.path.join(tv_sort.settings.get('TEST_FILES'), movie_file_name)
+    movie_file_path = tv_sort.settings.get('TEST_MOVIE')
     utils.copy_file(movie_file_path, new_files_folder, tv_sort.logger, move_file=False)
 
     # create empty folder
@@ -95,21 +89,21 @@ def test_replace_space_with_dots_int_input():
 
 
 def test_not_tv_show():
-    file_name = str('San Andreas 2015 720p WEB-DL x264 AAC-JYK')
-    guess = guessit(file_name)
-    assert not utils.is_tv_show(guess)
+    tv_file_name = tv_sort.settings.get('TEST_MOVIE')
+    video = scan_video(tv_file_name)
+    assert not utils.is_tv_show(video)
 
 
 def test_is_tv_show():
-    file_name = str('Mr Robot S01E05 HDTV x264-KILLERS[ettv]')
-    guess = guessit(file_name)
-    assert utils.is_tv_show(guess)
+    tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
+    video = scan_video(tv_file_name)
+    assert utils.is_tv_show(video)
 
 
 def test_is_movie():
-    file_name = str('San Andreas 2015 720p WEB-DL x264 AAC-JYK')
-    guess = guessit(file_name)
-    assert utils.is_movie(guess)
+    tv_file_name = tv_sort.settings.get('TEST_MOVIE')
+    video = scan_video(tv_file_name)
+    assert utils.is_movie(video)
 
 
 def test_compressed_file():
@@ -139,9 +133,10 @@ def test_media_file():
 
 
 def test_show_name():
-    guess = guessit(str('Anger.Management.S01E01.720p.HDTV.x264-IMMERSE.mkv'))
-    show_name = utils.get_show_name(guess)
-    assert show_name == 'Anger Management'
+    tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
+    video = scan_video(tv_file_name)
+    show_name = utils.get_show_name(video)
+    assert show_name == 'House of Cards'
 
 
 def test_folder_exist():
@@ -181,22 +176,24 @@ def test_not_empty_folder():
     utils.delete_file(file_path, tv_sort.logger)
 
 
-def test_wrong_series_name():
-    guess = guessit(str('House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'))
-    show_name = utils.transform_to_path_name(utils.get_show_name(guess))
-    utils.add_missing_country(guess, show_name)
-    assert guess.get('country') == 'US'
-
-
-def test_wrong_country_data_in_series_name():
-    guess = guessit(str('This.is.Us.S01E01.HDTV.x264-KILLERS.mkv'))
-    utils.remove_wrong_country_data(guess)
-    assert guess.get('country') is None
+# def test_wrong_series_name():
+#     tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
+#     video = scan_video(tv_file_name)
+#     show_name = utils.transform_to_path_name(utils.get_show_name(video))
+#     utils.add_missing_country(video, show_name)
+#     assert video.country == 'US'
+#
+#
+# def test_wrong_country_data_in_series_name():
+#     tv_file_name = tv_sort.settings.get('TEST_TV_3_PATH')
+#     video = scan_video(tv_file_name)
+#     utils.remove_wrong_country_data(video)
+#     assert video.country is None
 
 
 def test_get_file_ext():
-    file_name = 'House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'
-    file_ext = utils.get_file_ext(file_name)
+    tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
+    file_ext = utils.get_file_ext(tv_file_name)
     assert 'mkv' == file_ext
 
 

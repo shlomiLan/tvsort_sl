@@ -5,11 +5,9 @@ import requests
 import os
 
 import shutil
-import yaml
-from datetime import timedelta
 
 from babelfish import Language
-from subliminal import scan_videos, download_best_subtitles, save_subtitles, region, Video, scan_video
+from subliminal import download_best_subtitles, save_subtitles, Movie, Episode
 
 
 def is_compressed(file_name, setting):
@@ -60,12 +58,12 @@ def get_folders(path):
     return sorted(folders)
 
 
-def is_tv_show(guess):
-    return bool(guess.get('episode'))
+def is_tv_show(video):
+    return type(video) is Episode
 
 
-def is_movie(guess):
-    return guess.get('type') == 'movie'
+def is_movie(video):
+    return type(video) is Movie
 
 
 def is_file_exists(file_path):
@@ -126,15 +124,15 @@ def transform_to_path_name(string):
     return '.'.join([str(x).capitalize() for x in string.split('.')])
 
 
-def get_show_name(guess):
-    return guess.get('title')
+def get_show_name(video):
+    return video.series
 
 
-def remove_wrong_country_data(guess):
-    if guess.get('title') == 'This is':
-        guess['title'] += '.Us'
-        if guess.get('country'):
-            del guess['country']
+def remove_wrong_country_data(video):
+    if video.title == 'This is':
+        video.title += '.Us'
+        if video.country:
+            video.country = None
 
 
 def add_missing_country(video, show_name):
@@ -191,6 +189,3 @@ def download_subtitles(videos):
     # save them to disk, next to the video
     for v in videos:
         save_subtitles(v, subtitles[v])
-
-
-

@@ -119,12 +119,12 @@ class TvSort(object):
         self.settings['TEST_FILE_PATH_IN_TV'] = os.path.join(self.settings.get('TV_PATH'), 'test.txt')
 
         # test files
-        self.settings['TEST_ZIP_NAME'] = 'zip_test.zip'
-        self.settings['TEST_TV_NAME'] = 'House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv'
-        self.settings['TEST_TV_2_NAME'] = 'shameless.us.s08e01.web.h264-convoy.mkv'
-        self.settings['TEST_TV_3_NAME'] = 'This.Is.Us.S02E01.REPACK.720p.HDTV.x264-AVS.mkv'
-        self.settings['TEST_MOVIE'] = 'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv'
-        self.settings['TEST_GARBAGE_NAME'] = 'test.nfo'
+        self.settings['TEST_ZIP_PATH'] = os.path.join(self.settings['TEST_FILES'], 'zip_test.zip')
+        self.settings['TEST_TV_PATH'] = os.path.join(self.settings['TEST_FILES'], 'House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv')   # noqa
+        self.settings['TEST_TV_2_PATH'] = os.path.join(self.settings['TEST_FILES'], 'shameless.us.s08e01.web.h264-convoy.mkv')  # noqa
+        self.settings['TEST_TV_3_PATH'] = os.path.join(self.settings['TEST_FILES'], 'This.Is.Us.S02E01.REPACK.720p.HDTV.x264-AVS.mkv')  # noqa
+        self.settings['TEST_MOVIE'] = os.path.join(self.settings['TEST_FILES'], 'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv')  # noqa
+        self.settings['TEST_GARBAGE_PATH'] = os.path.join(self.settings['TEST_FILES'], 'test.nfo')
         self.settings['TEST_FOLDER_NAME'] = 'test.nfo'
         self.settings['TEST_FOLDER_IN_UNSORTED'] = os.path.join(self.settings.get('UNSORTED_PATH'), 'empty_folder')
 
