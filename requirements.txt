@@ -18,3 +18,4 @@ pytest==3.2.2
 
 # Subtitiles
 subliminal==2.0.5
+babelfish==0.5.5
