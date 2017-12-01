@@ -176,19 +176,19 @@ def test_not_empty_folder():
     utils.delete_file(file_path, tv_sort.logger)
 
 
-# def test_wrong_series_name():
-#     tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
-#     video = scan_video(tv_file_name)
-#     show_name = utils.transform_to_path_name(utils.get_show_name(video))
-#     utils.add_missing_country(video, show_name)
-#     assert video.country == 'US'
-#
-#
-# def test_wrong_country_data_in_series_name():
-#     tv_file_name = tv_sort.settings.get('TEST_TV_3_PATH')
-#     video = scan_video(tv_file_name)
-#     utils.remove_wrong_country_data(video)
-#     assert video.country is None
+def test_wrong_series_name():
+    tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
+    video = scan_video(tv_file_name)
+    show_name = utils.transform_to_path_name(utils.get_show_name(video))
+    utils.add_missing_country(video, show_name)
+    assert video.country == 'US'
+
+
+def test_wrong_country_data_in_series_name():
+    tv_file_name = tv_sort.settings.get('TEST_TV_3_PATH')
+    video = scan_video(tv_file_name)
+    utils.remove_wrong_country_data(video)
+    assert video.country is None
 
 
 def test_get_file_ext():

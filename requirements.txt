@@ -17,5 +17,6 @@ daiquiri==1.2.1
 pytest==3.2.2
 
 # Subtitiles
-subliminal==2.0.5
+# subliminal from my repository
+git+git://github.com/shlomiLan/subliminal.git@add_country
 babelfish==0.5.5
