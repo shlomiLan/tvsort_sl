@@ -1,6 +1,8 @@
 .idea
 dist
 tvsort_sl/settings.py
+*.DS_Store
+.cache/
 
 *.py[co]
 
