@@ -137,6 +137,7 @@ class TvSort(object):
 
         # Configs files exists
         for file_path in conf_files:
+            print('is_file_exists is: {}'.format(not utils.is_file_exists(file_path)))
             if not utils.is_file_exists(file_path):
                 raise Exception('Missing config file, you must have local.yml and test.yml in settings folder.'
                                 'Use files in settings/templates for reference')
@@ -191,7 +192,7 @@ class TvSort(object):
                     new_path = self.settings.get('MOVIES_PATH')
 
                 # Copy / Move the video file
-                # utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
+                utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
 
                 # Change the video name (path)
                 video.name = os.path.join(new_path, file_name)
