@@ -137,7 +137,6 @@ class TvSort(object):
 
         # Configs files exists
         for file_path in conf_files:
-            print('is_file_exists is: {}'.format(not utils.is_file_exists(file_path)))
             if not utils.is_file_exists(file_path):
                 raise Exception('Missing config file, you must have local.yml and test.yml in settings folder.'
                                 'Use files in settings/templates for reference')
