@@ -14,10 +14,6 @@ def is_compressed(file_name, setting):
     return is_file_ext_in_list(get_file_ext(file_name), setting.get('COMPRESS_EXTS'))
 
 
-def is_media(file_name, setting):
-    return is_file_ext_in_list(get_file_ext(file_name), setting.get('MEDIA_EXTS'))
-
-
 def is_garbage_file(file_name, setting):
     return is_file_ext_in_list(get_file_ext(file_name), setting.get('GARBAGE_EXTS')) or 'sample' in file_name.lower()
 

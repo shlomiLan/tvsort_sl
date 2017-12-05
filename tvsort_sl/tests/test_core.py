@@ -128,10 +128,6 @@ def test_garbage_file():
     assert not utils.is_garbage_file('test.avi', tv_sort.settings)
 
 
-def test_media_file():
-    assert utils.is_media('test.avi', tv_sort.settings)
-
-
 def test_show_name():
     tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
     video = scan_video(tv_file_name)
