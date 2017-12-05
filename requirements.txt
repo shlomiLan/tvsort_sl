@@ -1,6 +1,4 @@
 requests==2.11
-# guessit from my repository
-git+git://github.com/shlomiLan/guessit.git@wrong_country_match
 
 opster==4.1
 patool==1.12
@@ -16,7 +14,8 @@ daiquiri==1.2.1
 # Tests
 pytest==3.2.2
 
-# Subtitiles
+# Media name and Subtitles
+guessit==2.1.4
 # subliminal from my repository
 git+git://github.com/shlomiLan/subliminal.git@add_country
 babelfish==0.5.5

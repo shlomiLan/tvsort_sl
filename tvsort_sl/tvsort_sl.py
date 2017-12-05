@@ -9,7 +9,8 @@ import traceback
 
 import yaml
 import patoolib
-from subliminal import region, Episode, Movie, scan_video
+from guessit import guessit
+from subliminal import region, Episode, Movie, Video
 
 import utils as utils
 
@@ -169,7 +170,7 @@ class TvSort(object):
                 utils.delete_file(file_path, self.logger)
                 continue
 
-            video = scan_video(file_path)
+            video = self.scan_video(file_path)
             if isinstance(video, (Episode, Movie)):
                 new_path = None
                 file_path = video.name
@@ -201,6 +202,10 @@ class TvSort(object):
                 self.logger('Unsupported file type in: {}'.format(file_path))
 
         return videos
+
+
+    def scan_video(self, file_path):
+        return Video.fromguess(file_path, guessit(file_path, options={"expected_title": ["This Is Us"]}))
 
 
 if __name__ == "__main__":
