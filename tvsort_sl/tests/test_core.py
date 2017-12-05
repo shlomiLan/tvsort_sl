@@ -89,19 +89,19 @@ def test_replace_space_with_dots_int_input():
 
 def test_not_tv_show():
     tv_file_name = tv_sort.settings.get('TEST_MOVIE')
-    video = tv_sort.scan_video(tv_file_name)
+    video = utils.scan_video(tv_file_name)
     assert not utils.is_tv_show(video)
 
 
 def test_is_tv_show():
     tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
-    video = tv_sort.scan_video(tv_file_name)
+    video = utils.scan_video(tv_file_name)
     assert utils.is_tv_show(video)
 
 
 def test_is_movie():
     tv_file_name = tv_sort.settings.get('TEST_MOVIE')
-    video = tv_sort.scan_video(tv_file_name)
+    video = utils.scan_video(tv_file_name)
     assert utils.is_movie(video)
 
 
@@ -129,7 +129,7 @@ def test_garbage_file():
 
 def test_show_name():
     tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
-    video = tv_sort.scan_video(tv_file_name)
+    video = utils.scan_video(tv_file_name)
     show_name = utils.get_show_name(video)
     assert show_name == 'House of Cards'
 
@@ -173,7 +173,7 @@ def test_not_empty_folder():
 
 def test_wrong_series_name():
     tv_file_name = tv_sort.settings.get('TEST_TV_PATH')
-    video = tv_sort.scan_video(tv_file_name)
+    video = utils.scan_video(tv_file_name)
     show_name = utils.transform_to_path_name(utils.get_show_name(video))
     utils.add_missing_country(video, show_name)
     assert video.country == 'US'
@@ -181,14 +181,14 @@ def test_wrong_series_name():
 
 def test_good_series_name():
     tv_file_name = tv_sort.settings.get('TEST_TV_3_PATH')
-    video = tv_sort.scan_video(tv_file_name)
+    video = utils.scan_video(tv_file_name)
     show_name = utils.transform_to_path_name(utils.get_show_name(video))
     assert show_name == 'This.Is.Us'
 
 
 def test_wrong_country_data_in_series_name():
     tv_file_name = tv_sort.settings.get('TEST_TV_3_PATH')
-    video = tv_sort.scan_video(tv_file_name)
+    video = utils.scan_video(tv_file_name)
     utils.remove_wrong_country_data(video)
     assert video.country is None
 

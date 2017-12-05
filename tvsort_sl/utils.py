@@ -7,7 +7,8 @@ import os
 import shutil
 
 from babelfish import Language
-from subliminal import download_best_subtitles, save_subtitles, Movie, Episode
+from guessit import guessit
+from subliminal import download_best_subtitles, save_subtitles, Movie, Episode, Video
 
 
 def is_compressed(file_name, setting):
@@ -185,3 +186,13 @@ def download_subtitles(videos):
     # save them to disk, next to the video
     for v in videos:
         save_subtitles(v, subtitles[v])
+
+
+def scan_video(file_path):
+    """
+    Scan 'file_path' to get the video info
+    :param file_path: Video path
+    :type file_path: basestring
+    :return:
+    """
+    return Video.fromguess(file_path, guessit(file_path, options={"expected_title": ["This Is Us"]}))

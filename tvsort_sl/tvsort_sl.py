@@ -9,8 +9,7 @@ import traceback
 
 import yaml
 import patoolib
-from guessit import guessit
-from subliminal import region, Episode, Movie, Video
+from subliminal import region, Episode, Movie
 
 import utils as utils
 
@@ -36,6 +35,10 @@ class TvSort(object):
         self.unsorted_path = self.settings.get('UNSORTED_PATH')
 
     def run(self):
+        """
+        Run the tvsort process
+        :return:
+        """
         if not utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')):
             try:
                 utils.create_file(self.settings.get('DUMMY_FILE_PATH'))
@@ -69,18 +72,33 @@ class TvSort(object):
             return False
 
     def get_settings_folders(self):
+        """
+        Paths for base folder and the settings folder
+        :return: Base die path and setting folder path
+        """
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         settings_folder = os.path.join(base_dir, self.project_name, 'settings')
 
         return base_dir, settings_folder
 
     def load_base_setting(self):
+        """
+        Load the basic settings
+        """
         conf_files = self.get_settings_file(self.settings_folder)
         self.update_settings_from_file(conf_files)
 
         self.build_base_settings()
 
     def get_settings_file(self, is_base=True, is_test=False):
+        """
+        Get a list of all setting file paths
+        :param is_base: load base settings
+        :type is_base: bool
+        :param is_test: is test run
+        :type is_test: bool
+        :return: List of all setting file paths
+        """
         if is_base:
             return [os.path.join(self.settings_folder, 'conf.yml')]
         else:
@@ -91,19 +109,35 @@ class TvSort(object):
             return conf_files
 
     def update_settings_from_file(self, conf_files):
+        """
+        Add to settings from file
+        :param conf_files: List of config files
+        :type conf_files: list
+        """
         for file_path in conf_files:
             self.settings.update(yaml.load(open(file_path)))
 
     def build_base_settings(self):
+        """
+        build the basic settings
+        """
         self.settings['LOG_PATH'] = os.path.join(self.base_dir, 'logs')
 
     def load_additional_settings(self, is_test=False):
+        """
+        load the additional settings from file
+        :param is_test: is test run
+        :type is_test: bool
+        """
         conf_files = self.get_settings_file(is_base=False, is_test=is_test)
         self.update_settings_from_file(conf_files)
 
         self.build_settings()
 
     def build_settings(self):
+        """
+        Build the settings (all of it)
+        """
         # This should be overwrite by prod OR test settings
         self.settings['TV_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'TVShows')
         self.settings['MOVIES_PATH'] = os.path.join(self.settings.get('BASE_DRIVE'), 'Movies')
@@ -130,6 +164,12 @@ class TvSort(object):
         self.settings['TEST_FOLDER_IN_UNSORTED'] = os.path.join(self.settings.get('UNSORTED_PATH'), 'empty_folder')
 
     def check_project_setup(self, is_test):
+        """
+        Test that all the project setup is set, if not raise an exception
+        :param is_test: is test run
+        :type is_test: bool
+        :return: Flag to indicate if the project setup correctly
+        """
         log_folder_path = self.settings.get('LOG_PATH')
         conf_files = self.get_settings_file(is_base=False, is_test=is_test)
         # Logs folder exists
@@ -145,6 +185,11 @@ class TvSort(object):
         return True
 
     def create_logger(self, log_level=logging.INFO):
+        """
+        Create the logger that all functions will use
+        :param log_level: log level to use when creating the logger
+        :type log_level: basestring
+        """
         daiquiri.setup(outputs=(
             daiquiri.output.File(directory=self.settings.get('LOG_PATH'),
                                  program_name=self.project_name), daiquiri.output.STDOUT,))
@@ -153,6 +198,9 @@ class TvSort(object):
         self.logger = daiquiri.getLogger(program_name=self.project_name, log_level=log_level)
 
     def scan_archives(self):
+        """
+        Scan the 'unsorted_path' for archives file and extract them
+        """
         for file_path in utils.get_files(self.unsorted_path):
             if utils.is_compressed(file_path, self.settings):
                 self.logger.info("Extracting {}".format(file_path))
@@ -160,6 +208,10 @@ class TvSort(object):
                 utils.delete_file(file_path, self.logger)
 
     def scan_videos(self):
+        """
+        Scan for videos (Movies and Episodes) in 'unsorted_path'
+        :return: List of videos
+        """
         videos = []
         for file_path in utils.get_files(self.unsorted_path):
             self.logger.info('Checking file: {}'.format(file_path))
@@ -170,7 +222,7 @@ class TvSort(object):
                 utils.delete_file(file_path, self.logger)
                 continue
 
-            video = self.scan_video(file_path)
+            video = utils.scan_video(file_path)
             if isinstance(video, (Episode, Movie)):
                 new_path = None
                 file_path = video.name
@@ -202,10 +254,6 @@ class TvSort(object):
                 self.logger('Unsupported file type in: {}'.format(file_path))
 
         return videos
-
-
-    def scan_video(self, file_path):
-        return Video.fromguess(file_path, guessit(file_path, options={"expected_title": ["This Is Us"]}))
 
 
 if __name__ == "__main__":
