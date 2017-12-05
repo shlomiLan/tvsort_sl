@@ -1,5 +1,3 @@
-# coding=utf-8
-
 .. image:: https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl?svg=true
 	:target: https://ci.appveyor.com/project/shlomiLan/tvsort-sl
 .. image:: https://badge.fury.io/py/tvsort_sl.svg
@@ -8,8 +6,6 @@
 	:target: https://codecov.io/gh/shlomiLan/tvsort_sl
 .. image:: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl/total.svg
 	:target: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl
-.. image:: https://img.shields.io/pypi/dm/tvsort_sl.svg
-	:target: https://img.shields.io/pypi/dm/tvsort_sl
 
 =========
 tvsort_sl
