@@ -7,7 +7,7 @@ from distutils.core import setup
 setup(
     name='tvsort_sl',
     packages=['tvsort_sl'],
-    version='1.0.1',
+    version='1.0.2',
     description='Sort movies and TV-shows files',
     long_description=open('README.rst').read(),
     author='Shlomi Lanton',
