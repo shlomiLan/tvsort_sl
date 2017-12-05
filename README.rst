@@ -1,42 +1,46 @@
 .. image:: https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl?svg=true
-	:target: https://ci.appveyor.com/project/shlomiLan/tvsort-sl
+    :target: https://ci.appveyor.com/project/shlomiLan/tvsort-sl
 .. image:: https://badge.fury.io/py/tvsort_sl.svg
-	:target: https://badge.fury.io/py/tvsort_sl
+    :target: https://badge.fury.io/py/tvsort_sl
 .. image:: https://codecov.io/gh/shlomiLan/tvsort_sl/branch/master/graph/badge.svg
-	:target: https://codecov.io/gh/shlomiLan/tvsort_sl
+    :target: https://codecov.io/gh/shlomiLan/tvsort_sl
 .. image:: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl/total.svg
-	:target: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl
+    :target: https://img.shields.io/github/downloads/shlomiLan/tvsort_sl
 
 =========
 tvsort_sl
 =========
 
-Sort files to TV-shows and Movies folders and than (optional) update the KODI library
+Sort Viedo files to TV-shows and Movies folders, after that Update KODI library and download subtitles for each viedo file.
 
 Installation
 ------------
 ::
 
-	pip install tvsort_sl
+    pip install tvsort_sl
 
 Config
 ------
 -  Setup
 
-	First you need to set the path of the main 3 folders and the KODI IP (if needed):
-		- TV_PATH => folder for all TV-Shows, each show will be in a separate folder
-		- MOVIES_PATH => folder for all NON TV-Shows files, all files will be in the same directory
-		- UNSORTED_PATH => origin folder that contains all files that needs to be sorted
-		- KODI_IP (optional) => IP for the KODI device
+    Update your settings in: `local.yaml`
+    There set the following things:
+        - BASE_DRIVE => drive letter or pc-name where the videos are localted, in this drive should be 3 sub-folders:
+            - Unsortted => Folder with all the videos that needs to be sortted
+            - TVShows => Folder to which each video that will be flag as tv-show will be moved
+            - Movies => Folder to which each movie that will be flag as tv-show will be moved
+        - KODI_IP (optional) => IP for the KODI device
+        - MOVE_FILES => by default all files will be move (from Unsortted to TVShows OR Movies), if you want to keep the files in `Unsortted` folder you can change this settings to `False`
 
 -  Run
 
-	python tvsort_sl.py
+    python tvsort_sl.py
 
 - Error handling
 
-	If you get this error message:
-	::
-		Proses already running
-	and you are sure that there isn't another process already running, it means that in the last time the process run it was stuck,
-	so you can manually remove the 'dummy.txt' file from the 'TV_PATH' folder and than try again to run the process
+    By defualt this program can run on more than 1 one process at the same time. If you try and run it and get the following error
+    ::
+        Proses already running
+    it means that there is another process of this program that it already running and you should allow it to end firat.
+    If you think that there isn't another process that is already running, it means that in the last time the process run it was stuck,
+    so you can manually remove the 'dummy.txt' file from the 'TV_PATH' folder and than try again to run the process
