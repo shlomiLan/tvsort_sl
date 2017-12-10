@@ -56,11 +56,11 @@ def get_folders(path):
 
 
 def is_tv_show(video):
-    return type(video) is Episode
+    return isinstance(video, Episode)
 
 
 def is_movie(video):
-    return type(video) is Movie
+    return isinstance(video, Movie)
 
 
 def is_file_exists(file_path):

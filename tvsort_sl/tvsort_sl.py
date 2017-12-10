@@ -66,7 +66,8 @@ class TvSort(object):
 
             finally:
                 utils.delete_file(self.settings.get('DUMMY_FILE_PATH'), self.logger)
-                return not self.is_any_error
+
+            return not self.is_any_error
         else:
             self.logger.info('Proses already running')
             return False
