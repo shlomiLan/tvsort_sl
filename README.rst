@@ -44,3 +44,8 @@ Config
     it means that there is another process of this program that it already running and you should allow it to end firat.
     If you think that there isn't another process that is already running, it means that in the last time the process run it was stuck,
     so you can manually remove the 'dummy.txt' file from the 'TV_PATH' folder and than try again to run the process
+
+
+.. image:: https://api.codacy.com/project/badge/Grade/af326adf8c2c4644b1b0e6df9c21016c
+   :alt: Codacy Badge
+   :target: https://www.codacy.com/app/shlomiLan/tvsort_sl?utm_source=github.com&utm_medium=referral&utm_content=shlomiLan/tvsort_sl&utm_campaign=badger
