@@ -2,7 +2,7 @@ requests==2.19.1
 
 opster==4.1
 patool==1.12
-python-coveralls==2.9
+python-coveralls==2.9.1
 coveralls==1.1
 mock==2.0.0
 PyYAML==3.12
