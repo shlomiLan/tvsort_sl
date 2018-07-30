@@ -29,7 +29,7 @@ install:
 
   # Upgrade to the latest version of pip to avoid it displaying warnings
   # about it being out of date.
-  - "pip install --disable-pip-version-check --user --upgrade pip"
+  - "c:\python27\python.exe -m pip install --disable-pip-version-check --user --upgrade pip
 
   - "copy C:\\projects\\tvsort-sl\\tvsort_sl\\settings\\templates\\local.yml C:\\projects\\tvsort-sl\\tvsort_sl\\settings\\local.yml"
   - "copy C:\\projects\\tvsort-sl\\tvsort_sl\\settings\\templates\\test.yml C:\\projects\\tvsort-sl\\tvsort_sl\\settings\\test.yml"
