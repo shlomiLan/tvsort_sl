@@ -9,7 +9,7 @@ PyYAML==3.13
 codecov==2.0.15
 
 # Logs
-daiquiri==1.2.1
+daiquiri==1.5.0
 
 # Tests
 pytest==3.2.2
