@@ -1,4 +1,4 @@
-requests==2.11
+requests==2.19.1
 
 opster==4.1
 patool==1.12
