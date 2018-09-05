@@ -7,7 +7,7 @@ import pytest
 from mock import mock
 
 import tvsort_sl.utils as utils
-from .test_base import tv_sort, is_test
+from tvsort_sl.tests.test_base import tv_sort, is_test
 
 
 def setup_function(_):

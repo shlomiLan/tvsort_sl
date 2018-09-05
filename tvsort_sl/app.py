@@ -11,7 +11,7 @@ import yaml
 import patoolib
 from subliminal import region, Episode, Movie
 
-import utils as utils
+import tvsort_sl.utils as utils
 
 
 class TvSort(object):
