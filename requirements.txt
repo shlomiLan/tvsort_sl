@@ -14,6 +14,5 @@ python-coveralls==2.9.1
 coveralls==1.5.0
 mock==2.0.0
 
-# Media name and Subtitles
+# Find media name
 guessit==3.0.0
-babelfish==0.5.5

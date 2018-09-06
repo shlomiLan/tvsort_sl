@@ -190,7 +190,6 @@ def test_good_series_name():
 def test_wrong_country_data_in_series_name():
     tv_file_name = tv_sort.settings.get('TEST_TV_3_PATH')
     video = guessit(tv_file_name)
-    utils.remove_wrong_country_data(video)
     assert video.get('country') is None
 
 

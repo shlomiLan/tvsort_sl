@@ -121,13 +121,6 @@ def get_show_name(video):
     return video.get('title')
 
 
-def remove_wrong_country_data(video):
-    if video.get('title') == 'This is':
-        video['title'] += '.Us'
-        if video.get('country'):
-            video['country'] = None
-
-
 def add_missing_country(video, show_name):
     if show_name.lower() == 'house.of.cards':
         if not video.get('country'):

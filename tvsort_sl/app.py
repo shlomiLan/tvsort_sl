@@ -213,7 +213,7 @@ class TvSort(object):
                 utils.delete_file(file_path, self.logger)
                 continue
 
-            video = guessit(file_path, options={"expected_title": ["This Is Us"]})
+            video = guessit(file_path, options={'expected_title': ['This Is Us']})
             new_path = None
             file_path = video.name
             self.logger.info('Checking file: {}'.format(file_path))
