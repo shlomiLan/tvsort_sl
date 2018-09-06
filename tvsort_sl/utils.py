@@ -6,10 +6,6 @@ import os
 
 import shutil
 
-from babelfish import Language
-from guessit import guessit
-from subliminal import download_best_subtitles, save_subtitles, Movie, Episode, Video
-
 
 def is_compressed(file_name, setting):
     return is_file_ext_in_list(get_file_ext(file_name), setting.get('COMPRESS_EXTS'))
@@ -55,12 +51,12 @@ def get_folders(path):
     return sorted(folders)
 
 
-def is_tv_show(video):
-    return isinstance(video, Episode)
+def is_tv_show(guess):
+    return bool(guess.get('episode'))
 
 
-def is_movie(video):
-    return isinstance(video, Movie)
+def is_movie(guess):
+    return guess.get('type') == 'movie'
 
 
 def is_file_exists(file_path):
@@ -122,20 +118,13 @@ def transform_to_path_name(string):
 
 
 def get_show_name(video):
-    return video.series
-
-
-def remove_wrong_country_data(video):
-    if video.title == 'This is':
-        video.title += '.Us'
-        if video.country:
-            video.country = None
+    return video.get('title')
 
 
 def add_missing_country(video, show_name):
     if show_name.lower() == 'house.of.cards':
-        if not video.country:
-            video.country = 'US'
+        if not video.get('country'):
+            video['country'] = 'US'
 
 
 def create_file(file_path):
@@ -177,22 +166,3 @@ def update_xbmc(kodi_ip, logger):
     url = '{}/jsonrpc'.format(kodi_ip)
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
     return requests.post(url, json=data)
-
-
-def download_subtitles(videos):
-    # download best subtitles
-    subtitles = download_best_subtitles(videos, {Language('heb'), Language('eng')})
-
-    # save them to disk, next to the video
-    for v in videos:
-        save_subtitles(v, subtitles[v])
-
-
-def scan_video(file_path):
-    """
-    Scan 'file_path' to get the video info
-    :param file_path: Video path
-    :type file_path: basestring
-    :return:
-    """
-    return Video.fromguess(file_path, guessit(file_path, options={"expected_title": ["This Is Us"]}))

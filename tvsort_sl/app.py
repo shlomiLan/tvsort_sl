@@ -9,15 +9,12 @@ import traceback
 
 import yaml
 import patoolib
-from subliminal import region, Episode, Movie
+from guessit import guessit
 
 import tvsort_sl.utils as utils
 
 
 class TvSort(object):
-    # configure the cache
-    region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
-
     is_any_error = False
     project_name = 'tvsort_sl'
     settings = dict(PROJECT_NAME=project_name)
@@ -45,12 +42,6 @@ class TvSort(object):
 
                 # Scan and Extract all compressed files
                 self.scan_archives()
-
-                # scan for videos in the unsorted folder
-                videos = self.scan_videos()
-
-                # DOWNLOAD SUBTITLES
-                utils.download_subtitles(videos)
 
                 # UPDATE XBMC
                 utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)
@@ -213,7 +204,6 @@ class TvSort(object):
         Scan for videos (Movies and Episodes) in 'unsorted_path'
         :return: List of videos
         """
-        videos = []
         for file_path in utils.get_files(self.unsorted_path):
             self.logger.info('Checking file: {}'.format(file_path))
 
@@ -223,38 +213,29 @@ class TvSort(object):
                 utils.delete_file(file_path, self.logger)
                 continue
 
-            video = utils.scan_video(file_path)
-            if isinstance(video, (Episode, Movie)):
-                new_path = None
-                file_path = video.name
-                file_name = utils.get_file_name(file_path)
-                self.logger.info('Checking file: {}'.format(file_path))
+            video = guessit(file_path, options={'expected_title': ['This Is Us']})
+            new_path = None
+            file_path = video.name
+            self.logger.info('Checking file: {}'.format(file_path))
 
-                # Episode
-                if isinstance(video, Episode):
-                    video_name = utils.transform_to_path_name(video.series)
-                    utils.add_missing_country(video, video_name)
-                    if video.country:
-                        video_name += '.{}'.format(video.country)
+            # Episode
+            if utils.is_tv_show(video):
+                video_name = utils.transform_to_path_name(video.series)
+                utils.add_missing_country(video, video_name)
+                if video.country:
+                    video_name += '.{}'.format(video.country)
 
-                    new_path = os.path.join(self.settings.get('TV_PATH'), video_name)
-                    utils.create_folder(new_path, self.logger)
+                new_path = os.path.join(self.settings.get('TV_PATH'), video_name)
+                utils.create_folder(new_path, self.logger)
 
-                # Movie
-                elif isinstance(video, Movie):
-                    new_path = self.settings.get('MOVIES_PATH')
-
-                # Copy / Move the video file
-                utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
-
-                # Change the video name (path)
-                video.name = os.path.join(new_path, file_name)
-                videos.append(video)
-
+            # Movie
+            elif utils.is_movie(video):
+                new_path = self.settings.get('MOVIES_PATH')
             else:
                 self.logger('Unsupported file type in: {}'.format(file_path))
 
-        return videos
+            # Copy / Move the video file
+            utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
 
 
 if __name__ == "__main__":

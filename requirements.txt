@@ -1,19 +1,18 @@
 requests==2.19.1
-
 patool==1.12
-python-coveralls==2.9.1
-coveralls==1.5.0
-mock==2.0.0
-codecov==2.0.15
+
+# configs
+PyYAML==3.12
 
 # Logs
 daiquiri==1.5.0
 
 # Tests
 pytest==3.8.0
+codecov==2.0.15
+python-coveralls==2.9.1
+coveralls==1.5.0
+mock==2.0.0
 
-# Media name and Subtitles
+# Find media name
 guessit==3.0.0
-# subliminal from my repository
-git+git://github.com/shlomiLan/subliminal.git@add_country
-babelfish==0.5.5
