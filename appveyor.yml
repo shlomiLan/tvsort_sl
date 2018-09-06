@@ -43,7 +43,8 @@ install:
   - "virtualenv venv"
   - "venv\\Scripts\\activate"
   - "pip freeze"
-  - "pip"
+  - "pip list"
+  - "pip -V"
 
   # Install the build dependencies of the project. If some dependencies contain
   # compiled extensions and are not provided as pre-built wheel packages,
