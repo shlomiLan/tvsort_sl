@@ -10,7 +10,7 @@ codecov==2.0.15
 daiquiri==1.5.0
 
 # Tests
-pytest==3.7.4
+pytest==3.8.0
 
 # Media name and Subtitles
 guessit==3.0.0
