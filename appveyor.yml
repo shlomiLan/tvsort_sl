@@ -53,9 +53,6 @@ install:
 
   - "mkdir logs"
 
-  # Add fcntl module to path
-  - "SET PYTHONPATH=C:\\projects\\tvsort-sl\\tvsort_sl\\fcntl.py"
-
 test_script:
   - "cd tvsort_sl"
   - "coverage run -m pytest"
