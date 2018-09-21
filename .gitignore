@@ -16,6 +16,7 @@ tvsort_sl/settings/test.yml
 
 #virtual environment
 venv/
+venv3/
 
 # logs
 logs/
@@ -24,3 +25,6 @@ logs/
 cachefile.dbm.db
 cachefile.dbm.dogpile.lock
 cachefile.dbm.rw.lock
+
+.mypy_cache/
+.pytest_cache/
