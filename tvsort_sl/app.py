@@ -1,14 +1,13 @@
-from tvsort_sl import utils
-
 import logging
-
-import daiquiri
 import os
 import traceback
 
-import yaml
+import daiquiri
 import patoolib
+import yaml
 from guessit import guessit
+
+from tvsort_sl import utils
 
 
 class TvSort(object):
@@ -59,6 +58,8 @@ class TvSort(object):
             finally:
                 utils.delete_file(self.settings.get('DUMMY_FILE_PATH'), self.logger)
 
+            # TODO: Return list of counters to indicate how many actions were mad
+            # report = [move_or_copy=Counter(), delete=Counter(), garbage=Counter()]
             return not self.is_any_error
         else:
             self.logger.info('Proses already running')
@@ -78,7 +79,7 @@ class TvSort(object):
         """
         Load the basic settings
         """
-        conf_files = self.get_settings_file(self.settings_folder)
+        conf_files = self.get_settings_file(is_base=True)
         self.update_settings_from_file(conf_files)
 
         self.build_base_settings()
