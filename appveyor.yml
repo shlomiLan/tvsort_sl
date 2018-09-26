@@ -8,9 +8,6 @@ environment:
     - PYTHON: "C:\\Python37"
       PYTHON_VERSION: "3.7"
       PYTHON_ARCH: "32"
-    - PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7.8"
-      PYTHON_ARCH: "32"
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 install:
@@ -35,7 +32,7 @@ install:
 
   # Upgrade to the latest version of pip to avoid it displaying warnings
   # about it being out of date.
-  - "c:\\python27\\python.exe -m pip install --disable-pip-version-check --user --upgrade pip"
+  - "python -m pip install --disable-pip-version-check --user --upgrade pip"
 
   - "copy C:\\projects\\tvsort-sl\\tvsort_sl\\settings\\templates\\local.yml C:\\projects\\tvsort-sl\\tvsort_sl\\settings\\local.yml"
   - "copy C:\\projects\\tvsort-sl\\tvsort_sl\\settings\\templates\\test.yml C:\\projects\\tvsort-sl\\tvsort_sl\\settings\\test.yml"
