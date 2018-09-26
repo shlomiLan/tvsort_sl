@@ -131,6 +131,7 @@ def create_file(file_path):
 
 def delete_file(file_path, logger):
     try:
+        logger.info(f'Removing file: {file_path}')
         os.remove(file_path)
         return True
     except Exception as e:
@@ -149,8 +150,14 @@ def copy_file(old_path, new_path, logger, move_file=True):
             shutil.copy(old_path, new_path)
         return True
     except Exception as e:
-        logger.error("Unexpected error: {}".format(e))
-        return False
+        # If error because file already in new path delete the old file
+        if 'already exists' in str(e):
+            delete_file(old_path, logger)
+            return True
+        else:
+            # if Destination path '%s' already exists -> try and delete new file
+            logger.error("Unexpected error: {}".format(e))
+            return False
 
 
 def folder_empty(folder_path):

@@ -35,6 +35,9 @@ def test_main(_):
     garbage_file_path = tv_sort.settings.get('TEST_GARBAGE_PATH')
     utils.copy_file(garbage_file_path, new_files_folder, tv_sort.logger, move_file=False)
 
+    garbage_file_path = tv_sort.settings.get('GARBAGE_FILE_DS')
+    utils.copy_file(garbage_file_path, new_files_folder, tv_sort.logger, move_file=False)
+
     # Add tv-show files
     tv_file_path = tv_sort.settings.get('TEST_TV_PATH')
     utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
@@ -51,6 +54,8 @@ def test_main(_):
     utils.create_folder(tv_sort.settings.get('TEST_FOLDER_IN_UNSORTED'), tv_sort.logger)
 
     assert tv_sort.run()
+    # Add check to make sure that all files were move / deleted
+    # Add test to try and move file that was already moved
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
@@ -122,6 +127,7 @@ def test_file_not_in_ext_list():
 
 
 def test_garbage_file():
+    assert utils.is_garbage_file('.DS_Store', tv_sort.settings)
     assert not utils.is_garbage_file('test.avi', tv_sort.settings)
 
 
