@@ -2,13 +2,13 @@ requests==2.19.1
 patool==1.12
 
 # configs
-PyYAML==3.12
+PyYAML==3.13
 
 # Logs
 daiquiri==1.5.0
 
 # Tests
-pytest==3.7.4
+pytest==3.8.0
 codecov==2.0.15
 python-coveralls==2.9.1
 coveralls==1.5.0
