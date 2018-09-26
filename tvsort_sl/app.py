@@ -1,3 +1,5 @@
+from tvsort_sl import utils
+
 import logging
 
 import daiquiri
@@ -7,8 +9,6 @@ import traceback
 import yaml
 import patoolib
 from guessit import guessit
-
-import tvsort_sl.utils as utils
 
 
 class TvSort(object):
@@ -40,6 +40,9 @@ class TvSort(object):
                 # Scan and Extract all compressed files
                 self.scan_archives()
 
+                # Scan and move/copy videos
+                self.scan_videos()
+
                 # UPDATE XBMC
                 utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)
 
@@ -48,6 +51,7 @@ class TvSort(object):
                     utils.delete_folder_if_empty(folder_path, self.logger)
 
             except Exception as e:
+                # TODO: check if to change to self.is_any_error
                 utils.is_any_error = True
                 self.logger.error(e)
                 self.logger.error(traceback.print_exc())
@@ -144,11 +148,16 @@ class TvSort(object):
 
         # test files
         self.settings['TEST_ZIP_PATH'] = os.path.join(self.settings['TEST_FILES'], 'zip_test.zip')
-        self.settings['TEST_TV_PATH'] = os.path.join(self.settings['TEST_FILES'], 'House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv')   # noqa
-        self.settings['TEST_TV_2_PATH'] = os.path.join(self.settings['TEST_FILES'], 'shameless.us.s08e01.web.h264-convoy.mkv')  # noqa
-        self.settings['TEST_TV_3_PATH'] = os.path.join(self.settings['TEST_FILES'], 'This.Is.Us.S02E01.REPACK.720p.HDTV.x264-AVS.mkv')  # noqa
-        self.settings['TEST_MOVIE'] = os.path.join(self.settings['TEST_FILES'], 'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv')  # noqa
+        self.settings['TEST_TV_PATH'] = os.path.join(self.settings['TEST_FILES'],
+                                                     'House.of.Cards.2013.S04E01.720p.WEBRip.X264-DEFLATE.mkv')  # noqa
+        self.settings['TEST_TV_2_PATH'] = os.path.join(self.settings['TEST_FILES'],
+                                                       'shameless.us.s08e01.web.h264-convoy.mkv')  # noqa
+        self.settings['TEST_TV_3_PATH'] = os.path.join(self.settings['TEST_FILES'],
+                                                       'This.Is.Us.S02E01.REPACK.720p.HDTV.x264-AVS.mkv')  # noqa
+        self.settings['TEST_MOVIE'] = os.path.join(self.settings['TEST_FILES'],
+                                                   'San Andreas 2015 720p WEB-DL x264 AAC-JYK.mkv')  # noqa
         self.settings['TEST_GARBAGE_PATH'] = os.path.join(self.settings['TEST_FILES'], 'test.nfo')
+        self.settings['GARBAGE_FILE_DS'] = os.path.join(self.settings['TEST_FILES'], '.DS_Store')
         self.settings['TEST_FOLDER_NAME'] = 'test.nfo'
         self.settings['TEST_FOLDER_IN_UNSORTED'] = os.path.join(self.settings.get('UNSORTED_PATH'), 'empty_folder')
 
@@ -212,17 +221,16 @@ class TvSort(object):
 
             video = guessit(file_path, options={'expected_title': ['This Is Us']})
             new_path = None
-            file_path = video.name
             self.logger.info('Checking file: {}'.format(file_path))
 
             # Episode
             if utils.is_tv_show(video):
-                video_name = utils.transform_to_path_name(video.series)
-                utils.add_missing_country(video, video_name)
-                if video.country:
-                    video_name += '.{}'.format(video.country)
+                show_name = utils.transform_to_path_name(video.get('title'))
+                utils.add_missing_country(video, show_name)
+                if video.get('country'):
+                    show_name += '.{}'.format(video.get('country'))
 
-                new_path = os.path.join(self.settings.get('TV_PATH'), video_name)
+                new_path = os.path.join(self.settings.get('TV_PATH'), show_name)
                 utils.create_folder(new_path, self.logger)
 
             # Movie
@@ -232,7 +240,9 @@ class TvSort(object):
                 self.logger('Unsupported file type in: {}'.format(file_path))
 
             # Copy / Move the video file
-            utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
+            result = utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
+            if not result:
+                self.is_any_error = True
 
 
 if __name__ == "__main__":
