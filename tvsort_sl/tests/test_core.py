@@ -23,7 +23,6 @@ def teardown_function(_):
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
-# TODO: fix this test, can run without any files
 def test_main(_):
     new_files_folder = tv_sort.settings.get('UNSORTED_PATH')
 
@@ -79,7 +78,8 @@ def test_main_process_running(_):
 
 @mock.patch('requests.post', return_value={'status_code': 200})
 def test_update_xbmc(_):
-    utils.update_xbmc(tv_sort.settings.get('KODI_IP'))
+    response = utils.update_xbmc(tv_sort.settings.get('KODI_IP'))
+    assert response[0][0] == 'info'
 
 
 @mock.patch('tvsort_sl.utils.is_folder_exists', return_value=False)
@@ -256,6 +256,27 @@ def test_move_file():
 
     response = utils.copy_file(test_file_path, new_path)
     assert response[0][0] == 'info'
+
+    # Clean-up
+    response = utils.delete_file(new_test_file_path)
+    assert response[0][0] == 'info'
+
+
+def test_move_file_already_exists():
+    test_file_path = tv_sort.settings.get('TEST_FILE_PATH')
+    new_path = tv_sort.settings.get('TV_PATH')
+    new_test_file_path = os.path.join(new_path, utils.get_file_name(test_file_path))
+
+    response = utils.create_file(test_file_path)
+    assert response[0][0] == 'info'
+    response = utils.copy_file(test_file_path, new_path, move_file=False)
+    assert response[0][0] == 'info'
+
+    response = utils.create_file(test_file_path)
+    assert response[0][0] == 'info'
+    response = utils.copy_file(test_file_path, new_path)
+    tv_sort.logger.error(response)
+    assert response[0][0] == 'error'
 
     # Clean-up
     response = utils.delete_file(new_test_file_path)

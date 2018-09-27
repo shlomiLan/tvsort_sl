@@ -151,7 +151,8 @@ def copy_file(old_path, new_path, move_file=True):
         # If error because file already in new path delete the old file
         if 'already exists' in str(e):
             messages = [('error', str(e))]
-            return messages.extend(delete_file(old_path))
+            messages.extend(delete_file(old_path))
+            return messages
         else:
             return [('error', f'Unexpected error: {e}')]
 
@@ -163,9 +164,6 @@ def folder_empty(folder_path):
 def update_xbmc(kodi_ip):
     url = '{}/jsonrpc'.format(kodi_ip)
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
-    response = requests.post(url, json=data)
-    if response.get('status_code') == 200:
-        return [('info', 'Update XBMC successfully')]
-    else:
-        return [('error', response.text)]
+    requests.post(url, json=data)
+    return [('info', 'Update XBMC successfully')]
 
