@@ -4,7 +4,8 @@ from guessit import guessit
 from mock import mock
 
 import tvsort_sl.utils as utils
-from tvsort_sl.tests.test_base import tv_sort, is_test
+from tvsort_sl.conf import check_project_setup, get_conf_file_name
+from tvsort_sl.tests.test_base import tv_sort
 
 
 def setup_function(_):
@@ -83,7 +84,8 @@ def test_update_xbmc(_):
 
 @mock.patch('tvsort_sl.utils.is_folder_exists', return_value=False)
 def test_no_logs_folder(_):
-    response = tv_sort.check_project_setup(is_test)
+    conf_files = get_conf_file_name(is_test=True)
+    response = check_project_setup(tv_sort.settings, conf_files)
     assert response[0][0] == 'error'
 
 
