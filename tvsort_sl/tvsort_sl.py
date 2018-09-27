@@ -12,7 +12,6 @@ from tvsort_sl import utils
 
 
 class TvSort(object):
-    is_any_error = False
     project_name = 'tvsort_sl'
     settings = dict(PROJECT_NAME=project_name)
     logger = None
