@@ -1,6 +1,5 @@
 import os
 
-import pytest
 from guessit import guessit
 from mock import mock
 
@@ -84,8 +83,8 @@ def test_update_xbmc(_):
 
 @mock.patch('tvsort_sl.utils.is_folder_exists', return_value=False)
 def test_no_logs_folder(_):
-    with pytest.raises(Exception):
-        tv_sort.check_project_setup(is_test)
+    response = tv_sort.check_project_setup(is_test)
+    assert response[0][0] == 'error'
 
 
 def test_is_file_exists():

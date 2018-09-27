@@ -22,7 +22,7 @@ class TvSort(object):
         self.base_dir, self.settings_folder = self.get_settings_folders()
         self.load_base_setting()
 
-        if self.check_project_setup(is_test):
+        if all(message[0] == 'info' for message in self.check_project_setup(is_test)):
             self.load_additional_settings(is_test=is_test)
 
             self.create_logger(**kwargs)
@@ -174,15 +174,15 @@ class TvSort(object):
         conf_files = self.get_settings_file(is_base=False, is_test=is_test)
         # Logs folder exists
         if not utils.is_folder_exists(log_folder_path):
-            raise Exception('Logs folder is missing, should be at: {}'.format(log_folder_path))
+            return [('error', f'Logs folder is missing, should be at: {log_folder_path}')]
 
         # Configs files exists
         for file_path in conf_files:
             if not utils.is_file_exists(file_path):
-                raise Exception('Missing config file, you must have local.yml and test.yml in settings folder.'
-                                'Use files in settings/templates for reference')
+                return [('error', 'Missing config file, you must have local.yml and test.yml in settings folder. '
+                                  'Use files in settings/templates for reference')]
 
-        return True
+        return [('info', 'Project setup successfully')]
 
     def create_logger(self, log_level=logging.INFO):
         """
@@ -239,8 +239,6 @@ class TvSort(object):
             # Movie
             elif utils.is_movie(video):
                 new_path = self.settings.get('MOVIES_PATH')
-            else:
-                self.process_response([('info', f'Unsupported file type in: {file_path}')])
 
             # Copy / Move the video file
             response = utils.copy_file(file_path, new_path, move_file=self.settings.get('MOVE_FILES'))
