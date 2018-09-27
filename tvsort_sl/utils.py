@@ -64,43 +64,43 @@ def is_folder_exists(file_path):
     return os.path.isdir(file_path)
 
 
-def create_folder(folder_path, logger):
+def create_folder(folder_path):
     if not os.path.exists(folder_path):
-        logger.info('Creating folder: {}'.format(folder_path))
         os.makedirs(folder_path)
+        return [('info', f'Creating folder: {folder_path}')]
 
-    return True
 
-
-def delete_folder(folder_path, logger, force=False):
+def delete_folder(folder_path, force=False):
     try:
+        messages = []
         if force:
-            logger.info('Cleaning folder: {}'.format(folder_path))
-            clean_folder(folder_path, logger)
+            messages.append(('info', f'Cleaning folder: {folder_path}'))
+            messages.extend(clean_folder(folder_path))
 
         if folder_empty(folder_path):
-            logger.info('Deleting folder: {}'.format(folder_path))
+            messages.append(('info', 'Deleting folder: {}'.format(folder_path)))
             os.rmdir(folder_path)
-            return True
+            return messages
         else:
-            logger.error("Folder is not empty")
-            return False
+            return [('error', 'Folder is not empty')]
     except Exception as e:
-        logger.error("Folder can't be deleted, Unexpected error: {}".format(e))
-        return False
+        return [('error', f"Folder can't be deleted, Unexpected error: {e}")]
 
 
-def delete_folder_if_empty(folder_path, logger):
+def delete_folder_if_empty(folder_path):
     if folder_empty(folder_path):
-        delete_folder(folder_path, logger)
+        delete_folder(folder_path)
 
 
-def clean_folder(folder_path, logger):
+def clean_folder(folder_path):
+    msseages = []
     for file_path in get_files(folder_path):
-        delete_file(file_path, logger)
+        msseages.append(delete_file(file_path))
 
     for sub_folder in get_folders(folder_path):
-        delete_folder(sub_folder, logger)
+        msseages.append(delete_folder(sub_folder))
+
+    return msseages
 
 
 def is_process_already_running(file_path):
@@ -127,46 +127,45 @@ def add_missing_country(video, show_name):
 def create_file(file_path):
     dummy_file = open(file_path, str('w'))
     dummy_file.close()
+    return [('info', f'File was created, in: {file_path}')]
 
 
-def delete_file(file_path, logger):
+def delete_file(file_path):
     try:
-        logger.info(f'Removing file: {file_path}')
         os.remove(file_path)
-        return True
+        return [('info', f'Removing file: {file_path}')]
     except Exception as e:
-        logger.error("Unexpected error: {}".format(e))
-        return False
+        return [('error', f'Unexpected error: {e}')]
 
 
-def copy_file(old_path, new_path, logger, move_file=True):
+def copy_file(old_path, new_path, move_file=True):
     action = 'Moving' if move_file else 'Copying'
-    logger.info('{} file: FROM {} TO {}'.format(action, old_path, new_path))
 
     try:
         if move_file:
             shutil.move(old_path, new_path)
         else:
             shutil.copy(old_path, new_path)
-        return True
+        return [('info', f'{action} file: FROM {old_path} TO {new_path}')]
     except Exception as e:
         # If error because file already in new path delete the old file
         if 'already exists' in str(e):
-            delete_file(old_path, logger)
-            return True
+            messages = [('error', str(e))]
+            return messages.extend(delete_file(old_path))
         else:
-            # if Destination path '%s' already exists -> try and delete new file
-            logger.error("Unexpected error: {}".format(e))
-            return False
+            return [('error', f'Unexpected error: {e}')]
 
 
 def folder_empty(folder_path):
     return not bool(get_files(folder_path))
 
 
-def update_xbmc(kodi_ip, logger):
-    logger.info('Update XBMC')
-
+def update_xbmc(kodi_ip):
     url = '{}/jsonrpc'.format(kodi_ip)
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
-    return requests.post(url, json=data)
+    response = requests.post(url, json=data)
+    if response.get('status_code') == 200:
+        return [('info', 'Update XBMC successfully')]
+    else:
+        return [('error', response.text)]
+

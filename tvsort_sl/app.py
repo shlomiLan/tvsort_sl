@@ -1,6 +1,7 @@
 import logging
 import os
 import traceback
+from collections import Counter
 
 import daiquiri
 import patoolib
@@ -15,6 +16,8 @@ class TvSort(object):
     project_name = 'tvsort_sl'
     settings = dict(PROJECT_NAME=project_name)
     logger = None
+
+    report = dict(counters=Counter(), errors=[])
 
     def __init__(self, is_test=False, **kwargs):
         self.base_dir, self.settings_folder = self.get_settings_folders()
@@ -43,27 +46,26 @@ class TvSort(object):
                 self.scan_videos()
 
                 # UPDATE XBMC
-                utils.update_xbmc(self.settings.get('KODI_IP'), self.logger)
+                response = utils.update_xbmc(self.settings.get('KODI_IP'))
+                self.process_response(response)
 
                 # CLEAN UP
                 for folder_path in utils.get_folders(self.unsorted_path):
-                    utils.delete_folder_if_empty(folder_path, self.logger)
+                    response = utils.delete_folder_if_empty(folder_path)
+                    self.process_response(response)
 
             except Exception as e:
-                # TODO: check if to change to self.is_any_error
-                utils.is_any_error = True
-                self.logger.error(e)
-                self.logger.error(traceback.print_exc())
+                self.process_response([('error', traceback.print_exc())])
+                self.process_response([('error', str(e))])
 
             finally:
-                utils.delete_file(self.settings.get('DUMMY_FILE_PATH'), self.logger)
+                response = utils.delete_file(self.settings.get('DUMMY_FILE_PATH'))
+                self.process_response(response)
 
-            # TODO: Return list of counters to indicate how many actions were mad
-            # report = [move_or_copy=Counter(), delete=Counter(), garbage=Counter()]
-            return not self.is_any_error
         else:
-            self.logger.info('Proses already running')
-            return False
+            self.process_response([('error', 'Proses already running')])
+
+        return self.report
 
     def get_settings_folders(self):
         """
@@ -202,9 +204,10 @@ class TvSort(object):
         """
         for file_path in utils.get_files(self.unsorted_path):
             if utils.is_compressed(file_path, self.settings):
-                self.logger.info("Extracting {}".format(file_path))
                 patoolib.extract_archive(file_path, outdir=self.unsorted_path, verbosity=-1)
-                utils.delete_file(file_path, self.logger)
+                self.process_response(['info', f'Extracting {file_path}'])
+                response = utils.delete_file(file_path)
+                self.process_response(response)
 
     def scan_videos(self):
         """
@@ -212,17 +215,16 @@ class TvSort(object):
         :return: List of videos
         """
         for file_path in utils.get_files(self.unsorted_path):
-            self.logger.info('Checking file: {}'.format(file_path))
+            self.process_response([('info', f'Checking file: {file_path}')])
 
             # GARBAGE_FILE
             if utils.is_garbage_file(file_path, self.settings):
-                self.logger.info('Removing file: {}'.format(file_path))
-                utils.delete_file(file_path, self.logger)
+                response = utils.delete_file(file_path)
+                self.process_response(response)
                 continue
 
             video = guessit(file_path, options={'expected_title': ['This Is Us']})
             new_path = None
-            self.logger.info('Checking file: {}'.format(file_path))
 
             # Episode
             if utils.is_tv_show(video):
@@ -232,18 +234,35 @@ class TvSort(object):
                     show_name += '.{}'.format(video.get('country'))
 
                 new_path = os.path.join(self.settings.get('TV_PATH'), show_name)
-                utils.create_folder(new_path, self.logger)
+                response = utils.create_folder(new_path)
+                self.process_response(response)
 
             # Movie
             elif utils.is_movie(video):
                 new_path = self.settings.get('MOVIES_PATH')
             else:
-                self.logger('Unsupported file type in: {}'.format(file_path))
+                self.process_response([('info', f'Unsupported file type in: {file_path}')])
 
             # Copy / Move the video file
-            result = utils.copy_file(file_path, new_path, self.logger, move_file=self.settings.get('MOVE_FILES'))
-            if not result:
-                self.is_any_error = True
+            response = utils.copy_file(file_path, new_path, move_file=self.settings.get('MOVE_FILES'))
+            self.process_response(response)
+
+    def process_response(self, response):
+        if response:
+            for messages in response:
+                msg_type = messages[0]
+                msg_text = messages[1]
+
+                if msg_type == 'info':
+                    self.logger.info(msg_text)
+                    if 'Removing file' in msg_text:
+                        self.report.get('counters')['delete'] += 1
+                    elif any(text in msg_text for text in ['Moving file', 'Copying file']):
+                        self.report.get('counters')['move_or_copy'] += 1
+                elif msg_type == 'error':
+                    self.logger.error(msg_text)
+                    self.report.get('counters')['error'] += 1
+                    self.report.get('errors').append(msg_text)
 
 
 if __name__ == "__main__":

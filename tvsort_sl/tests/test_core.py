@@ -9,17 +9,17 @@ from tvsort_sl.tests.test_base import tv_sort, is_test
 
 
 def setup_function(_):
-    utils.create_folder(tv_sort.settings.get('TV_PATH'), tv_sort.logger)
-    utils.create_folder(tv_sort.settings.get('DUMMY_PATH'), tv_sort.logger)
-    utils.create_folder(tv_sort.settings.get('MOVIES_PATH'), tv_sort.logger)
-    utils.create_folder(tv_sort.settings.get('UNSORTED_PATH'), tv_sort.logger)
+    utils.create_folder(tv_sort.settings.get('TV_PATH'))
+    utils.create_folder(tv_sort.settings.get('DUMMY_PATH'))
+    utils.create_folder(tv_sort.settings.get('MOVIES_PATH'))
+    utils.create_folder(tv_sort.settings.get('UNSORTED_PATH'))
 
 
 def teardown_function(_):
-    utils.delete_folder(tv_sort.settings.get('TV_PATH'), tv_sort.logger, force=True)
-    utils.delete_folder(tv_sort.settings.get('DUMMY_PATH'), tv_sort.logger, force=True)
-    utils.delete_folder(tv_sort.settings.get('MOVIES_PATH'), tv_sort.logger, force=True)
-    utils.delete_folder(tv_sort.settings.get('UNSORTED_PATH'), tv_sort.logger, force=True)
+    utils.delete_folder(tv_sort.settings.get('TV_PATH'), force=True)
+    utils.delete_folder(tv_sort.settings.get('DUMMY_PATH'), force=True)
+    utils.delete_folder(tv_sort.settings.get('MOVIES_PATH'), force=True)
+    utils.delete_folder(tv_sort.settings.get('UNSORTED_PATH'), force=True)
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
@@ -29,46 +29,57 @@ def test_main(_):
 
     # Add ZIP file
     zip_file_path = tv_sort.settings.get('TEST_ZIP_PATH')
-    utils.copy_file(zip_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    response = utils.copy_file(zip_file_path, new_files_folder, move_file=False)
+    assert response[0][0] == 'info'
 
     # Add garbage file
     garbage_file_path = tv_sort.settings.get('TEST_GARBAGE_PATH')
-    utils.copy_file(garbage_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    response = utils.copy_file(garbage_file_path, new_files_folder, move_file=False)
+    assert response[0][0] == 'info'
 
     garbage_file_path = tv_sort.settings.get('GARBAGE_FILE_DS')
-    utils.copy_file(garbage_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    response = utils.copy_file(garbage_file_path, new_files_folder, move_file=False)
+    assert response[0][0] == 'error'
 
     # Add tv-show files
     tv_file_path = tv_sort.settings.get('TEST_TV_PATH')
-    utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    response = utils.copy_file(tv_file_path, new_files_folder, move_file=False)
+    assert response[0][0] == 'info'
     tv_file_path = tv_sort.settings.get('TEST_TV_2_PATH')
-    utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    response = utils.copy_file(tv_file_path, new_files_folder, move_file=False)
+    assert response[0][0] == 'info'
     tv_file_path = tv_sort.settings.get('TEST_TV_3_PATH')
-    utils.copy_file(tv_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    response = utils.copy_file(tv_file_path, new_files_folder, move_file=False)
+    assert response[0][0] == 'info'
 
     # Add movie file
     movie_file_path = tv_sort.settings.get('TEST_MOVIE')
-    utils.copy_file(movie_file_path, new_files_folder, tv_sort.logger, move_file=False)
+    response = utils.copy_file(movie_file_path, new_files_folder, move_file=False)
+    assert response[0][0] == 'info'
 
     # create empty folder
-    utils.create_folder(tv_sort.settings.get('TEST_FOLDER_IN_UNSORTED'), tv_sort.logger)
+    response = utils.create_folder(tv_sort.settings.get('TEST_FOLDER_IN_UNSORTED'))
+    assert response[0][0] == 'info'
 
-    assert tv_sort.run()
-    # Add check to make sure that all files were move / deleted
-    # Add test to try and move file that was already moved
+    result = tv_sort.run()
+    counters = result.get('counters')
+    assert counters.get('move_or_copy') == 4
+    assert counters.get('delete') == 3
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
 def test_main_process_running(_):
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
     utils.create_file(dummy_file_path)
-    assert not tv_sort.run()
-    utils.delete_file(dummy_file_path, tv_sort.logger)
+    result = tv_sort.run()
+    assert 'Proses already running' in result.get('errors')
+    response = utils.delete_file(dummy_file_path)
+    assert response[0][0] == 'info'
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
 def test_update_xbmc(_):
-    utils.update_xbmc(tv_sort.settings.get('KODI_IP'), tv_sort.logger)
+    utils.update_xbmc(tv_sort.settings.get('KODI_IP'))
 
 
 @mock.patch('tvsort_sl.utils.is_folder_exists', return_value=False)
@@ -80,9 +91,13 @@ def test_no_logs_folder(_):
 def test_is_file_exists():
     file_path = tv_sort.settings.get('TEST_FILE_PATH')
     assert not utils.is_file_exists(file_path)
-    utils.create_file(file_path)
+    response = utils.create_file(file_path)
+    assert response[0][0] == 'info'
+    assert 'File was created' in response[0][1]
+
     assert utils.is_file_exists(file_path)
-    utils.delete_file(file_path, tv_sort.logger)
+    response = utils.delete_file(file_path)
+    assert response[0][0] == 'info'
 
 
 def test_replace_space_with_dots_int_input():
@@ -141,23 +156,32 @@ def test_show_name():
 def test_folder_exist():
     folder_path = tv_sort.settings.get('FAKE_PATH')
     assert not utils.is_folder_exists(folder_path)
-    assert not utils.delete_folder(folder_path, tv_sort.logger)
+    response = utils.delete_folder(folder_path)
+    assert response[0][0] == 'error'
+
     folder_path = tv_sort.settings.get('TV_PATH')
     assert utils.is_folder_exists(folder_path)
 
 
 def test_delete_folder():
-    assert utils.delete_folder(tv_sort.settings.get('UNSORTED_PATH'), tv_sort.logger)
-    utils.create_folder(tv_sort.settings.get('UNSORTED_PATH'), tv_sort.logger)
+    response = utils.delete_folder(tv_sort.settings.get('UNSORTED_PATH'))
+    assert response[0][0] == 'info'
+
+    response = utils.create_folder(tv_sort.settings.get('UNSORTED_PATH'))
+    assert response[0][0] == 'info'
 
 
 def test_create_folder():
-    utils.delete_folder(tv_sort.settings.get('DUMMY_PATH'), tv_sort.logger)
-    assert utils.create_folder(tv_sort.settings.get('DUMMY_PATH'), tv_sort.logger)
+    response = utils.delete_folder(tv_sort.settings.get('DUMMY_PATH'))
+    assert response[0][0] == 'info'
+
+    response = utils.create_folder(tv_sort.settings.get('DUMMY_PATH'))
+    assert response[0][0] == 'info'
 
 
 def test_create_folder_that_already_exists():
-    assert utils.create_folder(tv_sort.settings.get('DUMMY_PATH'), tv_sort.logger)
+    response = utils.create_folder(tv_sort.settings.get('DUMMY_PATH'))
+    assert response is None
 
 
 def test_empty_folder():
@@ -169,10 +193,16 @@ def test_not_empty_folder():
     file_name = 'dummy1.txt'
     folder_path = tv_sort.settings.get('DUMMY_PATH')
     file_path = os.path.join(folder_path, file_name)
-    utils.create_file(file_path)
+    response = utils.create_file(file_path)
+    assert response[0][0] == 'info'
     assert not utils.folder_empty(folder_path)
-    assert not utils.delete_folder(folder_path, tv_sort.logger)
-    utils.delete_file(file_path, tv_sort.logger)
+
+    # Can't delete not empty folder
+    response = utils.delete_folder(folder_path)
+    assert all(message[0] == 'error' for message in response)
+
+    response = utils.delete_file(file_path)
+    assert response[0][0] == 'info'
 
 
 def test_wrong_series_name():
@@ -204,13 +234,18 @@ def test_get_file_ext():
 
 def test_delete_file():
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
-    utils.create_file(dummy_file_path)
-    assert utils.delete_file(dummy_file_path, tv_sort.logger)
+    response = utils.create_file(dummy_file_path)
+    assert response[0][0] == 'info'
+
+    response = utils.delete_file(dummy_file_path)
+    assert response[0][0] == 'info'
 
 
 def test_delete_file_fail():
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
-    assert not utils.delete_file(dummy_file_path, tv_sort.logger)
+    response = utils.delete_file(dummy_file_path)
+    assert response[0][0] == 'error'
+    assert 'Unexpected error:' in response[0][1]
 
 
 def test_move_file():
@@ -218,9 +253,13 @@ def test_move_file():
     utils.create_file(test_file_path)
     new_path = tv_sort.settings.get('TV_PATH')
     new_test_file_path = os.path.join(new_path, utils.get_file_name(test_file_path))
-    assert utils.copy_file(test_file_path, new_path, tv_sort.logger)
+
+    response = utils.copy_file(test_file_path, new_path)
+    assert response[0][0] == 'info'
+
     # Clean-up
-    utils.delete_file(new_test_file_path, tv_sort.logger)
+    response = utils.delete_file(new_test_file_path)
+    assert response[0][0] == 'info'
 
 
 def test_copy_file():
@@ -228,16 +267,21 @@ def test_copy_file():
     utils.create_file(test_file_path)
     new_path = tv_sort.settings.get('TV_PATH')
     new_test_file_path = os.path.join(new_path, utils.get_file_name(test_file_path))
-    assert utils.copy_file(test_file_path, new_path, tv_sort.logger, move_file=False)
+    response = utils.copy_file(test_file_path, new_path, move_file=False)
+    assert response[0][0] == 'info'
+
     # Delete both files
-    utils.delete_file(test_file_path, tv_sort.logger)
-    utils.delete_file(new_test_file_path, tv_sort.logger)
+    response = utils.delete_file(test_file_path)
+    assert response[0][0] == 'info'
+    response = utils.delete_file(new_test_file_path)
+    assert response[0][0] == 'info'
 
 
 def test_copy_file_fail():
     test_file_path = tv_sort.settings.get('TEST_FILE_PATH')
     new_path = tv_sort.settings.get('TV_PATH')
-    assert not utils.copy_file(test_file_path, new_path, tv_sort.logger)
+    response = utils.copy_file(test_file_path, new_path)
+    assert response[0][0] == 'error'
 
 
 def test_get_folder_name_from_path():
