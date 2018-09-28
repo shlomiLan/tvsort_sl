@@ -24,7 +24,7 @@ class TvSort(object):
         self.create_logger(**kwargs)
 
         conf_files = conf.get_conf_file_name(is_test=is_test)
-        response = conf.check_project_setup(self.settings, conf_files)
+        response = utils.check_project_setup(self.settings, conf_files)
         self.process_response(response)
         if any(message[0] != 'info' for message in response):
             return

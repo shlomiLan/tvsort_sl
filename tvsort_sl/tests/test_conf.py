@@ -1,7 +1,8 @@
 import os
 
-from tvsort_sl.conf import SETTINGS_FOLDER, check_project_setup, get_conf_file_name
+from tvsort_sl.conf import SETTINGS_FOLDER, get_conf_file_name
 from tvsort_sl.tests.test_base import tv_sort
+from tvsort_sl.utils import check_project_setup
 
 
 def test_missing_conf_file():

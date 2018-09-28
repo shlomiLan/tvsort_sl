@@ -2,26 +2,8 @@ import os
 
 import yaml
 
-from tvsort_sl import utils
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))).replace('\\', '/')
 SETTINGS_FOLDER = os.path.join(BASE_DIR, 'tvsort_sl', 'settings')
-
-
-def check_project_setup(settings, conf_files):
-    log_folder_path = settings.get('LOG_PATH')
-
-    # Logs folder exists
-    if not utils.is_folder_exists(log_folder_path):
-        return [('error', f'Logs folder is missing, should be at: {log_folder_path}')]
-
-    # Configs files exists
-    for file_path in conf_files:
-        if not utils.is_file_exists(file_path):
-            return [('error', 'Missing config file, you must have local.yml and test.yml in settings folder. '
-                              'Use files in settings/templates for reference')]
-
-    return [('info', 'Project setup successfully')]
 
 
 def get_conf_file_name(is_test=False):

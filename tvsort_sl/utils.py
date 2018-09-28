@@ -171,3 +171,19 @@ def update_xbmc(kodi_ip: str) -> List[Tuple[str, str]]:
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
     requests.post(url, json=data)
     return [('info', 'Update XBMC successfully')]
+
+
+def check_project_setup(settings, conf_files):
+    log_folder_path = settings.get('LOG_PATH')
+
+    # Logs folder exists
+    if not is_folder_exists(log_folder_path):
+        return [('error', f'Logs folder is missing, should be at: {log_folder_path}')]
+
+    # Configs files exists
+    for file_path in conf_files:
+        if not is_file_exists(file_path):
+            return [('error', 'Missing config file, you must have local.yml and test.yml in settings folder. '
+                              'Use files in settings/templates for reference')]
+
+    return [('info', 'Project setup successfully')]
