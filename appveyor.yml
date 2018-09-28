@@ -55,4 +55,4 @@ test_script:
   - "coverage run -m pytest"
   - "codecov"
   - "cd"
-  - "python -m tvsort_sl.tvsort_sl "
+  - "python -m tvsort_sl.app "
