@@ -33,14 +33,23 @@ def get_conf_file_name(is_test=False):
     return conf_files
 
 
-def update_settings_from_file(settings, conf_files):
+def get_ext_file_name():
+    return [os.path.join(SETTINGS_FOLDER, 'extensions.yml')]
+
+
+def update_dict_from_yaml(settings, conf_files):
     for file_path in conf_files:
         settings.update(yaml.load(open(file_path)))
 
 
 def load_setting(settings, conf_files):
-    update_settings_from_file(settings, conf_files)
+    update_dict_from_yaml(settings, conf_files)
     build_settings(settings)
+
+
+def load_extensions(extensions):
+    ext_files = get_ext_file_name()
+    update_dict_from_yaml(extensions, ext_files)
 
 
 def build_settings(settings):

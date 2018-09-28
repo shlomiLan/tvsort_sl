@@ -1,34 +1,35 @@
-import requests
 import os
-
 import shutil
+from typing import List, Optional, Tuple, Dict
+
+import requests
 
 
-def is_compressed(file_name, setting):
-    return is_file_ext_in_list(get_file_ext(file_name), setting.get('COMPRESS_EXTS'))
+def is_compressed(file_name: str, extensions: Dict[str, List[str]]) -> bool:
+    return is_file_ext_in_list(get_file_ext(file_name), extensions.get('COMPRESS', []))
 
 
-def is_garbage_file(file_name, setting):
-    return is_file_ext_in_list(get_file_ext(file_name), setting.get('GARBAGE_EXTS')) or 'sample' in file_name.lower()
+def is_garbage_file(file_name: str, extensions: Dict[str, List[str]]) -> bool:
+    return is_file_ext_in_list(get_file_ext(file_name), extensions.get('GARBAGE', [])) or 'sample' in file_name.lower()
 
 
-def is_file_ext_in_list(file_ext, ext_list):
+def is_file_ext_in_list(file_ext: str, ext_list: List[str]) -> bool:
     return bool(file_ext.lower() in ext_list)
 
 
-def get_file_ext(file_name):
+def get_file_ext(file_name: str) -> str:
     return file_name.split('.')[-1]
 
 
-def get_file_name(file_path):
+def get_file_name(file_path: str) -> str:
     return file_path.split(os.sep)[-1]
 
 
-def get_folder_path_from_file_path(file_path):
+def get_folder_path_from_file_path(file_path: str) -> str:
     return os.path.dirname(file_path)
 
 
-def get_files(path):
+def get_files(path: str) -> List[str]:
     files = []
 
     for root, _, walk_files in os.walk(path):
@@ -38,7 +39,7 @@ def get_files(path):
     return sorted(files)
 
 
-def get_folders(path):
+def get_folders(path: str) -> List[str]:
     folders = []
 
     for root, dirs, _ in os.walk(path):
@@ -48,29 +49,31 @@ def get_folders(path):
     return sorted(folders)
 
 
-def is_tv_show(guess):
+def is_tv_show(guess: dict) -> bool:
     return bool(guess.get('episode'))
 
 
-def is_movie(guess):
+def is_movie(guess: dict) -> bool:
     return guess.get('type') == 'movie'
 
 
-def is_file_exists(file_path):
+def is_file_exists(file_path: str) -> bool:
     return os.path.isfile(file_path)
 
 
-def is_folder_exists(file_path):
+def is_folder_exists(file_path: str) -> bool:
     return os.path.isdir(file_path)
 
 
-def create_folder(folder_path):
+def create_folder(folder_path: str) -> Optional[List[Tuple[str, str]]]:
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
         return [('info', f'Creating folder: {folder_path}')]
 
+    return None
 
-def delete_folder(folder_path, force=False):
+
+def delete_folder(folder_path: str, force: bool = False) -> List[Tuple[str, str]]:
     try:
         messages = []
         if force:
@@ -87,50 +90,50 @@ def delete_folder(folder_path, force=False):
         return [('error', f"Folder can't be deleted, Unexpected error: {e}")]
 
 
-def delete_folder_if_empty(folder_path):
+def delete_folder_if_empty(folder_path: str) -> None:
     if folder_empty(folder_path):
         delete_folder(folder_path)
 
 
-def clean_folder(folder_path):
+def clean_folder(folder_path: str) -> List[Tuple[str, str]]:
     msseages = []
     for file_path in get_files(folder_path):
-        msseages.append(delete_file(file_path))
+        msseages.extend(delete_file(file_path))
 
     for sub_folder in get_folders(folder_path):
-        msseages.append(delete_folder(sub_folder))
+        msseages.extend(delete_folder(sub_folder))
 
     return msseages
 
 
-def is_process_already_running(file_path):
+def is_process_already_running(file_path: str) -> bool:
     return is_file_exists(file_path)
 
 
-def transform_to_path_name(string):
+def transform_to_path_name(string: str) -> str:
     if isinstance(string, int):
         string = str(string)
     string = string.replace(' ', '.')
     return '.'.join([str(x).capitalize() for x in string.split('.')])
 
 
-def get_show_name(video):
+def get_show_name(video: Dict[str, str]) -> Optional[str]:
     return video.get('title')
 
 
-def add_missing_country(video, show_name):
+def add_missing_country(video: dict, show_name: str) -> None:
     if show_name.lower() == 'house.of.cards':
         if not video.get('country'):
             video['country'] = 'US'
 
 
-def create_file(file_path):
+def create_file(file_path: str) -> List[Tuple[str, str]]:
     dummy_file = open(file_path, str('w'))
     dummy_file.close()
     return [('info', f'File was created, in: {file_path}')]
 
 
-def delete_file(file_path):
+def delete_file(file_path: str) -> List[Tuple[str, str]]:
     try:
         os.remove(file_path)
         return [('info', f'Removing file: {file_path}')]
@@ -138,7 +141,7 @@ def delete_file(file_path):
         return [('error', f'Unexpected error: {e}')]
 
 
-def copy_file(old_path, new_path, move_file=True):
+def copy_file(old_path: str, new_path: str, move_file: bool = True) -> List[Tuple[str, str]]:
     action = 'Moving' if move_file else 'Copying'
 
     try:
@@ -157,13 +160,12 @@ def copy_file(old_path, new_path, move_file=True):
             return [('error', f'Unexpected error: {e}')]
 
 
-def folder_empty(folder_path):
+def folder_empty(folder_path: str) -> bool:
     return not bool(get_files(folder_path))
 
 
-def update_xbmc(kodi_ip):
+def update_xbmc(kodi_ip: str) -> List[Tuple[str, str]]:
     url = '{}/jsonrpc'.format(kodi_ip)
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
     requests.post(url, json=data)
     return [('info', 'Update XBMC successfully')]
-

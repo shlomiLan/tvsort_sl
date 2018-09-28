@@ -4,5 +4,6 @@ MOVE_FILES: True
 DUMMY_FILE_NAME: 'dummy.txt'
 
 # extensions
-COMPRESS_EXTS: ['r00', 'rar', 'zip']
-GARBAGE_EXTS: ['nfo', 'txt', 'db', 'pdf', 'jpg', 'png', 'srt', 'dat', 'vob', 'ds_store']
+EXTENSIONS:
+  COMPRESS: ['r00', 'rar', 'zip']
+  GARBAGE: ['nfo', 'txt', 'db', 'pdf', 'jpg', 'png', 'srt', 'dat', 'vob', 'ds_store']

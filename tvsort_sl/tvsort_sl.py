@@ -2,10 +2,11 @@ import logging
 import os
 import traceback
 from collections import Counter
+from typing import Dict, Union, List
 
 import daiquiri
+import guessit
 import patoolib
-from guessit import guessit
 
 from tvsort_sl import utils, conf
 from tvsort_sl.conf import BASE_DIR
@@ -13,10 +14,11 @@ from tvsort_sl.conf import BASE_DIR
 
 class TvSort(object):
     project_name = 'tvsort_sl'
-    settings = dict(PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs'))
+    settings: Dict[str, Union[str, bool]] = dict(PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs'))
+    extensions: Dict[str, List[str]] = dict()
     logger = None
 
-    report = dict(counters=Counter(), errors=[])
+    report: Dict[str, Union[Counter, List[str]]] = dict(counters=Counter(), errors=[])
 
     def __init__(self, is_test=False, **kwargs):
         self.create_logger(**kwargs)
@@ -28,6 +30,7 @@ class TvSort(object):
             return
 
         conf.load_setting(self.settings, conf_files)
+        conf.load_extensions(self.extensions)
         self.unsorted_path = self.settings.get('UNSORTED_PATH')
 
     def run(self):
@@ -72,7 +75,7 @@ class TvSort(object):
 
     def scan_archives(self):
         for file_path in utils.get_files(self.unsorted_path):
-            if utils.is_compressed(file_path, self.settings):
+            if utils.is_compressed(file_path, self.extensions):
                 patoolib.extract_archive(file_path, outdir=self.unsorted_path, verbosity=-1)
                 self.process_response(['info', f'Extracting {file_path}'])
                 response = utils.delete_file(file_path)
@@ -83,12 +86,12 @@ class TvSort(object):
             self.process_response([('info', f'Checking file: {file_path}')])
 
             # Garbage
-            if utils.is_garbage_file(file_path, self.settings):
+            if utils.is_garbage_file(file_path, self.extensions):
                 response = utils.delete_file(file_path)
                 self.process_response(response)
                 continue
 
-            video = guessit(file_path, options={'expected_title': ['This Is Us']})
+            video = guessit.guessit(file_path, options={'expected_title': ['This Is Us']})
             new_path = None
 
             # Episode
