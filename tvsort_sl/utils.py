@@ -1,6 +1,6 @@
 import os
 import shutil
-from typing import List, Optional, Tuple, Dict
+from typing import List, Optional, Tuple, Dict, Union
 
 import requests
 
@@ -90,9 +90,11 @@ def delete_folder(folder_path: str, force: bool = False) -> List[Tuple[str, str]
         return [('error', f"Folder can't be deleted, Unexpected error: {e}")]
 
 
-def delete_folder_if_empty(folder_path: str) -> None:
+def delete_folder_if_empty(folder_path: str) -> List[Tuple[str, str]]:
     if folder_empty(folder_path):
-        delete_folder(folder_path)
+        return delete_folder(folder_path)
+
+    return [('', '')]
 
 
 def clean_folder(folder_path: str) -> List[Tuple[str, str]]:
@@ -110,7 +112,7 @@ def is_process_already_running(file_path: str) -> bool:
     return is_file_exists(file_path)
 
 
-def transform_to_path_name(string: str) -> str:
+def transform_to_path_name(string: Union[str, int]) -> str:
     if isinstance(string, int):
         string = str(string)
     string = string.replace(' ', '.')

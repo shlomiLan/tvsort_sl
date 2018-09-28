@@ -1,7 +1,7 @@
 import os
 
+import mock
 from guessit import guessit
-from mock import mock
 
 import tvsort_sl.utils as utils
 from tvsort_sl.conf import check_project_setup, get_conf_file_name

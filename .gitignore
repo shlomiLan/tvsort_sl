@@ -1,6 +1,5 @@
 .idea
 dist
-tvsort_sl/settings.py
 *.DS_Store
 .cache/
 
@@ -16,7 +15,6 @@ tvsort_sl/settings/test.yml
 
 #virtual environment
 venv/
-venv3/
 
 # logs
 logs/
