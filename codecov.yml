@@ -1,2 +1,8 @@
 fixes:
   - "::tvsort_sl/"
+coverage:
+  status:
+    patch:
+      default:
+        target: 95%
+        threshold: 0.1
