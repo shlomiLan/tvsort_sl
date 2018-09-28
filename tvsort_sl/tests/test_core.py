@@ -36,10 +36,6 @@ def test_main(_):
     response = utils.copy_file(garbage_file_path, new_files_folder, move_file=False)
     assert response[0][0] == 'info'
 
-    garbage_file_path = tv_sort.settings.get('GARBAGE_FILE_DS')
-    response = utils.copy_file(garbage_file_path, new_files_folder, move_file=False)
-    assert response[0][0] == 'error'
-
     # Add tv-show files
     tv_file_path = tv_sort.settings.get('TEST_TV_PATH')
     response = utils.copy_file(tv_file_path, new_files_folder, move_file=False)
