@@ -1,3 +1,4 @@
+# coding: future_fstrings
 import logging
 import os
 import traceback
@@ -11,14 +12,15 @@ import patoolib
 from tvsort_sl import utils, conf
 from tvsort_sl.conf import BASE_DIR
 
-
 class TvSort(object):
+
+
     project_name = 'tvsort_sl'
-    settings: Dict[str, Union[str, bool]] = dict(PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs'))
-    extensions: Dict[str, List[str]] = dict()
+    settings = dict(PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs'))
+    extensions = dict()
     logger = None
 
-    report: Dict[str, Union[Counter, List[str]]] = dict(counters=Counter(), errors=[])
+    report = dict(counters=Counter(), errors=[])
 
     def __init__(self, is_test=False, **kwargs):
         self.create_logger(**kwargs)
@@ -130,6 +132,8 @@ class TvSort(object):
                     self.report.get('counters')['error'] += 1
                     self.report.get('errors').append(msg_text)
 
+TvSort.__annotations__ = {'settings': Dict[str, Union[str, bool]], 'extensions': Dict[str, List[str]],
+                          'report': Dict[str, Union[Counter, List[str]]]}
 
 if __name__ == "__main__":
     tv_sort = TvSort()
