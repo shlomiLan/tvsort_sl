@@ -8,11 +8,11 @@ PyYAML==3.13
 daiquiri==1.5.0
 
 # Tests
-pytest==3.8.0
+pytest==3.8.2
 pytest-cov==2.6.0
 codecov==2.0.15
 python-coveralls==2.9.1
-coveralls==1.5.0
+coveralls==1.5.1
 mock==2.0.0
 
 # Find media name
