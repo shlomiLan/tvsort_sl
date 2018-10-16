@@ -17,7 +17,3 @@ mock==2.0.0
 
 # Find media name
 guessit==3.0.0
-
-# Python 2.7 support
-typing==3.6.6
-future-fstrings==0.4.4
