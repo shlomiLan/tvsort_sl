@@ -26,3 +26,5 @@ cachefile.dbm.rw.lock
 
 .mypy_cache/
 .pytest_cache/
+
+resources/

@@ -23,7 +23,8 @@ def teardown_function(_):
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
-def test_main(_):
+@mock.patch('tvsort_sl.email.send_email', return_value={'status_code': 202})
+def test_main(_, __):
     new_files_folder = tv_sort.settings.get('UNSORTED_PATH')
 
     # Add ZIP file
@@ -63,7 +64,8 @@ def test_main(_):
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
-def test_main_process_running(_):
+@mock.patch('tvsort_sl.email.send_email', return_value={'status_code': 202})
+def test_main_process_running(_, __):
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
     utils.create_file(dummy_file_path)
     result = tv_sort.run()

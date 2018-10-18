@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import traceback
@@ -10,6 +11,7 @@ import patoolib
 
 from tvsort_sl import utils, conf
 from tvsort_sl.conf import BASE_DIR
+from tvsort_sl.email import send_email
 
 
 class TvSort(object):
@@ -130,7 +132,13 @@ class TvSort(object):
                     self.report.get('counters')['error'] += 1
                     self.report.get('errors').append(msg_text)
 
+    def email_report(self):
+        subject = 'TV sort report'
+        content = json.dumps(self.report)
+        return send_email(subject=subject, content=content)
+
 
 if __name__ == "__main__":
     tv_sort = TvSort()
     tv_sort.run()
+    tv_sort.email_report()
