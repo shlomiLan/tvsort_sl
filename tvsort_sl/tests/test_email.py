@@ -6,10 +6,9 @@ from python_http_client import UnauthorizedError
 from tvsort_sl import messages
 
 
-@mock.patch('tvsort_sl.messages.send_email', return_value={'status_code': 202})
-def test_send_email(_):
+def test_send_email():
     res = messages.send_email(content='This is test content', subject='Test subject')
-    assert res.get('status_code') == 202
+    assert res.status_code == 200
 
 
 def test_no_api_key():
