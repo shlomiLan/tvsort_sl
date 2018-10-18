@@ -11,7 +11,7 @@ import patoolib
 
 from tvsort_sl import utils, conf
 from tvsort_sl.conf import BASE_DIR
-from tvsort_sl.email import send_email
+from tvsort_sl.messages import send_email
 
 
 class TvSort(object):
