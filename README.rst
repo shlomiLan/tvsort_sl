@@ -11,7 +11,7 @@
    :target: https://www.codacy.com/app/shlomiLan/tvsort_sl?utm_source=github.com&utm_medium=referral&utm_content=shlomiLan/tvsort_sl&utm_campaign=badger
    
 ==================
-tvsort_sl - test 1
+tvsort_sl - test 3
 ==================
 
 Sort Viedo files to TV-shows and Movies folders, after that Update KODI library and download subtitles for each viedo file.
