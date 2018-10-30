@@ -57,8 +57,8 @@ def test_main(_, __):
     response = utils.create_folder(tv_sort.settings.get('TEST_FOLDER_IN_UNSORTED'))
     assert response[0][0] == 'info'
 
-    result = tv_sort.run()
-    counters = result.get('counters')
+    tv_sort.run()
+    counters = tv_sort.report.get('counters')
     assert counters.get('move_or_copy') == 4
     assert counters.get('delete') == 3
 
@@ -68,8 +68,8 @@ def test_main(_, __):
 def test_main_process_running(_, __):
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
     utils.create_file(dummy_file_path)
-    result = tv_sort.run()
-    assert 'Proses already running' in result.get('errors')
+    tv_sort.run()
+    assert 'Proses already running' in tv_sort.report.get('errors')
     response = utils.delete_file(dummy_file_path)
     assert response[0][0] == 'info'
 

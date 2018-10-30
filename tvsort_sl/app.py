@@ -38,7 +38,7 @@ class TvSort(object):
     def run(self):
         if utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')):
             self.process_response([('error', 'Proses already running')])
-            return self.report
+            return
 
         try:
             utils.create_file(self.settings.get('DUMMY_FILE_PATH'))
@@ -66,7 +66,7 @@ class TvSort(object):
             response = utils.delete_file(self.settings.get('DUMMY_FILE_PATH'))
             self.process_response(response)
 
-        return self.report
+        return
 
     def create_logger(self, log_level=logging.INFO):
         daiquiri.setup(outputs=(daiquiri.output.File(directory=self.settings.get('LOG_PATH'),
@@ -133,9 +133,10 @@ class TvSort(object):
                     self.report.get('errors').append(msg_text)
 
     def email_report(self):
-        subject = 'TV sort report'
-        content = json.dumps(self.report)
-        return send_email(subject=subject, content=content)
+        if self.report.get('counters') and self.report.get('counters').get('error') > 0:
+            subject = 'TV sort report'
+            content = json.dumps(self.report)
+            return send_email(subject=subject, content=content)
 
 
 if __name__ == "__main__":
