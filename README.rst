@@ -10,9 +10,9 @@
    :alt: Codacy Badge
    :target: https://www.codacy.com/app/shlomiLan/tvsort_sl?utm_source=github.com&utm_medium=referral&utm_content=shlomiLan/tvsort_sl&utm_campaign=badger
    
-=========
-tvsort_sl
-=========
+==================
+tvsort_sl - test 1
+==================
 
 Sort Viedo files to TV-shows and Movies folders, after that Update KODI library and download subtitles for each viedo file.
 
@@ -27,6 +27,7 @@ Config
 -  Setup
 
     Update your settings in: `local.yaml`
+
     There set the following things:
         - BASE_DRIVE => drive letter or pc-name where the videos are localted, in this drive should be 3 sub-folders:
             - Unsortted => Folder with all the videos that needs to be sortted
@@ -42,8 +43,9 @@ Config
 - Error handling
 
     By defualt this program can run on more than 1 one process at the same time. If you try and run it and get the following error
-    ::
-        Proses already running
+
+    `Proses already running`
+
     it means that there is another process of this program that it already running and you should allow it to end firat.
     If you think that there isn't another process that is already running, it means that in the last time the process run it was stuck,
     so you can manually remove the 'dummy.txt' file from the 'TV_PATH' folder and than try again to run the process
