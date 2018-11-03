@@ -50,7 +50,7 @@ def get_folders(path: str) -> List[str]:
 
 
 def is_tv_show(guess: dict) -> bool:
-    return bool(guess.get('episode'))
+    return bool(guess.get('episode') is not None)
 
 
 def is_movie(guess: dict) -> bool:

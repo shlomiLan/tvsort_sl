@@ -98,7 +98,11 @@ class TvSort(object):
 
             # Episode
             if utils.is_tv_show(video):
-                show_name = utils.transform_to_path_name(video.get('title'))
+                title = video.get('title')
+                if title == 'Season':
+                    title = video.get('episode_title')
+					
+                show_name = utils.transform_to_path_name(title)
                 utils.add_missing_country(video, show_name)
                 if video.get('country'):
                     show_name += '.{}'.format(video.get('country'))
