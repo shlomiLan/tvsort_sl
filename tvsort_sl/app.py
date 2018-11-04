@@ -114,7 +114,7 @@ class TvSort(object):
             # Movie
             elif utils.is_movie(video):
                 new_path = self.settings.get('MOVIES_PATH')
-
+			
             # Copy / Move the video file
             response = utils.copy_file(file_path, new_path, move_file=self.settings.get('MOVE_FILES'))
             self.process_response(response)
@@ -137,7 +137,7 @@ class TvSort(object):
                     self.report.get('errors').append(msg_text)
 
     def email_report(self):
-        if self.report.get('counters') and self.report.get('counters').get('error') > 0:
+        if self.report.get('counters') and self.report.get('counters').get('error') and self.report.get('counters').get('error') > 0:
             subject = 'TV sort report'
             content = json.dumps(self.report)
             return send_email(subject=subject, content=content)
