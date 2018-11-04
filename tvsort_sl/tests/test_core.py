@@ -30,7 +30,7 @@ def test_main(_, __):
     # Add ZIP file
     zip_file_path = tv_sort.settings.get('TEST_ZIP_PATH')
     response = utils.copy_file(zip_file_path, new_files_folder, move_file=False)
-    assert response[0][0] == 'info'
+    assert response[0][0] == 'info1'
 
     # Add garbage file
     garbage_file_path = tv_sort.settings.get('TEST_GARBAGE_PATH')
