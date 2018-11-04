@@ -20,8 +20,8 @@ def init_app(c, env=None):
 
 @task(init_app)
 def run_app(c, env=None):
-	run(c, 'python -m tvsort_sl.app', False)
-	
+    run(c, 'python -m tvsort_sl.app', False)
+
 
 def run(c, command, with_venv=True):
     if with_venv:

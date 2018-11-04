@@ -101,7 +101,7 @@ class TvSort(object):
                 title = video.get('title')
                 if title == 'Season':
                     title = video.get('episode_title')
-					
+
                 show_name = utils.transform_to_path_name(title)
                 utils.add_missing_country(video, show_name)
                 if video.get('country'):
@@ -114,7 +114,7 @@ class TvSort(object):
             # Movie
             elif utils.is_movie(video):
                 new_path = self.settings.get('MOVIES_PATH')
-			
+
             # Copy / Move the video file
             response = utils.copy_file(file_path, new_path, move_file=self.settings.get('MOVE_FILES'))
             self.process_response(response)
