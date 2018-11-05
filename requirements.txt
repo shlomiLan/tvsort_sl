@@ -16,7 +16,7 @@ coveralls==1.5.1
 mock==2.0.0
 
 # Find media name
-guessit==3.0.0
+guessit==3.0.3
 
 # Emails
 sendgrid==5.6.0
