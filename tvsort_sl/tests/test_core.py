@@ -214,14 +214,14 @@ def test_wrong_series_name():
 
 def test_good_series_name():
     tv_file_name = tv_sort.settings.get('TEST_TV_3_PATH')
-    video = guessit(tv_file_name)
+    video = guessit(tv_file_name, options={'expected_title': ['This Is Us']})
     show_name = utils.transform_to_path_name(utils.get_show_name(video))
     assert show_name == 'This.Is.Us'
 
 
 def test_wrong_country_data_in_series_name():
     tv_file_name = tv_sort.settings.get('TEST_TV_3_PATH')
-    video = guessit(tv_file_name)
+    video = guessit(tv_file_name, options={'expected_title': ['This Is Us']})
     assert video.get('country') is None
 
 
