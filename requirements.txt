@@ -1,4 +1,4 @@
-requests==2.19.1
+requests==2.20.0
 patool==1.12
 
 # configs
@@ -8,7 +8,7 @@ PyYAML==3.13
 daiquiri==1.5.0
 
 # Tests
-pytest==3.8.2
+pytest==3.10.0
 pytest-cov==2.6.0
 codecov==2.0.15
 python-coveralls==2.9.1
@@ -16,7 +16,7 @@ coveralls==1.5.1
 mock==2.0.0
 
 # Find media name
-guessit==3.0.0
+guessit==3.0.3
 
 # Emails
 sendgrid==5.6.0
