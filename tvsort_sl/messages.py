@@ -11,6 +11,10 @@ def send_email(subject, content):
     content = Content("text/plain", content)
     mail = Mail(from_email, subject, to_email, content)
     sand_box = os.environ.get('SAND_BOX')
+
+    print(os.environ.get('SENDGRID_API_KEY'))
+    print(os.environ.get('SAND_BOX'))
+
     if sand_box == 'true':
         mail_settings = MailSettings()
         mail_settings.sandbox_mode = SandBoxMode(True)
