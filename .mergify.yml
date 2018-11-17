@@ -1,7 +1,15 @@
-- name: merge pull requests from dependabot if CI passes
-  conditions:
-  - author=dependabot[bot]
-  - status-success=continuous-integration/travis/pr
-  actions:
-    merge:
-      method: merge
+pull_request_rules:
+  - name: automatic merge on CI success and review
+    conditions:
+      - status-success=continuous-integration/travis-ci/pr
+      - "#approved-reviews-by>=2"
+    actions:
+      merge:
+        method: merge
+  - name: merge pull requests from dependabot if CI passes
+    conditions:
+    - author=dependabot[bot]
+    - status-success=continuous-integration/travis/pr
+    actions:
+      merge:
+        method: merge
