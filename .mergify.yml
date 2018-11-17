@@ -1,8 +1,8 @@
-rules:
-  pull_request_rules:
-    - name: Automatic merge on CI success
-      conditions:
-        - status-success=continuous-integration/appveyor/pr
-      actions:
-        merge:
-          method: merge
+pull_request_rules:
+  - name: Automatic merge on CI success
+    conditions:
+      - status-success=continuous-integration/appveyor/pr
+      - base=master
+    actions:
+      merge:
+        method: merge
