@@ -69,7 +69,6 @@ def get_venv_action():
 def test(c, cov=False, file=None):
     # cov - if to use coverage, file - if to run specific file
 
-    os.environ['SAND_BOX'] = 'true'
     command = 'pytest -s --disable-pytest-warnings'
     if cov:
         command = '{} --cov=slots_tracker_server --cov-report term-missing'.format(command)
