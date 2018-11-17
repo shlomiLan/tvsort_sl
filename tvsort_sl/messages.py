@@ -4,7 +4,7 @@ from sendgrid import sendgrid, Email
 from sendgrid.helpers.mail import Content, Mail, MailSettings, SandBoxMode
 
 
-def send_email(subject, content):
+def Send_email(subject, content):
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get("SENDGRID_API_KEY"))
     from_email = Email(name="TV sort", email="tvsortsl@gmail.com")
     to_email = Email(name="TV sort", email="tvsortsl@gmail.com")
