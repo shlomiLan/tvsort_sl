@@ -1,4 +1,4 @@
-requests==2.20.1
+requests==2.21.0
 patool==1.12
 
 # configs
