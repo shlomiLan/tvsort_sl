@@ -1,4 +1,4 @@
-requests==2.20.0
+requests==2.21.0
 patool==1.12
 
 # configs
@@ -8,7 +8,7 @@ PyYAML==3.13
 daiquiri==1.5.0
 
 # Tests
-pytest==3.10.0
+pytest==4.0.2
 pytest-cov==2.6.0
 codecov==2.0.15
 python-coveralls==2.9.1
