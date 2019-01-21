@@ -2,4 +2,4 @@
 -r requirements.txt
 
 invoke==1.2.0
-pre-commit==1.13.0
+pre-commit==1.14.2
