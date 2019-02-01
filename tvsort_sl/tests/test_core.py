@@ -124,17 +124,17 @@ def test_is_movie():
 
 def test_compressed_file():
     file_name = "test.zip"
-    assert utils.is_compressed(file_name, tv_sort.settings.get("EXTENSIONS"))
+    assert utils.is_compressed(file_name, tv_sort.extensions)
 
 
 def test_not_compressed_file():
     file_name = "test.avi"
-    assert not utils.is_compressed(file_name, tv_sort.settings.get("EXTENSIONS"))
+    assert not utils.is_compressed(file_name, tv_sort.extensions)
 
 
 def test_exe_file():
     file_name = "test.exe"
-    assert utils.is_garbage_file(file_name, tv_sort.settings.get("EXTENSIONS"))
+    assert utils.is_garbage_file(file_name, tv_sort.extensions)
 
 
 def test_file_in_ext_list():
