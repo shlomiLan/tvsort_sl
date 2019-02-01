@@ -5,14 +5,14 @@ from sendgrid.helpers.mail import Content, Mail, MailSettings, SandBoxMode
 
 
 def send_email(subject, content):
-    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get("SENDGRID_API_KEY"))
-    from_email = Email(name="TV sort", email="tvsortsl@gmail.com")
-    to_email = Email(name="TV sort", email="tvsortsl@gmail.com")
-    content = Content("text/plain", content)
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(name='TV sort', email='tvsortsl@gmail.com')
+    to_email = Email(name='TV sort', email='tvsortsl@gmail.com')
+    content = Content('text/plain', content)
     mail = Mail(from_email, subject, to_email, content)
-    sand_box = os.environ.get("SAND_BOX")
+    sand_box = os.environ.get('SAND_BOX')
 
-    if sand_box == "true":
+    if sand_box == 'true':
         mail_settings = MailSettings()
         mail_settings.sandbox_mode = SandBoxMode(True)
         mail.mail_settings = mail_settings

@@ -8,7 +8,7 @@ from tvsort_sl import messages
 
 def test_send_email():
     res = messages.send_email(content='This is test content', subject='Test subject')
-    assert res.status_code == 200
+    assert res.status_code in (200, 202)
 
 
 def test_no_api_key():
