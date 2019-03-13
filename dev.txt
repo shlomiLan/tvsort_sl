@@ -1,3 +1,4 @@
+python_http_client
 # install all base requirements
 -r requirements.txt
 
