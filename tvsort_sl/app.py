@@ -14,9 +14,14 @@ from tvsort_sl.conf import BASE_DIR
 from tvsort_sl.messages import send_email
 
 
+PROCESS_RUNNING = 'Proses already running'
+
+
 class TvSort(object):
     project_name = 'tvsort_sl'
-    settings: Dict[str, Union[str, bool]] = dict(PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs'))
+    settings: Dict[str, Union[str, bool]] = dict(
+        PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs')
+    )
     extensions: Dict[str, List[str]] = dict()
     logger = None
 
@@ -37,7 +42,7 @@ class TvSort(object):
 
     def run(self):
         if utils.is_process_already_running(self.settings.get('DUMMY_FILE_PATH')):
-            self.process_response([('error', 'Proses already running')])
+            self.process_response([('error', PROCESS_RUNNING)])
             return
 
         try:
@@ -69,16 +74,27 @@ class TvSort(object):
         return
 
     def create_logger(self, log_level=logging.INFO):
-        daiquiri.setup(outputs=(daiquiri.output.File(directory=self.settings.get('LOG_PATH'),
-                                                     program_name=self.project_name), daiquiri.output.STDOUT,))
+        daiquiri.setup(
+            outputs=(
+                daiquiri.output.File(
+                    directory=self.settings.get('LOG_PATH'),
+                    program_name=self.project_name,
+                ),
+                daiquiri.output.STDOUT,
+            )
+        )
 
         daiquiri.getLogger(program_name=self.project_name).logger.level = log_level
-        self.logger = daiquiri.getLogger(program_name=self.project_name, log_level=log_level)
+        self.logger = daiquiri.getLogger(
+            program_name=self.project_name, log_level=log_level
+        )
 
     def scan_archives(self):
         for file_path in utils.get_files(self.unsorted_path):
             if utils.is_compressed(file_path, self.extensions):
-                patoolib.extract_archive(file_path, outdir=self.unsorted_path, verbosity=-1)
+                patoolib.extract_archive(
+                    file_path, outdir=self.unsorted_path, verbosity=-1
+                )
                 self.process_response(['info', f'Extracting {file_path}'])
                 response = utils.delete_file(file_path)
                 self.process_response(response)
@@ -93,7 +109,9 @@ class TvSort(object):
                 self.process_response(response)
                 continue
 
-            video = guessit.guessit(file_path, options={'expected_title': ['This Is Us']})
+            video = guessit.guessit(
+                file_path, options={'expected_title': ['This Is Us']}
+            )
             new_path = None
 
             # Episode
@@ -116,7 +134,9 @@ class TvSort(object):
                 new_path = self.settings.get('MOVIES_PATH')
 
             # Copy / Move the video file
-            response = utils.copy_file(file_path, new_path, move_file=self.settings.get('MOVE_FILES'))
+            response = utils.copy_file(
+                file_path, new_path, move_file=self.settings.get('MOVE_FILES')
+            )
             self.process_response(response)
 
     def process_response(self, response):
@@ -129,15 +149,25 @@ class TvSort(object):
                     self.logger.info(msg_text)
                     if 'Removing file' in msg_text:
                         self.report.get('counters')['delete'] += 1
-                    elif any(text in msg_text for text in ['Moving file', 'Copying file']):
+                    elif any(
+                        text in msg_text for text in ['Moving file', 'Copying file']
+                    ):
                         self.report.get('counters')['move_or_copy'] += 1
                 elif msg_type == 'error':
                     self.logger.error(msg_text)
-                    self.report.get('counters')['error'] += 1
-                    self.report.get('errors').append(msg_text)
+                    if msg_text not in self.report.get('errors'):
+                        self.report.get('errors').append(msg_text)
+
+    def is_send_report(self):
+        if self.report.get('counters'):
+            errors = self.report.get('errors')
+            if errors:
+                return any(x != PROCESS_RUNNING for x in errors)
+
+        return False
 
     def email_report(self):
-        if self.report.get('counters') and self.report.get('counters').get('error') and self.report.get('counters').get('error') > 0:
+        if self.is_send_report():
             subject = 'TV sort report'
             content = json.dumps(self.report)
             return send_email(subject=subject, content=content)
