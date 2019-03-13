@@ -4,6 +4,7 @@ import mock
 from guessit import guessit
 
 import tvsort_sl.utils as utils
+from tvsort_sl.app import PROCESS_RUNNING
 from tvsort_sl.conf import get_conf_file_name
 from tvsort_sl.tests.test_base import tv_sort
 
@@ -69,9 +70,12 @@ def test_main_process_running(_, __):
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
     utils.create_file(dummy_file_path)
     tv_sort.run()
-    assert 'Proses already running' in tv_sort.report.get('errors')
+    assert PROCESS_RUNNING in tv_sort.report.get('errors')
+    tv_sort.run()
+    tv_sort.run()
     response = utils.delete_file(dummy_file_path)
     assert response[0][0] == 'info'
+    assert tv_sort.is_send_report() is False
 
 
 @mock.patch('requests.post', return_value={'status_code': 200})
