@@ -152,6 +152,7 @@ def test_file_not_in_ext_list():
 def test_garbage_file():
     assert utils.is_garbage_file('.DS_Store', tv_sort.extensions)
     assert not utils.is_garbage_file('test.avi', tv_sort.extensions)
+    assert utils.is_garbage_file('sample_1.avi', tv_sort.extensions)
 
 
 def test_show_name():
