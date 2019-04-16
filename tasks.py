@@ -82,3 +82,9 @@ def test(c, cov=False, file=None):
         command = "{} {}".format(command, file)
 
     run(c, command)
+
+
+@task(init_app)
+def mutmut(c):
+    command = "mutmut run"
+    run(c, command)
