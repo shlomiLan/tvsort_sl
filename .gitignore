@@ -26,5 +26,6 @@ cachefile.dbm.rw.lock
 
 .mypy_cache/
 .pytest_cache/
+.mutmut-cache
 
 resources/
