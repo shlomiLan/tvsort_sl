@@ -2,13 +2,14 @@ import os
 
 from tvsort_sl.conf import SETTINGS_FOLDER, get_conf_file_name
 from tvsort_sl.tests.test_base import tv_sort
-from tvsort_sl.utils import check_project_setup
+from tvsort_sl.utils import check_project_setup, is_file_exists
 
 file_path = os.path.join(SETTINGS_FOLDER, 'test.yml')
 new_file_path = os.path.join(SETTINGS_FOLDER, 'test1.yml')
 
 
 def setup_function():
+    assert is_file_exists(file_path) is True
     os.rename(file_path, new_file_path)
 
 

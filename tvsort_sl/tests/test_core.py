@@ -31,6 +31,7 @@ def test_main(_, __):
     # Add ZIP file
     zip_file_path = tv_sort.settings.get('TEST_ZIP_PATH')
     response = utils.copy_file(zip_file_path, new_files_folder, move_file=False)
+    assert utils.is_file_exists(zip_file_path) is True
     assert response[0][0] == 'info'
 
     # Add garbage file
@@ -70,7 +71,7 @@ def test_main_process_running(_, __):
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
     utils.create_file(dummy_file_path)
     tv_sort.run()
-    assert PROCESS_RUNNING in tv_sort.report.get('errors')
+    assert tv_sort.report.get('errors') is PROCESS_RUNNING
     tv_sort.run()
     tv_sort.run()
     response = utils.delete_file(dummy_file_path)
