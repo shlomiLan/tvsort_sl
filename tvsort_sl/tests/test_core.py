@@ -31,6 +31,7 @@ def test_main(_, __):
     # Add ZIP file
     zip_file_path = tv_sort.settings.get('TEST_ZIP_PATH')
     response = utils.copy_file(zip_file_path, new_files_folder, move_file=False)
+    assert utils.is_file_exists(zip_file_path) is True
     assert response[0][0] == 'info'
 
     # Add garbage file
@@ -70,7 +71,7 @@ def test_main_process_running(_, __):
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
     utils.create_file(dummy_file_path)
     tv_sort.run()
-    assert PROCESS_RUNNING in tv_sort.report.get('errors')
+    assert all(x == PROCESS_RUNNING for x in tv_sort.report.get('errors'))
     tv_sort.run()
     tv_sort.run()
     response = utils.delete_file(dummy_file_path)
@@ -152,6 +153,7 @@ def test_file_not_in_ext_list():
 def test_garbage_file():
     assert utils.is_garbage_file('.DS_Store', tv_sort.extensions)
     assert not utils.is_garbage_file('test.avi', tv_sort.extensions)
+    assert utils.is_garbage_file('sample_1.avi', tv_sort.extensions)
 
 
 def test_show_name():
