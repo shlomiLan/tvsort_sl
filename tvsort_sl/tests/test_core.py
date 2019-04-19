@@ -71,7 +71,7 @@ def test_main_process_running(_, __):
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
     utils.create_file(dummy_file_path)
     tv_sort.run()
-    assert tv_sort.report.get('errors') is PROCESS_RUNNING
+    assert all(x == PROCESS_RUNNING for x in tv_sort.report.get('errors'))
     tv_sort.run()
     tv_sort.run()
     response = utils.delete_file(dummy_file_path)
