@@ -1,31 +1,11 @@
-.idea
 dist
-*.DS_Store
 .cache/
-
-*.py[co]
-
-# Unit test / coverage reports
-.coverage
-htmlcov/
 
 # config files
 /tvsort_sl/settings/local.yml
 tvsort_sl/settings/test.yml
 
-#virtual environment
-venv/
-
 # logs
 logs/
-
-# subliminal files
-cachefile.dbm.db
-cachefile.dbm.dogpile.lock
-cachefile.dbm.rw.lock
-
-.mypy_cache/
-.pytest_cache/
-.mutmut-cache
 
 resources/
