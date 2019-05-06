@@ -19,4 +19,4 @@ mock==3.0.4
 guessit==3.0.3
 
 # Emails
-sendgrid==6.0.4
+sendgrid==6.0.5
