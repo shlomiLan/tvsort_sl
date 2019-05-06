@@ -8,15 +8,15 @@ pyyaml>=4.2b1
 daiquiri==1.5.0
 
 # Tests
-pytest==4.4.0
-pytest-cov==2.6.1
+pytest==4.4.1
+pytest-cov==2.7.1
 codecov==2.0.15
 python-coveralls==2.9.1
 coveralls==1.7.0
-mock==2.0.0
+mock==3.0.4
 
 # Find media name
 guessit==3.0.3
 
 # Emails
-sendgrid==6.0.4
+sendgrid==6.0.5
