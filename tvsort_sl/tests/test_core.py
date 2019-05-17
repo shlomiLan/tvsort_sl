@@ -2,11 +2,19 @@ import os
 
 import mock
 from guessit import guessit
+from requests import Response
 
 import tvsort_sl.utils as utils
 from tvsort_sl.app import PROCESS_RUNNING
 from tvsort_sl.conf import get_conf_file_name
 from tvsort_sl.tests.test_base import tv_sort
+
+r_200 = Response()
+r_200.status_code = 200
+r_202 = Response()
+r_202.status_code = 202
+r_400 = Response()
+r_400.status_code = 400
 
 
 def setup_function(_):
@@ -23,8 +31,8 @@ def teardown_function(_):
     utils.delete_folder(tv_sort.settings.get('UNSORTED_PATH'), force=True)
 
 
-@mock.patch('requests.post', return_value={'status_code': 200})
-@mock.patch('tvsort_sl.messages.send_email', return_value={'status_code': 202})
+@mock.patch('requests.post', return_value=r_200)
+@mock.patch('tvsort_sl.messages.send_email', return_value=r_202)
 def test_main(_, __):
     new_files_folder = tv_sort.settings.get('UNSORTED_PATH')
 
@@ -65,21 +73,38 @@ def test_main(_, __):
     assert counters.get('delete') == 3
 
 
-@mock.patch('requests.post', return_value={'status_code': 200})
-@mock.patch('tvsort_sl.messages.send_email', return_value={'status_code': 202})
+@mock.patch('requests.post', return_value=r_200)
+@mock.patch('tvsort_sl.messages.send_email', return_value=r_202)
 def test_main_process_running(_, __):
     dummy_file_path = tv_sort.settings.get('DUMMY_FILE_PATH')
     utils.create_file(dummy_file_path)
     tv_sort.run()
     assert all(x == PROCESS_RUNNING for x in tv_sort.report.get('errors'))
     tv_sort.run()
-    tv_sort.run()
     response = utils.delete_file(dummy_file_path)
     assert response[0][0] == 'info'
     assert tv_sort.is_send_report() is False
 
 
-@mock.patch('requests.post', return_value={'status_code': 200})
+@mock.patch('requests.post', return_value=r_200)
+@mock.patch('tvsort_sl.messages.send_email', return_value=r_202)
+def test_main_with_error_without_report(_, __):
+    tv_sort.run()
+    tv_sort.process_response([('error', 'HTTPConnectionPool(host="1.1.1.1")')])
+    assert tv_sort.is_send_report() is False
+
+    tv_sort.process_response([('error', 'New error')])
+    assert tv_sort.is_send_report() is True
+
+
+@mock.patch('requests.post', return_value=r_400)
+@mock.patch('tvsort_sl.messages.send_email', return_value=r_202)
+def test_main_with_error_and_report(_, __):
+    tv_sort.run()
+    assert tv_sort.is_send_report() is True
+
+
+@mock.patch('requests.post', return_value=r_200)
 def test_update_xbmc(_):
     response = utils.update_xbmc(tv_sort.settings.get('KODI_IP'))
     assert response[0][0] == 'info'

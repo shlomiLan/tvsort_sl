@@ -10,7 +10,10 @@ def is_compressed(file_name: str, extensions: Dict[str, List[str]]) -> bool:
 
 
 def is_garbage_file(file_name: str, extensions: Dict[str, List[str]]) -> bool:
-    return is_file_ext_in_list(get_file_ext(file_name), extensions.get('GARBAGE', [])) or 'sample' in file_name.lower()
+    return (
+        is_file_ext_in_list(get_file_ext(file_name), extensions.get('GARBAGE', []))
+        or 'sample' in file_name.lower()
+    )
 
 
 def is_file_ext_in_list(file_ext: str, ext_list: List[str]) -> bool:
@@ -143,7 +146,9 @@ def delete_file(file_path: str) -> List[Tuple[str, str]]:
         return [('error', f'Unexpected error: {e}')]
 
 
-def copy_file(old_path: str, new_path: str, move_file: bool = True) -> List[Tuple[str, str]]:
+def copy_file(
+    old_path: str, new_path: str, move_file: bool = True
+) -> List[Tuple[str, str]]:
     action = 'Moving' if move_file else 'Copying'
 
     try:
@@ -169,8 +174,11 @@ def folder_empty(folder_path: str) -> bool:
 def update_xbmc(kodi_ip: str) -> List[Tuple[str, str]]:
     url = '{}/jsonrpc'.format(kodi_ip)
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
-    requests.post(url, json=data)
-    return [('info', 'Update XBMC successfully')]
+    response = requests.post(url, json=data)
+    if response.status_code == 200:
+        return [('info', 'Update XBMC successfully')]
+
+    return [('error', 'Invalid response: {}'.format(response))]
 
 
 def check_project_setup(settings, conf_files):
@@ -183,7 +191,12 @@ def check_project_setup(settings, conf_files):
     # Configs files exists
     for file_path in conf_files:
         if not is_file_exists(file_path):
-            return [('error', 'Missing config file, you must have local.yml and test.yml in settings folder. '
-                              'Use files in settings/templates for reference')]
+            return [
+                (
+                    'error',
+                    'Missing config file, you must have local.yml and test.yml in settings folder. '
+                    'Use files in settings/templates for reference',
+                )
+            ]
 
     return [('info', 'Project setup successfully')]
