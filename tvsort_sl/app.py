@@ -15,6 +15,7 @@ from tvsort_sl.messages import send_email
 
 
 PROCESS_RUNNING = 'Proses already running'
+CONNECTION_ISSUE = 'HTTPConnectionPool'
 
 
 class TvSort(object):
@@ -162,7 +163,9 @@ class TvSort(object):
         if self.report.get('counters'):
             errors = self.report.get('errors')
             if errors:
-                return any(x != PROCESS_RUNNING for x in errors)
+                return any(
+                    x != PROCESS_RUNNING and CONNECTION_ISSUE not in x for x in errors
+                )
 
         return False
 
