@@ -11,7 +11,7 @@ environment:
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 install:
-  - ECHO "Filesystem root:1"
+  - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
 
   - ECHO "Installed SDKs:"
