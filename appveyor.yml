@@ -64,6 +64,7 @@ after_test:
   - "echo [pypi] > %USERPROFILE%\\.pypirc"
   - "echo username: user >> %USERPROFILE%\\.pypirc"
   - "echo password: %password% >> %USERPROFILE%\\.pypirc"
+  - python setup.py sdist
   - twine upload dist\*
 
 artifacts:
