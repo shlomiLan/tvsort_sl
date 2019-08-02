@@ -11,7 +11,7 @@ environment:
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 install:
-  - ECHO "Filesystem root:"
+  - ECHO "Filesystem root:1"
   - ps: "ls \"C:/\""
 
   - ECHO "Installed SDKs:"
@@ -56,3 +56,5 @@ test_script:
   - "codecov"
   - "cd .."
   - "python -m tvsort_sl.app "
+deploy_script:
+  - python setup.py sdist bdist_wheel upload
