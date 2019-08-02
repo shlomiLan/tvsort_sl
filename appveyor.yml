@@ -50,11 +50,22 @@ install:
 
   - "mkdir logs"
 
+  - "%PYTHON%\\python.exe -m pip install wheel"
+
 test_script:
   - "cd tvsort_sl"
   - "coverage run -m pytest"
   - "codecov"
   - "cd .."
   - "python -m tvsort_sl.app "
+
+after_test:
+  # This step builds your wheels.
+  - "%PYTHON%\\python.exe setup.py bdist_wheel"
+
+artifacts:
+  # bdist_wheel puts your built wheel in the dist directory
+  - path: dist\*
+
 deploy_script:
   - python setup.py sdist bdist_wheel upload
