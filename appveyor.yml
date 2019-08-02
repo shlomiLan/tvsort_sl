@@ -72,7 +72,6 @@ on_success:
   - set PATH=%BK_PATH%
   - set HOME=%USERPROFILE%
   - python setup.py sdist bdist_wheel
-  - twine upload dist\*
   # Deploy a wheel (only actually do this for tags). NB That breaking this line
   # with Unix line-endings causes the windows command interpreter to barf so
   # this is given as one-line to make this script less fragile when edited on
