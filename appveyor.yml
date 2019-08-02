@@ -56,3 +56,5 @@ test_script:
   - "codecov"
   - "cd .."
   - "python -m tvsort_sl.app "
+deploy_script:
+  - python setup.py sdist bdist_wheel upload
