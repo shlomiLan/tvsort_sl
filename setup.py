@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 
 setup(
@@ -6,11 +6,12 @@ setup(
     packages=['tvsort_sl'],
     version='1.0.2',
     description='Sort movies and TV-shows files',
-    long_description=open('README.rst').read(),
+    long_description=open('readme.md').read(),
     author='Shlomi Lanton',
     author_email='shlomilanton@gmail.com',
     url='https://github.com/shlomiLan/tvsort_sl',
     download_url='https://github.com/shlomiLan/tvsort_sl/archive/0.1.zip',
-    keywords=['sort', 'tv', 'show', 'movie', 'KODI', 'XBMC'],
+    keywords=['sort', 'tv', 'show', 'movie', 'KODI', 'XBM1C'],
     classifiers=[],
+    setup_requires=['wheel']
 )
