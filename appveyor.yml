@@ -61,11 +61,8 @@ test_script:
 
 after_test:
   # This step builds your wheels.
-  - "%PYTHON%\\python.exe setup.py bdist_wheel"
+  - "%PYTHON%\\python.exe setup.py bdist_wheel upload"
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
   - path: dist\*
-
-deploy_script:
-  - python setup.py sdist bdist_wheel upload
