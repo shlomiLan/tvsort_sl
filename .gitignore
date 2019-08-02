@@ -1,5 +1,7 @@
 dist
 .cache/
+build/
+tvsort_sl.egg-info/
 
 # config files
 /tvsort_sl/settings/local.yml

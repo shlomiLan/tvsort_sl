@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 
 setup(
@@ -13,4 +13,5 @@ setup(
     download_url='https://github.com/shlomiLan/tvsort_sl/archive/0.1.zip',
     keywords=['sort', 'tv', 'show', 'movie', 'KODI', 'XBM1C'],
     classifiers=[],
+    setup_requires=['wheel']
 )
