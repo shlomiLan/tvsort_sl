@@ -61,6 +61,9 @@ test_script:
 
 after_test:
   # This step builds your wheels.
+  - "echo [pypi] > %USERPROFILE%\\.pypirc"
+  - "echo username: user >> %USERPROFILE%\\.pypirc"
+  - "echo password: %password% >> %USERPROFILE%\\.pypirc"
   - "%PYTHON%\\python.exe setup.py bdist_wheel upload"
 
 artifacts:
