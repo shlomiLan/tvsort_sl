@@ -64,7 +64,7 @@ after_test:
   - "echo [pypi] > %USERPROFILE%\\.pypirc"
   - "echo username: user >> %USERPROFILE%\\.pypirc"
   - "echo password: %password% >> %USERPROFILE%\\.pypirc"
-  - twine upload dist/*
+  - twine upload dist\*
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
