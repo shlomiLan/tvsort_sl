@@ -59,7 +59,7 @@ install:
 #  - "cd .."
 #  - "python -m tvsort_sl.app"
 
-after_test:
+on_success:
   - echo "Starting Artifact Deployment"
   # populate pypirc file for twine
   - echo [distutils]                                  > %USERPROFILE%\\.pypirc
@@ -73,6 +73,11 @@ after_test:
   - set HOME=%USERPROFILE%
   - python setup.py sdist bdist_wheel
   - twine upload dist\*
+  # Deploy a wheel (only actually do this for tags). NB That breaking this line
+  # with Unix line-endings causes the windows command interpreter to barf so
+  # this is given as one-line to make this script less fragile when edited on
+  # other OSes.
+  - if "%APPVEYOR_REPO_TAG%"=="true" ( %PYTHON%\\python.exe setup.py bdist_wheel upload ) else ( echo "Not deploying because not a tagged commit." )
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
