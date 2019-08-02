@@ -60,11 +60,19 @@ test_script:
   - "python -m tvsort_sl.app "
 
 after_test:
-  # This step builds your wheels.
-  - "echo [pypi] > %USERPROFILE%\\.pypirc"
-  - "echo username: user >> %USERPROFILE%\\.pypirc"
-  - "echo password: %password% >> %USERPROFILE%\\.pypirc"
-  - python setup.py sdist
+  - echo "Starting Artifact Deployment"
+  # populate pypirc file for twine
+  - echo [distutils]                                  > %USERPROFILE%\\.pypirc
+  - echo index-servers =                             >> %USERPROFILE%\\.pypirc
+  - echo     pypi                                    >> %USERPROFILE%\\.pypirc
+  - echo [pypi]                                      >> %USERPROFILE%\\.pypirc
+  - echo username=shlomiLan                          >> %USERPROFILE%\\.pypirc
+  - echo %PYPI_PASSWORD%
+  - echo password=%PYPI_PASSWORD%                    >> %USERPROFILE%\\.pypirc
+  # upload to pypi for windows
+  - set PATH=%BK_PATH%
+  - set HOME=%USERPROFILE%
+  - python setup.py sdist bdist_wheel
   - twine upload dist\*
 
 artifacts:
