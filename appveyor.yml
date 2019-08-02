@@ -52,12 +52,12 @@ install:
 
   - "%PYTHON%\\python.exe -m pip install wheel"
 
-test_script:
-  - "cd tvsort_sl"
-  - "coverage run -m pytest"
-  - "codecov"
-  - "cd .."
-  - "python -m tvsort_sl.app "
+#test_script:
+#  - "cd tvsort_sl"
+#  - "coverage run -m pytest"
+#  - "codecov"
+#  - "cd .."
+#  - "python -m tvsort_sl.app"
 
 after_test:
   - echo "Starting Artifact Deployment"
@@ -67,7 +67,6 @@ after_test:
   - echo     pypi                                    >> %USERPROFILE%\\.pypirc
   - echo [pypi]                                      >> %USERPROFILE%\\.pypirc
   - echo username=shlomiLan                          >> %USERPROFILE%\\.pypirc
-  - echo %PYPI_PASSWORD%
   - echo password=%PYPI_PASSWORD%                    >> %USERPROFILE%\\.pypirc
   # upload to pypi for windows
   - set PATH=%BK_PATH%
