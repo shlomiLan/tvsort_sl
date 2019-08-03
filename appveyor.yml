@@ -44,7 +44,7 @@ install:
   # compiled extensions and are not provided as pre-built wheel packages,
   # pip will build them from source using the MSVC compiler matching the
   # target Python version and architecture
-  - "%CMD_IN_ENV% pip install -r requirements.txt"
+  - "%CMD_IN_ENV% pip install -r dev.txt"
   - "pip list"
   - "pip -V"
 
@@ -52,20 +52,33 @@ install:
 
   - "%PYTHON%\\python.exe -m pip install wheel"
 
-test_script:
-  - "cd tvsort_sl"
-  - "coverage run -m pytest"
-  - "codecov"
-  - "cd .."
-  - "python -m tvsort_sl.app "
+#test_script:
+#  - "cd tvsort_sl"
+#  - "coverage run -m pytest"
+#  - "codecov"
+#  - "cd .."
+#  - "python -m tvsort_sl.app"
 
-after_test:
-  # This step builds your wheels.
-  - "%PYTHON%\\python.exe setup.py bdist_wheel"
+on_success:
+  - echo "Starting Artifact Deployment"
+  # populate pypirc file for twine
+  - echo [distutils]                                  > %USERPROFILE%\\.pypirc
+  - echo index-servers =                             >> %USERPROFILE%\\.pypirc
+  - echo     pypi                                    >> %USERPROFILE%\\.pypirc
+  - echo [pypi]                                      >> %USERPROFILE%\\.pypirc
+  - echo username=shlomiLan                          >> %USERPROFILE%\\.pypirc
+  - echo password=%PYPI_PASSWORD%                    >> %USERPROFILE%\\.pypirc
+  # upload to pypi for windows
+  - set PATH=%BK_PATH%
+  - set HOME=%USERPROFILE%
+  - python setup.py sdist bdist_wheel
+  # Deploy a wheel (only actually do this for tags). NB That breaking this line
+  # with Unix line-endings causes the windows command interpreter to barf so
+  # this is given as one-line to make this script less fragile when edited on
+  # other OSes.
+  - "echo APPVEYOR_REPO_TAG: %APPVEYOR_REPO_TAG%"
+  - if "%APPVEYOR_REPO_TAG%"=="true" ( %PYTHON%\\python.exe setup.py bdist_wheel upload ) else ( echo "Not deploying because not a tagged commit." )
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
   - path: dist\*
-
-deploy_script:
-  - python setup.py sdist bdist_wheel upload

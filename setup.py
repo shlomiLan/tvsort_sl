@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name='tvsort_sl',
     packages=['tvsort_sl'],
-    version='1.0.2',
+    version='1.1.1',
     description='Sort movies and TV-shows files',
     long_description=open('readme.md').read(),
     author='Shlomi Lanton',

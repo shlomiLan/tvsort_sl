@@ -3,4 +3,12 @@ python_http_client==3.1.0
 -r requirements.txt
 
 invoke==1.2.0
-wheel==0.33.4
+twine==1.13.0
+
+# Tests
+pytest==5.0.0
+pytest-cov==2.7.1
+codecov==2.0.15
+python-coveralls==2.9.2
+coveralls==1.8.1
+mock==3.0.5
