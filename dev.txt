@@ -9,6 +9,6 @@ twine==1.13.0
 pytest==5.0.1
 pytest-cov==2.7.1
 codecov==2.0.15
-python-coveralls==2.9.2
+python-coveralls==2.9.3
 coveralls==1.8.1
 mock==3.0.5
