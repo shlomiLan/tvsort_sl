@@ -7,6 +7,7 @@ setup(
     version='1.1.1',
     description='Sort movies and TV-shows files',
     long_description=open('readme.md').read(),
+    long_description_content_type='text/markdown',
     author='Shlomi Lanton',
     author_email='shlomilanton@gmail.com',
     url='https://github.com/shlomiLan/tvsort_sl',
