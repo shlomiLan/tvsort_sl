@@ -12,6 +12,9 @@ install:
 after_success:
 - codecov
 - python-codacy-coverage -r coverage.xml
+branches:
+  only:
+  - master
 before_deploy: "echo 'Starting deploy'"
 after_deploy: "echo 'End deploy'"
 deploy:
