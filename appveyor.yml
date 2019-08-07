@@ -1,4 +1,4 @@
-build: off
+#build: off
 
 for:
   # configuration for "master" branch
