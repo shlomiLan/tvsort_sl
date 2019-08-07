@@ -3,6 +3,7 @@ python:
 - 3.6.7
 - 3.7
 script:
+- mkdir logs
 - coverage run -m pytest
 install:
 - pip install -r dev.txt
