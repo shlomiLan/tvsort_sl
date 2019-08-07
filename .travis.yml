@@ -4,6 +4,8 @@ python:
 - 3.7
 script:
 - mkdir logs
+- cp ./tvsort_sl/settings/templates/local.yml ./tvsort_sl/settings/local.yml
+- cp ./tvsort_sl/settings/templates/test.yml ./tvsort_sl/settings/test.yml
 - coverage run -m pytest
 install:
 - pip install -r dev.txt
