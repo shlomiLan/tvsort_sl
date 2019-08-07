@@ -12,6 +12,13 @@ install:
 after_success:
 - codecov
 - python-codacy-coverage -r coverage.xml
-branches:
-  only:
-  - master
+before_deploy: "echo 'Starting deploy'"
+after_deploy: "echo 'End deploy'"
+deploy:
+  provider: pypi
+  user: shlomiLan
+  password:
+    secure: QouWbbDMfF8ALhUxl+cAi3K88XUogPjOQQWrwZPJIwTEgNpFXMWsaOstQUnp4MymcVbJh3IUr2biChyImmft0Hc9li584u+U84TuDyRN0E9n1WGsfacPU/QobCdvIKURGrqjS/8verslvvmvyPO0qNoiZHEWoSMsgHVehtg2fhhPSt0gBR19u3CFhr4JNdaKbFIiNYvo78L/WcBBPucnGLVtQ0W14tGFZqxA5SYA3V84hLKeQYep0qEQD2AaC4BB2I2du5umEmgYQodh6HkVytCHhN1vkBUZJ39KuUuDEYdmurjGnNQtqFfUrgAEds4qxFXHamV6IccM6ArPWTwGo9J1DIblCir9Mhft5+Fnx+1j2aI+IAeZaXrkOzN5EZ1eeZkjpyhr5pFizFtUQxppuyWShu3TcGHg6zDnr3EnZqrV9WeZUcjJxc+0qknuhq/ppbZonBastYv6hoPvM1Tc8Hjw0ssPrijCUraoVELqX7+bArp2PmzrzHNIiG5oV/z2VaWxnG6JEfJDcyBcfPPz0gZ33MSsPR2GC1h5sh8AOdx9qMDPtnQygJ+lybbgbiDUeIvCchKwOt6UyjtUcdPTHMk+yguHfOc0srHJpQ+TwwNzqGXVeXaHULFofVBTttey5np24VtfYQ0+iDu4x2aTZVc6ktl9AEYerQbu+FSYPoQ=
+  skip_existing: true
+  on:
+    branch: master
