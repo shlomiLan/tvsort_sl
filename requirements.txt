@@ -13,6 +13,3 @@ guessit==3.0.4
 
 # Emails
 sendgrid==6.0.5
-
-# Dummy
-Flask==1.1.1
