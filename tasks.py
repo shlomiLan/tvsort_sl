@@ -102,7 +102,7 @@ def bump_version(c):
             return
 
     print('Bumping version')
-    run(c, 'bumpversion --verbose patch')
+    run(c, 'bumpversion --verbose patch', with_venv=False)
 
     print('Updating git')
     origin = repo.remote('origin')
