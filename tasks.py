@@ -109,6 +109,6 @@ def bump_version(c):
     repo.git.checkout('-b', branch_name)
 
     print('Updating git')
-    repo.git.push('origin')
+    repo.git.push('--set-upstream', 'origin', branch_name)
 
     return True
