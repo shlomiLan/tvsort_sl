@@ -109,7 +109,6 @@ def bump_version(c):
     repo.git.checkout('-b', branch_name)
 
     print('Updating git')
-    origin = repo.remote('origin')
-    origin.push()
+    repo.git.push('origin', branch_name)
 
     return True
