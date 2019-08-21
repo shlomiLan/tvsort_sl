@@ -91,6 +91,7 @@ def mutmut(c):
     run(c, command)
 
 
+@task()
 def bump_version(c):
     setup_filename = 'setup.py'
     repo = Repo(os.getcwd())
