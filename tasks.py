@@ -2,6 +2,7 @@ import json
 import os
 
 import yaml
+from git import Repo
 from invoke import task
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
@@ -88,3 +89,18 @@ def test(c, cov=False, file=None):
 def mutmut(c):
     command = "mutmut run"
     run(c, command)
+
+
+@task(init_app)
+def bump_version(c):
+    setup_filename = 'setup.py'
+    repo = Repo(os.getcwd())
+    print('repo is: {}'.format(repo))
+    for item in repo.index.diff(None):
+        if item.a_path == setup_filename:
+            print('Version was already bumped, exiting')
+            return
+
+    print('Bumping version')
+    run(c, 'bumpversion --verbose patch')
+
