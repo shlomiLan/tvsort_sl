@@ -104,3 +104,4 @@ def bump_version(c):
     print('Bumping version')
     run(c, 'bumpversion --verbose patch')
 
+    return True
