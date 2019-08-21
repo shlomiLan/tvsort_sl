@@ -15,5 +15,5 @@ coveralls==1.8.2
 mock==3.0.5
 
 # Version update
-gitdb2==2.0.5
+GitPython==3.0.1
 bumpversion==0.5.3
