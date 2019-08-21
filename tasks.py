@@ -104,6 +104,10 @@ def bump_version(c):
     print('Bumping version')
     run(c, 'bumpversion --verbose patch', with_venv=False)
 
+    branch_name = os.environ['TRAVIS_BRANCH']
+    print('Checking out branch: {}'.format(branch_name))
+    repo.git.checkout(branch_name)
+
     print('Updating git')
     origin = repo.remote('origin')
     origin.push()
