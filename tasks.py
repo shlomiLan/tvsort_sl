@@ -106,6 +106,7 @@ def bump_version(c):
 
     branch_name = os.environ['TRAVIS_PULL_REQUEST_BRANCH']
     print('Checking out branch: {}'.format(branch_name))
+    repo.git.fetch()
     repo.git.checkout(branch_name)
 
     print('Updating git')
