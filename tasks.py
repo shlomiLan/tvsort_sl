@@ -99,7 +99,7 @@ def bump_version(c):
     github_client = Github(os.environ['GITHUB_ACCESS_TOKEN'])
     repo = github_client.get_repo('shlomiLan/tvsort_sl')
 
-    pr = repo.get_pull(68)
+    pr = repo.get_pull(int(os.environ['TRAVIS_PULL_REQUEST']))
     for pr_file in pr.get_files():
         pr_filename = pr_file.filename
         if pr_filename in files_to_update:
@@ -107,7 +107,7 @@ def bump_version(c):
             return
 
     print('Bumping version')
-    print(run(c, 'bumpversion --verbose patch  --allow-dirty', with_venv=False))
+    run(c, 'bumpversion --verbose patch  --allow-dirty', with_venv=False)
 
     # Updating GitHub with new changes
     for filename in files_to_update:
