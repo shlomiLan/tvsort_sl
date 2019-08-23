@@ -116,4 +116,4 @@ def bump_version(c):
             repo.update_file(file_object.path, "Update version, file: {}".format(filename), f.read(),
                              file_object.sha, branch=branch_name)
 
-    return -1  # to fail CI
+    raise  # to fail CI
