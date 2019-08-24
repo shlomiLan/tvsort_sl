@@ -105,7 +105,7 @@ def bump_version(c):
         pr_filename = pr_file.filename
         if pr_filename in files_to_update:
             print('Version was already bumped, exiting')
-            return True
+            return
 
     print('Bumping version')
     run(c, 'bumpversion --verbose patch  --allow-dirty', with_venv=False)
@@ -118,5 +118,3 @@ def bump_version(c):
         with open(filename) as f:
             repo.update_file(file_object.path, "Update version, file: {}".format(filename), f.read(),
                              file_object.sha, branch=branch_name)
-
-    raise  # to fail CI
