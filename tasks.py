@@ -1,5 +1,6 @@
 import json
 import os
+import time
 
 import yaml
 from github import Github
@@ -111,6 +112,8 @@ def bump_version(c):
 
     # Updating GitHub with new changes
     for filename in files_to_update:
+        # Separate commits so that Travis will only build the last one
+        time.sleep(10)
         file_object = repo.get_contents(path=filename, ref=branch_name)
         with open(filename) as f:
             repo.update_file(file_object.path, "Update version, file: {}".format(filename), f.read(),
