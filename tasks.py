@@ -1,8 +1,9 @@
 import json
 import os
+import time
 
 import yaml
-from git import Repo
+from github import Github
 from invoke import task
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
@@ -93,22 +94,27 @@ def mutmut(c):
 
 @task()
 def bump_version(c):
-    setup_filename = 'setup.py'
-    repo = Repo(os.getcwd())
-    print('repo is: {}'.format(repo))
-    for item in repo.index.diff(None):
-        if item.a_path == setup_filename:
+    files_to_update = ['setup.py', '.bumpversion.cfg']
+    branch_name = 'develop'
+
+    github_client = Github(os.environ['GITHUB_ACCESS_TOKEN'])
+    repo = github_client.get_repo('shlomiLan/tvsort_sl')
+
+    pr = repo.get_pull(int(os.environ['TRAVIS_PULL_REQUEST']))
+    for pr_file in pr.get_files():
+        pr_filename = pr_file.filename
+        if pr_filename in files_to_update:
             print('Version was already bumped, exiting')
             return
 
     print('Bumping version')
-    run(c, 'bumpversion --verbose patch', with_venv=False)
+    run(c, 'bumpversion --verbose patch  --allow-dirty', with_venv=False)
 
-    branch_name = os.environ['TRAVIS_PULL_REQUEST_BRANCH']
-    print('Checking out branch: {}'.format(branch_name))
-    repo.git.checkout('-b', branch_name)
-
-    print('Updating git')
-    repo.git.push('--set-upstream', 'origin', branch_name)
-
-    return True
+    # Updating GitHub with new changes
+    for filename in files_to_update:
+        # Separate commits so that Travis will only build the last one
+        time.sleep(10)
+        file_object = repo.get_contents(path=filename, ref=branch_name)
+        with open(filename) as f:
+            repo.update_file(file_object.path, "Update version, file: {}".format(filename), f.read(),
+                             file_object.sha, branch=branch_name)

@@ -6,8 +6,9 @@ script:
 - mkdir logs
 - cp ./tvsort_sl/settings/templates/local.yml ./tvsort_sl/settings/local.yml
 - cp ./tvsort_sl/settings/templates/test.yml ./tvsort_sl/settings/test.yml
-#- inv bump-version
 - coverage run -m pytest
+- inv bump-version
+- git checkout .
 install:
 - pip install -r dev.txt
 after_success:
