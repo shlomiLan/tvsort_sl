@@ -3,7 +3,7 @@ urllib3==1.25.8
 patool==1.12
 
 # configs
-pyyaml==5.1.2
+pyyaml==5.3
 
 # Logs
 daiquiri==1.6.0
