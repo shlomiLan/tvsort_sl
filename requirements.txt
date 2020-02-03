@@ -1,15 +1,15 @@
 requests==2.22.0
-urllib3==1.25.6
+urllib3==1.25.8
 patool==1.12
 
 # configs
-pyyaml==5.1.2
+pyyaml==5.3
 
 # Logs
-daiquiri==1.6.0
+daiquiri==2.0.0
 
 # Find media name
 guessit==3.1.0
 
 # Emails
-sendgrid==6.1.0
+sendgrid==6.1.1
