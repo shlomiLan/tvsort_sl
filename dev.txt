@@ -15,5 +15,5 @@ coveralls==1.10.0
 mock==3.0.5
 
 # Version update
-PyGithub==1.44
+PyGithub==1.45
 bumpversion==0.5.3
