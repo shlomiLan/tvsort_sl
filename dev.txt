@@ -1,7 +1,7 @@
 # install all base requirements
 -r requirements.txt
 
-python_http_client==3.2.5
+python_http_client==3.2.6
 
 invoke==1.4.1
 twine==3.1.1
