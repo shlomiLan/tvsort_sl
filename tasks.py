@@ -100,7 +100,7 @@ def bump_version(c):
     github_client = Github(os.environ['GITHUB_ACCESS_TOKEN'])
     repo = github_client.get_repo('shlomiLan/tvsort_sl')
 
-    pr = repo.get_pull(int(os.environ['TRAVIS_PULL_REQUEST']))
+    pr = repo.get_pull(os.environ['TRAVIS_PULL_REQUEST'])
     for pr_file in pr.get_files():
         pr_filename = pr_file.filename
         if pr_filename in files_to_update:
