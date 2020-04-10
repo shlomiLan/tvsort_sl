@@ -1,5 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/1fec2l6od2qgyqvl?svg=true)](https://ci.appveyor.com/project/shlomiLan/tvsort-sl)
-[![PyPI version](https://badge.fury.io/py/tvsort_sl.svg)](https://badge.fury.io/py/tvsort_sl)
+[![PyPI version](https://badge.fury.io/py/tvsort-sl.svg)](https://badge.fury.io/py/tvsort-sl)
 [![codecov](https://codecov.io/gh/shlomiLan/tvsort_sl/branch/master/graph/badge.svg)](https://codecov.io/gh/shlomiLan/tvsort_sl)
 ![](https://img.shields.io/github/downloads/shlomiLan/tvsort_sl/total.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d3353839b44e4a3d9d09815f40c92616)](https://www.codacy.com/app/public/tvsort_sl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=shlomiLan/tvsort_sl&amp;utm_campaign=Badge_Grade)
