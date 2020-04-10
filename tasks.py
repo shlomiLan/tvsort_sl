@@ -102,7 +102,12 @@ def bump_version(c):
     repo = github_client.get_repo('shlomiLan/tvsort_sl')
 
     travis_pull_request = os.environ['TRAVIS_PULL_REQUEST']
-    if not strtobool(travis_pull_request):
+    try:
+        travis_pull_request = int(travis_pull_request)
+    except ValueError:
+        travis_pull_request = strtobool(travis_pull_request)
+
+    if not travis_pull_request:
         print('Not running on PR')
         return
 
