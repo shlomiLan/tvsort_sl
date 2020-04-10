@@ -1,6 +1,7 @@
 pull_request_rules:
   - name: Automatic merge on CI success
     conditions:
+      - author=pyup-bot
       - status-success="Travis CI - Pull Request"
       - base=master
     actions:
