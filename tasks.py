@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from distutils.util import strtobool
 
 import yaml
 from github import Github
@@ -100,7 +101,14 @@ def bump_version(c):
     github_client = Github(os.environ['GITHUB_ACCESS_TOKEN'])
     repo = github_client.get_repo('shlomiLan/tvsort_sl')
 
-    pr = repo.get_pull(os.environ['TRAVIS_PULL_REQUEST'])
+    travis_pull_request = os.environ['TRAVIS_PULL_REQUEST']
+    if not strtobool(travis_pull_request):
+        print('Not running on PR')
+        return
+
+    # Convert travis_pull_request from string to int
+    travis_pull_request = int(travis_pull_request)
+    pr = repo.get_pull(travis_pull_request)
     for pr_file in pr.get_files():
         pr_filename = pr_file.filename
         if pr_filename in files_to_update:
