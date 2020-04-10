@@ -96,12 +96,13 @@ def mutmut(c):
 @task()
 def bump_version(c):
     files_to_update = ['setup.py', '.bumpversion.cfg']
-    branch_name = 'develop'
 
     github_client = Github(os.environ['GITHUB_ACCESS_TOKEN'])
-    repo = github_client.get_repo('shlomiLan/tvsort_sl')
 
     travis_pull_request = os.environ['TRAVIS_PULL_REQUEST']
+    travis_pull_request_branch = os.environ['TRAVIS_PULL_REQUEST_BRANCH']
+    travis_pull_request_slug = os.environ['TRAVIS_PULL_REQUEST_SLUG']
+
     try:
         travis_pull_request = int(travis_pull_request)
     except ValueError:
@@ -113,6 +114,8 @@ def bump_version(c):
 
     # Convert travis_pull_request from string to int
     travis_pull_request = int(travis_pull_request)
+
+    repo = github_client.get_repo(travis_pull_request_slug)
     pr = repo.get_pull(travis_pull_request)
     for pr_file in pr.get_files():
         pr_filename = pr_file.filename
@@ -127,7 +130,7 @@ def bump_version(c):
     for filename in files_to_update:
         # Separate commits so that Travis will only build the last one
         time.sleep(10)
-        file_object = repo.get_contents(path=filename, ref=branch_name)
+        file_object = repo.get_contents(path=filename, ref=travis_pull_request_branch)
         with open(filename) as f:
             repo.update_file(file_object.path, "Update version, file: {}".format(filename), f.read(),
-                             file_object.sha, branch=branch_name)
+                             file_object.sha, branch=travis_pull_request_branch)
