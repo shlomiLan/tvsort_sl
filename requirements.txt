@@ -1,5 +1,5 @@
 requests==2.23.0
-urllib3==1.25.8
+urllib3==1.25.9
 patool==1.12
 
 # configs
