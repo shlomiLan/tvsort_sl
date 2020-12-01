@@ -11,9 +11,9 @@ pytest==6.1.2
 pytest-cov==2.10.1
 codecov==2.1.10
 python-coveralls==2.9.3
-coveralls==2.1.2
+coveralls==2.2.0
 mock==4.0.2
 
 # Version update
-PyGithub==1.53
+PyGithub==1.54
 bumpversion==0.6.0
