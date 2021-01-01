@@ -1,4 +1,4 @@
-requests==2.25.0
+requests==2.25.1
 urllib3==1.26.2
 patool==1.12
 
@@ -9,7 +9,7 @@ pyyaml==5.3.1
 daiquiri==3.0.0
 
 # Find media name
-guessit==3.1.1
+guessit==3.2.0
 
 # Emails
-sendgrid==6.4.7
+sendgrid==6.4.8
