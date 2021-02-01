@@ -12,4 +12,4 @@ daiquiri==3.0.0
 guessit==3.2.0
 
 # Emails
-sendgrid==6.4.8
+sendgrid==6.5.0
