@@ -1,17 +1,17 @@
 # install all base requirements
 -r requirements.txt
 
-python_http_client==3.3.3
+python_http_client==3.3.4
 
 invoke==1.6.0
-twine==3.4.2
+twine==3.7.1
 
 # Tests
 pytest==6.2.5
-pytest-cov==2.12.1
+pytest-cov==3.0.0
 codecov==2.1.12
 python-coveralls==2.9.3
-coveralls==3.2.0
+coveralls==3.3.1
 mock==4.0.3
 
 # Version update
