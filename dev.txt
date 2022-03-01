@@ -7,7 +7,7 @@ invoke==1.6.0
 twine==3.8.0
 
 # Tests
-pytest==6.2.5
+pytest==7.0.1
 pytest-cov==2.12.1
 codecov==2.1.12
 python-coveralls==2.9.3
