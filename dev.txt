@@ -8,7 +8,7 @@ twine==3.8.0
 
 # Tests
 pytest==7.0.1
-pytest-cov==2.12.1
+pytest-cov==3.0.0
 codecov==2.1.12
 python-coveralls==2.9.3
 coveralls==3.2.0
