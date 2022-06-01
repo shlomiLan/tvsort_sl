@@ -9,7 +9,7 @@ pyyaml==6.0
 daiquiri==3.0.1
 
 # Find media name
-guessit==3.3.1
+guessit==3.4.3
 
 # Emails
 sendgrid==6.8.2
