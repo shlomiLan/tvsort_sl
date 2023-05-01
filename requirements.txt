@@ -6,7 +6,7 @@ patool==1.12
 pyyaml==6.0
 
 # Logs
-daiquiri==3.0.1
+daiquiri==3.2.1
 
 # Find media name
 guessit==3.3.1
