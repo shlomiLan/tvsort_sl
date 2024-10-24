@@ -68,8 +68,8 @@ def is_unix():
 def get_venv_action():
     if is_unix():
         return f"source {BASEDIR}/venv/bin/activate"
-    else:
-        return f"{BASEDIR}\\venv\\Scripts\\activate"
+
+    return f"{BASEDIR}\\venv\\Scripts\\activate"
 
 
 @task(init_app)
@@ -115,9 +115,9 @@ def bump_version(context):
     travis_pull_request = int(travis_pull_request)
 
     repo = github_client.get_repo(travis_pull_request_slug)
-    pr = repo.get_pull(travis_pull_request)
-    for pr_file in pr.get_files():
-        pr_filename = pr_file.filename
+    pull_request = repo.get_pull(travis_pull_request)
+    for pull_request_file in pull_request.get_files():
+        pr_filename = pull_request_file.filename
         if pr_filename in files_to_update:
             print('Version was already bumped, exiting')
             return
