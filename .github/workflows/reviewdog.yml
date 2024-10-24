@@ -39,3 +39,4 @@ jobs:
           # GitHub Status Check won't become failure with warning.
           level: error
           filter_mode: nofilter
+          fail_on_error: true
