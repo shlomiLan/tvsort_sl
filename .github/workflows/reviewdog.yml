@@ -35,6 +35,7 @@ jobs:
           level: error
           glob_pattern: "tvsort_sl/*.py"
           fail_on_error: true
+          filter_mode: "nofilter"
 
       - run: |
           pip install pylint
