@@ -25,16 +25,16 @@ jobs:
 #          # GitHub Status Check won't become failure with a warning.
 #          level: error
 #
-#      - uses: dciborow/action-pylint@0.1.0
-#        with:
-#          github_token: ${{ secrets.github_token }}
-#          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
-#          reporter: github-pr-review
-#          # Change reporter level if you need.
-#          # GitHub Status Check won't become failure with warning.
-#          level: error
-#          glob_pattern: "**/*.py"
-#          fail_on_error: true
+      - uses: dciborow/action-pylint@0.1.0
+        with:
+          github_token: ${{ secrets.github_token }}
+          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
+          reporter: github-pr-review
+          # Change reporter level if you need.
+          # GitHub Status Check won't become failure with warning.
+          level: error
+          glob_pattern: "tvsort_sl/*.py"
+          fail_on_error: true
 
       - run: |
           pip install pylint
