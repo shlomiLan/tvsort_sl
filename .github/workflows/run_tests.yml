@@ -23,6 +23,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r dev.txt && pip install pytest-md pytest-emoji
 
+      - name: Add local settings
+        run: |
+          mkdir logs
+          cp ./tvsort_sl/settings/templates/local.yml ./tvsort_sl/settings/local.yml
+          cp ./tvsort_sl/settings/templates/test.yml ./tvsort_sl/settings/test.yml
+
       - uses: pavelzw/pytest-action@v2.2.0
         with:
           verbose: true
