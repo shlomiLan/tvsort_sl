@@ -1,0 +1,37 @@
+name: Run Reviewdog with Black and Flake8
+
+on: [pull_request]
+
+jobs:
+  lint:
+    name: Run Black and Flake8
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install black flake8 reviewdog
+
+      - name: Run Black
+        run: black --check .
+        continue-on-error: true
+
+      - name: Run Flake8
+        run: flake8 .
+        continue-on-error: true
+
+      - name: Reviewdog Reporting
+        uses: reviewdog/action-flake8@v1
+        with:
+          reporter: github-pr-review
+          level: error
+          fail_on_error: true
+          filter_mode: added
