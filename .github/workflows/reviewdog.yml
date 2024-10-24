@@ -27,24 +27,10 @@ jobs:
         run: |
           pip install black flake8==3.7.6
 
-      - name: Run Black
-        run: black --check .
-        continue-on-error: true
-
-      - name: Run Flake8
-        run: flake8 .
-        continue-on-error: true
-
-      - name: Reviewdog Reporting
-        uses: reviewdog/action-flake8@v3
-        with:
-          reporter: github-pr-review
-          level: error
-          fail_on_error: true
-          filter_mode: added
-
-      - name: Run reviewdog
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          reviewdog -reporter=github-check -runners=flake8
+      - name: wemake-python-styleguide
+        uses: wemake-services/wemake-python-styleguide
+#      - name: Run reviewdog
+#        env:
+#          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#          reviewdog -reporter=github-check -runners=flake8
