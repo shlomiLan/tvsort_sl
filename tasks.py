@@ -11,7 +11,7 @@ BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 
 @task()
-def init_app(c, env=None):
+def init_app(context, env=None):
     # Prevent execute this function more than once
     if not os.environ.get("APP_SETTINGS"):
         # Load the basic configs
@@ -21,24 +21,24 @@ def init_app(c, env=None):
 
         for name, data in env_vars.items():
             set_env_var(
-                c, name, data.get("value"), env, data.get("is_protected", False)
+                context, name, data.get("value"), env, data.get("is_protected", False)
             )
 
 
 @task(init_app)
-def run_app(c, env=None):
-    run(c, "python -m tvsort_sl.app", False)
+def run_app(context, env=None):
+    run(context, "python -m tvsort_sl.app", False)
 
 
-def run(c, command, with_venv=True):
+def run(context, command, with_venv=True):
     if with_venv:
         command = "{} && {}".format(get_venv_action(), command)
 
     print("Running: {}".format(command))
-    c.run(command)
+    context.run(command)
 
 
-def set_env_var(c, name, value, env, is_protected=True):
+def set_env_var(context, name, value, env, is_protected=True):
     # env codes: t - Travis-CI , None - Dev
     if isinstance(value, dict):
         value = json.dumps(value)
@@ -49,7 +49,7 @@ def set_env_var(c, name, value, env, is_protected=True):
             command = "{} --public".format(command)
 
         if command:
-            run(c, command, False)
+            run(context, command, False)
 
     else:
         print(f"Set local var: {name}={value}")
@@ -73,7 +73,7 @@ def get_venv_action():
 
 
 @task(init_app)
-def test(c, cov=False, file=None):
+def test(context, cov=False, file=None):
     # cov - if to use coverage, file - if to run specific file
 
     command = "pytest -s -p no:warnings"
@@ -84,17 +84,17 @@ def test(c, cov=False, file=None):
     if file:
         command = "{} {}".format(command, file)
 
-    run(c, command)
+    run(context, command)
 
 
 @task(init_app)
-def mutmut(c):
+def mutmut(context):
     command = "mutmut run"
-    run(c, command)
+    run(context, command)
 
 
 @task()
-def bump_version(c):
+def bump_version(context):
     files_to_update = ['setup.py', '.bumpversion.cfg']
 
     github_client = Github(os.environ['GITHUB_ACCESS_TOKEN'])
@@ -124,7 +124,7 @@ def bump_version(c):
             return
 
     print('Bumping version')
-    run(c, 'bumpversion --verbose patch  --allow-dirty', with_venv=False)
+    run(context, 'bumpversion --verbose patch  --allow-dirty', with_venv=False)
 
     # Updating GitHub with new changes
     for filename in files_to_update:
