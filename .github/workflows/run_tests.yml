@@ -21,7 +21,7 @@ jobs:
           cache: 'pip' # caching pip dependencies
 
       - name: Install dependencies
-        run: pip install -r dev.txt
+        run: pip install -r dev.txt && pip install pytest-md
 
       - uses: pavelzw/pytest-action@v2.2.0
         with:
