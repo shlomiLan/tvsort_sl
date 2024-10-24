@@ -11,3 +11,19 @@ tvsort_sl/settings/test.yml
 logs/
 
 resources/
+
+# python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.eggs/
+
+# virtualenv
+venv/
+
+# IDE
+.idea/
+
+# Pyenv
+.python-version

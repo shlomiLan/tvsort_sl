@@ -4,7 +4,7 @@ import mock
 from guessit import guessit
 from requests import Response
 
-import tvsort_sl.utils as utils
+from tvsort_sl import utils
 from tvsort_sl.app import PROCESS_RUNNING
 from tvsort_sl.conf import get_conf_file_name
 from tvsort_sl.tests.test_base import tv_sort

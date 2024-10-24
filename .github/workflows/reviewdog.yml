@@ -1,0 +1,32 @@
+name: Run Reviewdog
+
+on: [pull_request]
+
+jobs:
+  lint:
+    name: Run Black and Flake8
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+          cache: 'pip' # caching pip dependencies
+
+      - name: Install dependencies
+        run: pip install -r dev.txt
+
+      - uses: dciborow/action-pylint@0.1.1
+        with:
+          github_token: ${{ secrets.github_token }}
+          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
+          reporter: github-pr-review
+          # Change reporter level if you need.
+          # GitHub Status Check won't become failure with warning.
+          level: error
+          filter_mode: nofilter
+          fail_on_error: true

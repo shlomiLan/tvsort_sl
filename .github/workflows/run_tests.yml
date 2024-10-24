@@ -1,0 +1,35 @@
+name: Run Tests
+
+on: [pull_request]
+
+jobs:
+  pytest:
+    name: Run Pytest
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: ["3.6.7", "3.7"]
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip' # caching pip dependencies
+
+      - name: Install dependencies
+        run: pip install -r dev.txt
+
+      - name: Add local settings
+        run: |
+          mkdir logs
+          cp ./tvsort_sl/settings/templates/local.yml ./tvsort_sl/settings/local.yml
+          cp ./tvsort_sl/settings/templates/test.yml ./tvsort_sl/settings/test.yml
+
+      - uses: pavelzw/pytest-action@v2.2.0
+        with:
+          verbose: true
+          emoji: false
+          job-summary: false
