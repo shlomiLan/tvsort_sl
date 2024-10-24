@@ -24,7 +24,8 @@ def get_ext_file_name():
 
 def update_dict_from_yaml(settings, conf_files):
     for file_path in conf_files:
-        settings.update(yaml.load(open(file_path)))
+        with open(file_path) as stream:
+            settings.update(yaml.load(stream))
 
 
 def load_setting(settings, conf_files):
