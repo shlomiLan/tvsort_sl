@@ -28,9 +28,6 @@ jobs:
           pip install black flake8==3.7.6
 
       - name: wemake-python-styleguide
-        uses: wemake-services/wemake-python-styleguide
-#      - name: Run reviewdog
-#        env:
-#          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: |
-#          reviewdog -reporter=github-check -runners=flake8
+        uses: wemake-services/wemake-python-styleguide@0.19.2
+
+
