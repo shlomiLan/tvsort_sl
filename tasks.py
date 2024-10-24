@@ -26,15 +26,15 @@ def init_app(context, env=None):
 
 
 @task(init_app)
-def run_app(context, env=None):
+def run_app(context):
     run(context, "python -m tvsort_sl.app", False)
 
 
 def run(context, command, with_venv=True):
     if with_venv:
-        command = "{} && {}".format(get_venv_action(), command)
+        command = f"{get_venv_action()} && {command}"
 
-    print("Running: {}".format(command))
+    print(f"Running: {command}")
     context.run(command)
 
 
@@ -44,9 +44,9 @@ def set_env_var(context, name, value, env, is_protected=True):
         value = json.dumps(value)
 
     if env == "t":
-        command = "travis env set {} '{}'".format(name, value)
+        command = f"travis env set {name} '{value}'"
         if not is_protected:
-            command = "{} --public".format(command)
+            command = f"{command} --public"
 
         if command:
             run(context, command, False)
@@ -78,11 +78,10 @@ def test(context, cov=False, file=None):
 
     command = "pytest -s -p no:warnings"
     if cov:
-        command = "{} --cov=slots_tracker_server --cov-report term-missing".format(
-            command
-        )
+        command = f"{command} --cov=slots_tracker_server --cov-report term-missing"
+
     if file:
-        command = "{} {}".format(command, file)
+        command = f"{command} {file}"
 
     run(context, command)
 
@@ -132,5 +131,5 @@ def bump_version(context):
         time.sleep(10)
         file_object = repo.get_contents(path=filename, ref=travis_pull_request_branch)
         with open(filename) as f:
-            repo.update_file(file_object.path, "Update version, file: {}".format(filename), f.read(),
+            repo.update_file(file_object.path, f"Update version, file: {filename}", f.read(),
                              file_object.sha, branch=travis_pull_request_branch)
