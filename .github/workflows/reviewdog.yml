@@ -16,20 +16,11 @@ jobs:
         with:
           python-version: "3.7"
 
-#      - name: Install Reviewdog
-#        uses: reviewdog/action-setup@v1
-#
-#      - name: Reviewdog version
-#        run: reviewdog -version
-#
-#      - name: Install dependencies
-##        TODO: add versions
-#        run: |
-#          pip install black flake8==3.7.6
-
-      - name: wemake-python-styleguide
-        uses: wemake-services/wemake-python-styleguide@0.19.2
+      - uses: reviewdog/action-black@v3
         with:
-          reporter: 'terminal'
-        env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          github_token: ${{ secrets.github_token }}
+          # Change reviewdog reporter if you need [github-pr-check, github-check].
+          reporter: github-pr-check
+          # Change reporter level if you need.
+          # GitHub Status Check won't become failure with a warning.
+          level: warning
