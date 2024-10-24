@@ -23,10 +23,10 @@ class TvSort:
     settings: Dict[str, Union[str, bool]] = {
         "PROJECT_NAME": project_name, "LOG_PATH": os.path.join(BASE_DIR, "logs")
     }
-    extensions: Dict[str, List[str]] = dict()
+    extensions: Dict[str, List[str]] = {}
     logger = None
 
-    report: Dict[str, Union[Counter, List[str]]] = dict(counters=Counter(), errors=[])
+    report: Dict[str, Union[Counter, List[str]]] = {"counters": Counter(), "errors": []}
 
     def __init__(self, is_test=False, **kwargs):
         self.create_logger(**kwargs)
@@ -124,7 +124,7 @@ class TvSort:
                 show_name = utils.transform_to_path_name(title)
                 utils.add_missing_country(video, show_name)
                 if video.get('country'):
-                    show_name += '.{}'.format(video.get('country'))
+                    show_name += f'.{video.get("country")}'
 
                 new_path = os.path.join(self.settings.get('TV_PATH'), show_name)
                 response = utils.create_folder(new_path)
