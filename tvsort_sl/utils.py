@@ -135,7 +135,7 @@ def add_missing_country(video: dict, show_name: str) -> None:
 
 
 def create_file(file_path: str) -> List[Tuple[str, str]]:
-    with open(file_path, 'w'):
+    with open(file_path, 'w', encoding="utf-8"):
         pass
     return [('info', f'File was created, in: {file_path}')]
 
@@ -144,8 +144,9 @@ def delete_file(file_path: str) -> List[Tuple[str, str]]:
     try:
         os.remove(file_path)
         return [('info', f'Removing file: {file_path}')]
-    except Exception as e:
-        return [('error', f'Unexpected error: {e}')]
+    # pylint: disable=broad-except
+    except Exception as exception:
+        return [('error', f'Unexpected error: {exception}')]
 
 
 def copy_file(
@@ -159,14 +160,15 @@ def copy_file(
         else:
             shutil.copy(old_path, new_path)
         return [('info', f'{action} file: FROM {old_path} TO {new_path}')]
-    except Exception as e:
+    # pylint: disable=broad-except
+    except Exception as exception:
         # If error because file already in new path delete the old file
-        if 'already exists' in str(e):
-            messages = [('error', str(e))]
+        if 'already exists' in str(exception):
+            messages = [('error', str(exception))]
             messages.extend(delete_file(old_path))
             return messages
-        else:
-            return [('error', f'Unexpected error: {e}')]
+
+        return [('error', f'Unexpected error: {e}')]
 
 
 def folder_empty(folder_path: str) -> bool:
@@ -176,7 +178,7 @@ def folder_empty(folder_path: str) -> bool:
 def update_xbmc(kodi_ip: str) -> List[Tuple[str, str]]:
     url = f'{kodi_ip}/jsonrpc'
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, timeout=30)
     if response.status_code == 200:
         return [('info', 'Update XBMC successfully')]
 
