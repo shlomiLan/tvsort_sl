@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: "3.9"
 
-      - uses: reviewdog/action-black@v3
+      - uses: reviewdog/action-black@v3.21.0
         with:
           github_token: ${{ secrets.github_token }}
           # Change reviewdog reporter if you need [github-pr-check, github-check].
