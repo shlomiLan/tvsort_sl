@@ -25,7 +25,7 @@ jobs:
           # GitHub Status Check won't become failure with a warning.
           level: error
 
-      - uses: dciborow/action-pylint@0.1.0
+      - uses: dciborow/action-pylint@0.1.1
         with:
           github_token: ${{ secrets.github_token }}
           # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
