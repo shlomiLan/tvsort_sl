@@ -23,7 +23,7 @@ jobs:
           reporter: github-pr-check
           # Change reporter level if you need.
           # GitHub Status Check won't become failure with a warning.
-          level: warning
+          level: error
 
       - uses: dciborow/action-pylint@0.1.0
         with:
@@ -34,3 +34,4 @@ jobs:
           # GitHub Status Check won't become failure with warning.
           level: error
           glob_pattern: "**/*.py"
+          fail_on_error: true
