@@ -168,7 +168,7 @@ def copy_file(
             messages.extend(delete_file(old_path))
             return messages
 
-        return [('error', f'Unexpected error: {e}')]
+        return [('error', f'Unexpected error: {exception}')]
 
 
 def folder_empty(folder_path: str) -> bool:
