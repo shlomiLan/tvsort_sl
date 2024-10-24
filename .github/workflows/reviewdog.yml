@@ -1,4 +1,4 @@
-name: Run Reviewdog with Black and Flake8
+name: Run Reviewdog
 
 on: [pull_request]
 
