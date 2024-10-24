@@ -91,8 +91,8 @@ def delete_folder(folder_path: str, force: bool = False) -> List[Tuple[str, str]
         return [('error', 'Folder is not empty')]
 
     # pylint: disable=broad-except
-    except Exception as e:
-        return [('error', f"Folder can't be deleted, Unexpected error: {e}")]
+    except Exception as exception:
+        return [('error', f"Folder can't be deleted, Unexpected error: {exception}")]
 
 
 def delete_folder_if_empty(folder_path: str) -> List[Tuple[str, str]]:
