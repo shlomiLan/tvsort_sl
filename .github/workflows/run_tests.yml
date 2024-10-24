@@ -1,0 +1,16 @@
+name: Run Tests
+
+on: [pull_request]
+
+jobs:
+  pytest:
+    name: Run Pytest
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: pavelzw/pytest-action@v2.2.0
+        with:
+          emoji: true
+          job-summary: true
+          click-to-expand: true
+          report-title: 'Test Report'
