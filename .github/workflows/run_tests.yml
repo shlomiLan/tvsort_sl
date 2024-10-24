@@ -18,8 +18,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip' # caching pip dependencies
 
       - name: Install dependencies
         run: pip install -r dev.txt
 
       - uses: pavelzw/pytest-action@v2.2.0
+        with:
+          verbose: true
