@@ -135,8 +135,8 @@ def add_missing_country(video: dict, show_name: str) -> None:
 
 
 def create_file(file_path: str) -> List[Tuple[str, str]]:
-    dummy_file = open(file_path, str('w'))
-    dummy_file.close()
+    with open(file_path, 'w'):
+        pass
     return [('info', f'File was created, in: {file_path}')]
 
 
