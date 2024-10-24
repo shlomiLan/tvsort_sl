@@ -20,9 +20,9 @@ CONNECTION_ISSUE = 'HTTPConnectionPool'
 
 class TvSort:
     project_name = 'tvsort_sl'
-    settings: Dict[str, Union[str, bool]] = dict(
-        PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs')
-    )
+    settings: Dict[str, Union[str, bool]] = {
+        "PROJECT_NAME": project_name, "LOG_PATH": os.path.join(BASE_DIR, "logs")
+    }
     extensions: Dict[str, List[str]] = dict()
     logger = None
 
