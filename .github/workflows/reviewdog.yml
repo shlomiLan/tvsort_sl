@@ -8,17 +8,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
+      - name: Check out source repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up Python environment
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.7"
 
       - name: Install dependencies
+#        TODO: add versions
         run: |
-          pip install black flake8 reviewdog
+          pip install black flake8==6.0.0 reviewdog
 
       - name: Run Black
         run: black --check .
@@ -29,7 +30,7 @@ jobs:
         continue-on-error: true
 
       - name: Reviewdog Reporting
-        uses: reviewdog/action-flake8@v1
+        uses: reviewdog/action-flake8@v3
         with:
           reporter: github-pr-review
           level: error
