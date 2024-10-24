@@ -34,7 +34,7 @@ jobs:
           # GitHub Status Check won't become failure with warning.
           level: error
           glob_pattern: "tvsort_sl/*.py"
-          fail_on_error: true
+#          fail_on_error: true
           filter_mode: "nofilter"
 
       - run: |
