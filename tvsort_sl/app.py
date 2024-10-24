@@ -18,7 +18,7 @@ PROCESS_RUNNING = 'Proses already running'
 CONNECTION_ISSUE = 'HTTPConnectionPool'
 
 
-class TvSort(object):
+class TvSort:
     project_name = 'tvsort_sl'
     settings: Dict[str, Union[str, bool]] = dict(
         PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs')
