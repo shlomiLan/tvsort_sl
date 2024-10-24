@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
 #        TODO: add versions
         run: |
-          pip install black flake8==6.0.0 reviewdog
+          pip install black flake8==3.7.6 reviewdog
 
       - name: Run Black
         run: black --check .
