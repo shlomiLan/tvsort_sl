@@ -16,10 +16,16 @@ jobs:
         with:
           python-version: "3.7"
 
+      - name: Install Reviewdog
+        uses: reviewdog/action-setup@v1
+
+      - name: Reviewdog version
+        run: reviewdog -version
+
       - name: Install dependencies
 #        TODO: add versions
         run: |
-          pip install black flake8==3.7.6 reviewdog
+          pip install black flake8==3.7.6
 
       - name: Run Black
         run: black --check .
