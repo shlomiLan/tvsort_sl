@@ -23,8 +23,3 @@ jobs:
         run: pip install -r dev.txt
 
       - uses: pavelzw/pytest-action@v2.2.0
-        with:
-          emoji: true
-          job-summary: true
-          click-to-expand: true
-          report-title: 'Test Report'
