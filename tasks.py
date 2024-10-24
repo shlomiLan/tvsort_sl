@@ -57,7 +57,7 @@ def set_env_var(context, name, value, env, is_protected=True):
 
 
 def load_yaml_from_file(file_path):
-    with open(file_path, "r") as stream:
+    with open(file_path, "r", encoding="utf-8") as stream:
         return yaml.safe_load(stream)
 
 
@@ -130,6 +130,6 @@ def bump_version(context):
         # Separate commits so that Travis will only build the last one
         time.sleep(10)
         file_object = repo.get_contents(path=filename, ref=travis_pull_request_branch)
-        with open(filename) as f:
+        with open(filename, encoding="utf-8") as f:
             repo.update_file(file_object.path, f"Update version, file: {filename}", f.read(),
                              file_object.sha, branch=travis_pull_request_branch)
