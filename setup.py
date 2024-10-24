@@ -2,8 +2,8 @@ from setuptools import setup
 
 
 def long_description():
-    with open("README.md", "r", encoding="utf-8") as f:
-        return f.read()
+    with open("README.md", "r", encoding="utf-8") as file:
+        return file.read()
 
 
 setup(
