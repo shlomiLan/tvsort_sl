@@ -171,10 +171,10 @@ class TvSort:
         return False
 
     def email_report(self):
+        # pylint: disable=inconsistent-return-statements
         if self.is_send_report():
             subject = 'TV sort report'
             content = json.dumps(self.report)
-            # pylint: disable=inconsistent-return-statements
             return send_email(subject=subject, content=content)
 
 
