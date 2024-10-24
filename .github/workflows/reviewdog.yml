@@ -33,5 +33,10 @@ jobs:
           # Change reporter level if you need.
           # GitHub Status Check won't become failure with warning.
           level: error
-#          fail_on_error: true
-          filter_mode: "nofilter"
+
+      - name: wemake-python-styleguide
+        uses: wemake-services/wemake-python-styleguide
+        with:
+          reporter: 'github-pr-review'
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
