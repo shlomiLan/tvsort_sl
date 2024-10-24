@@ -36,8 +36,8 @@ def get_files(path: str) -> List[str]:
     files = []
 
     for root, _, walk_files in os.walk(path):
-        for f in walk_files:
-            files.append(os.path.join(root, f))
+        for file in walk_files:
+            files.append(os.path.join(root, file))
 
     return sorted(files)
 
@@ -46,8 +46,8 @@ def get_folders(path: str) -> List[str]:
     folders = []
 
     for root, dirs, _ in os.walk(path):
-        for d in dirs:
-            folders.append(os.path.join(root, d))
+        for directory in dirs:
+            folders.append(os.path.join(root, directory))
 
     return sorted(folders)
 
@@ -84,11 +84,13 @@ def delete_folder(folder_path: str, force: bool = False) -> List[Tuple[str, str]
             messages.extend(clean_folder(folder_path))
 
         if folder_empty(folder_path):
-            messages.append(('info', 'Deleting folder: {}'.format(folder_path)))
+            messages.append(('info', f'Deleting folder: {folder_path}'))
             os.rmdir(folder_path)
             return messages
-        else:
-            return [('error', 'Folder is not empty')]
+
+        return [('error', 'Folder is not empty')]
+
+    # pylint: disable=broad-except
     except Exception as e:
         return [('error', f"Folder can't be deleted, Unexpected error: {e}")]
 
@@ -172,13 +174,13 @@ def folder_empty(folder_path: str) -> bool:
 
 
 def update_xbmc(kodi_ip: str) -> List[Tuple[str, str]]:
-    url = '{}/jsonrpc'.format(kodi_ip)
+    url = f'{kodi_ip}/jsonrpc'
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
     response = requests.post(url, json=data)
     if response.status_code == 200:
         return [('info', 'Update XBMC successfully')]
 
-    return [('error', 'Invalid response: {}'.format(response))]
+    return [('error', f'Invalid response: {response}')]
 
 
 def check_project_setup(settings, conf_files):

@@ -64,9 +64,10 @@ class TvSort:
                 response = utils.delete_folder_if_empty(folder_path)
                 self.process_response(response)
 
-        except Exception as e:
+        # pylint: disable=broad-except
+        except Exception as exception:
             self.process_response([('error', traceback.print_exc())])
-            self.process_response([('error', str(e))])
+            self.process_response([('error', str(exception))])
 
         finally:
             response = utils.delete_file(self.settings.get('DUMMY_FILE_PATH'))

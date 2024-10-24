@@ -130,6 +130,6 @@ def bump_version(context):
         # Separate commits so that Travis will only build the last one
         time.sleep(10)
         file_object = repo.get_contents(path=filename, ref=travis_pull_request_branch)
-        with open(filename, encoding="utf-8") as f:
-            repo.update_file(file_object.path, f"Update version, file: {filename}", f.read(),
+        with open(filename, encoding="utf-8") as file:
+            repo.update_file(file_object.path, f"Update version, file: {filename}", file.read(),
                              file_object.sha, branch=travis_pull_request_branch)
