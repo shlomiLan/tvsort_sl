@@ -20,16 +20,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r dev.txt
 
-      - uses: reviewdog/action-black@v3.21.0
-        with:
-          github_token: ${{ secrets.github_token }}
-          # Change reviewdog reporter if you need [github-pr-check, github-check].
-          reporter: github-pr-review
-          # Change reporter level if you need.
-          # GitHub Status Check won't become failure with a warning.
-          level: error
-          filter_mode: nofilter
-
       - uses: dciborow/action-pylint@0.1.1
         with:
           github_token: ${{ secrets.github_token }}
