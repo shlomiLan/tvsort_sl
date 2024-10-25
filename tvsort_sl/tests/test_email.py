@@ -6,9 +6,14 @@ from python_http_client import UnauthorizedError
 from tvsort_sl import messages
 
 
-def test_send_email():
-    with pytest.raises(UnauthorizedError):
-        messages.send_email(content='This is test content', subject='Test subject')
+@mock.patch('tvsort_sl.messages.SendGridAPIClient')
+def test_send_email(mock_sendgrid_client):
+    mock_response = mock.Mock()
+    mock_response.status_code = 200
+    mock_sendgrid_client.return_value.send.return_value = mock_response
+
+    res = messages.send_email(content='This is test content', subject='Test subject')
+    assert res.status_code in (200, 202)
 
 
 def test_no_api_key():
