@@ -43,3 +43,4 @@ jobs:
           pytest-xml-coverage-path: ./coverage.xml
           create-new-comment: true
           unique-id-for-comment: ${{ matrix.python-version }}
+          title: "Coverage report for Python ${{ matrix.python-version }}"
