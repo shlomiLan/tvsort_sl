@@ -35,7 +35,7 @@ jobs:
           job-summary: false
 
       - name: Generate coverage report
-        run: pytest --cov=./ --cov-report=json
+        run: pytest --cov=./ --cov-report=xml
 
 #      - name: Pytest coverage comment
 #        uses: MishaKav/pytest-coverage-comment@main
