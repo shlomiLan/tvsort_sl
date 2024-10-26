@@ -11,29 +11,26 @@ jobs:
       matrix:
         python-version: ["3.6.7"]
     steps:
-      - name: Set status check with message
-        run: |
-          message="Custom message for status check"
-          curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/statuses/${{github.event.pull_request.head.sha}} \
-            -d "{\"state\": \"failure\", \"description\": \"$message\", \"context\": \"Run Tests / Run Pytest (3.6.7) (pull_request)\"}"
+      - name: Check out source repository
+        uses: actions/checkout@v4
 
-#      - run: exit 1
-#
-#      - name: Check out source repository
-#        uses: actions/checkout@v4
-#
-#      - name: Set up Python ${{ matrix.python-version }}
-#        uses: actions/setup-python@v5
-#        with:
-#          python-version: ${{ matrix.python-version }}
-#          cache: 'pip' # caching pip dependencies
-#
-#      - name: Install dependencies
-#        run: pip install -r dev.txt
-#
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip' # caching pip dependencies
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('dev.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: pip install -r dev.txt
+
 #      - name: Add local settings
 #        run: |
 #          mkdir logs
