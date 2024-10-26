@@ -45,11 +45,8 @@ jobs:
 #          unique-id-for-comment: ${{ matrix.python-version }}
 #          title: "Coverage report for Python ${{ matrix.python-version }}"
 
-      - name: Monitor coverage
-        uses: slavcodev/coverage-monitor-action@v1
+      - name: Upload coverage
+        uses: codelyze/action@2.1.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          coverage_path: "./coverage.json"
-          threshold_alert: 10
-          threshold_warning: 50
-          threshold_metric: "lines"
+          token: ${{ secrets.CODELYZE_TOKEN }}
+          path: coverage/lcov.info
