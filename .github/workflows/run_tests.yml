@@ -55,6 +55,6 @@ jobs:
 
           if (( $(echo "$coverage < 100" | bc -l) )); then
             echo "::error::Coverage: $coverage%"
-            echo "Coverage is below 100%"
+            echo "Coverage is below 100%" && exit 1
           fi
         shell: bash
