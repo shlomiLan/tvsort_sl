@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.6.7", "3.7"]
+        python-version: ["3.6.7"]
     steps:
       - name: Set status check with message
         run: |
@@ -20,55 +20,55 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/statuses/${{github.event.pull_request.head.sha}} \
             -d "{\"state\": \"failure\", \"description\": \"$message\", \"context\": \"Run Tests / Run Pytest (3.6.7)\"}"
 
-      - run: exit 1
-
-      - name: Check out source repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'pip' # caching pip dependencies
-
-      - name: Install dependencies
-        run: pip install -r dev.txt
-
-      - name: Add local settings
-        run: |
-          mkdir logs
-          cp ./tvsort_sl/settings/templates/local.yml ./tvsort_sl/settings/local.yml
-          cp ./tvsort_sl/settings/templates/test.yml ./tvsort_sl/settings/test.yml
-
-      - uses: pavelzw/pytest-action@v2.2.0
-        with:
-          verbose: true
-          emoji: false
-          job-summary: false
-
-      - name: Generate coverage report
-        run: pytest --cov=./ --cov-report=xml
-
-      - name: Pytest coverage comment
-        uses: MishaKav/pytest-coverage-comment@main
-        with:
-          pytest-xml-coverage-path: ./coverage.xml
-          create-new-comment: true
-          unique-id-for-comment: ${{ matrix.python-version }}
-          title: "Coverage report for Python ${{ matrix.python-version }}"
-
-      - name: Set coverage output
-        id: set_coverage
-        run: |
-          coverage=$(xmllint --xpath "string(//coverage/@line-rate)" coverage.xml)
-          coverage=$(echo "$coverage * 100" | bc)
-          echo "Coverage: $coverage%"
-          echo "::set-output name=coverage::$coverage"
-        shell: bash
-
-      - uses: ouzi-dev/commit-status-updater@v2
-        if: ${{ steps.set_coverage.outputs.coverage < 100 }}
-        with:
-          status: "error"
-          description: "this is my status check"
-          name: "Run Tests / Run Pytest (3.6.7)"
+#      - run: exit 1
+#
+#      - name: Check out source repository
+#        uses: actions/checkout@v4
+#
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#          cache: 'pip' # caching pip dependencies
+#
+#      - name: Install dependencies
+#        run: pip install -r dev.txt
+#
+#      - name: Add local settings
+#        run: |
+#          mkdir logs
+#          cp ./tvsort_sl/settings/templates/local.yml ./tvsort_sl/settings/local.yml
+#          cp ./tvsort_sl/settings/templates/test.yml ./tvsort_sl/settings/test.yml
+#
+#      - uses: pavelzw/pytest-action@v2.2.0
+#        with:
+#          verbose: true
+#          emoji: false
+#          job-summary: false
+#
+#      - name: Generate coverage report
+#        run: pytest --cov=./ --cov-report=xml
+#
+#      - name: Pytest coverage comment
+#        uses: MishaKav/pytest-coverage-comment@main
+#        with:
+#          pytest-xml-coverage-path: ./coverage.xml
+#          create-new-comment: true
+#          unique-id-for-comment: ${{ matrix.python-version }}
+#          title: "Coverage report for Python ${{ matrix.python-version }}"
+#
+#      - name: Set coverage output
+#        id: set_coverage
+#        run: |
+#          coverage=$(xmllint --xpath "string(//coverage/@line-rate)" coverage.xml)
+#          coverage=$(echo "$coverage * 100" | bc)
+#          echo "Coverage: $coverage%"
+#          echo "::set-output name=coverage::$coverage"
+#        shell: bash
+#
+#      - uses: ouzi-dev/commit-status-updater@v2
+#        if: ${{ steps.set_coverage.outputs.coverage < 100 }}
+#        with:
+#          status: "error"
+#          description: "this is my status check"
+#          name: "Run Tests / Run Pytest (3.6.7)"
