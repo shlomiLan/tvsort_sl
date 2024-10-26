@@ -39,6 +39,7 @@ jobs:
 
       - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@main
+        id: set_coverage
         with:
           pytest-xml-coverage-path: ./coverage.xml
           create-new-comment: true
