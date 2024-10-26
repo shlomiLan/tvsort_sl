@@ -97,7 +97,7 @@ class TvSort:
                 patoolib.extract_archive(
                     file_path, outdir=self.unsorted_path, verbosity=-1
                 )
-                self.process_response(['info', f'Extracting {file_path}'])
+                self.process_response([('info', f'Extracting {file_path}')])
                 response = utils.delete_file(file_path)
                 self.process_response(response)
 
