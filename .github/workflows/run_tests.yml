@@ -45,3 +45,12 @@ jobs:
           unique-id-for-comment: ${{ matrix.python-version }}
           title: "Coverage report for Python ${{ matrix.python-version }}"
 
+      - name: Check coverage
+        run: |
+          coverage=${{ steps.set_coverage.outputs.coverage }}
+          echo "Coverage: $coverage%"
+          if (( $(echo "$coverage < 100" | bc -l) )); then
+            echo "Coverage is below 100%"
+            exit 1
+          fi
+        shell: bash
