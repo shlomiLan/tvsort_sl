@@ -11,24 +11,14 @@ jobs:
       matrix:
         python-version: ["3.6.7", "3.7"]
     steps:
-      - uses: ouzi-dev/commit-status-updater@v2
-#        if: ${{ steps.set_coverage.outputs.coverage < 100 }}
-        with:
-          status: "error"
-          description: "this is my status check"
-          name: "Run Pytest"
-      - uses: ouzi-dev/commit-status-updater@v2
-#        if: ${{ steps.set_coverage.outputs.coverage < 100 }}
-        with:
-          status: "error"
-          description: "this is my status check"
-          name: "Run Tests"
-      - uses: ouzi-dev/commit-status-updater@v2
-#        if: ${{ steps.set_coverage.outputs.coverage < 100 }}
-        with:
-          status: "error"
-          description: "this is my status check"
-          name: "Run Tests / Run Pytest (3.6.7)"
+      - name: Set status check with message
+        run: |
+          message="Custom message for status check"
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/statuses/${{github.event.pull_request.head.sha}} \
+            -d "{\"state\": \"failure\", \"description\": \"$message\", \"context\": \"My Custom Status\"}"
 
       - run: exit 1
 
