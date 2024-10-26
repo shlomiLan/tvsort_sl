@@ -16,7 +16,7 @@ jobs:
         with:
           status: "error"
           description: "this is my status check"
-          name: "Run Tests / Run Pytest (3.6.7)"
+          name: "Run Pytest (3.6.7)"
 
       - name: Check out source repository
         uses: actions/checkout@v4
@@ -47,7 +47,6 @@ jobs:
 
       - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@main
-        id: set_coverage
         with:
           pytest-xml-coverage-path: ./coverage.xml
           create-new-comment: true
