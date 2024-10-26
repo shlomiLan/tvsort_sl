@@ -141,24 +141,38 @@ class TvSort:
             )
             self.process_response(response)
 
-    def process_response(self, response):
-        if response:
-            for messages in response:
-                msg_type = messages[0]
-                msg_text = messages[1]
+    @staticmethod
+    def if_info_log(msg_type):
+        return msg_type == 'info'
 
-                if msg_type == 'info':
-                    self.logger.info(msg_text)
-                    if 'Removing file' in msg_text:
-                        self.report.get('counters')['delete'] += 1
-                    elif any(
-                        text in msg_text for text in ['Moving file', 'Copying file']
-                    ):
-                        self.report.get('counters')['move_or_copy'] += 1
-                elif msg_type == 'error':
-                    self.logger.error(msg_text)
-                    if msg_text not in self.report.get('errors'):
-                        self.report.get('errors').append(msg_text)
+    @staticmethod
+    def if_error_log(msg_type):
+        return msg_type == 'error'
+
+    def process_info_messages(self, msg_text):
+        self.logger.info(msg_text)
+        if 'Removing file' in msg_text:
+            self.report.get('counters')['delete'] += 1
+        elif any(text in msg_text for text in ['Moving file', 'Copying file']):
+            self.report.get('counters')['move_or_copy'] += 1
+
+    def process_error_messages(self, msg_text):
+        self.logger.error(msg_text)
+        if msg_text not in self.report.get('errors'):
+            self.report.get('errors').append(msg_text)
+
+    def process_response(self, response):
+        if not response:
+            return
+
+        for messages in response:
+            msg_type, msg_text = messages
+
+            if self.if_info_log(msg_type):
+                self.process_info_messages(msg_text)
+
+            elif self.if_error_log(msg_type):
+                self.process_error_messages(msg_text)
 
     def is_send_report(self):
         if self.report.get('counters'):
