@@ -35,7 +35,7 @@ jobs:
           job-summary: false
 
       - name: Generate coverage report
-        run: pytest --cov=./ --cov-report=xml
+        run: pytest --cov=./ --cov-report=json
 
 #      - name: Pytest coverage comment
 #        uses: MishaKav/pytest-coverage-comment@main
@@ -49,7 +49,7 @@ jobs:
         uses: slavcodev/coverage-monitor-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          coverage_path: "./coverage.xml"
+          coverage_path: "./coverage.json"
           threshold_alert: 10
           threshold_warning: 50
           threshold_metric: "lines"
