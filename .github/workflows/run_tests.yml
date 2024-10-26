@@ -37,10 +37,19 @@ jobs:
       - name: Generate coverage report
         run: pytest --cov=./ --cov-report=xml
 
-      - name: Pytest coverage comment
-        uses: MishaKav/pytest-coverage-comment@main
+#      - name: Pytest coverage comment
+#        uses: MishaKav/pytest-coverage-comment@main
+#        with:
+#          pytest-xml-coverage-path: ./coverage.xml
+#          create-new-comment: true
+#          unique-id-for-comment: ${{ matrix.python-version }}
+#          title: "Coverage report for Python ${{ matrix.python-version }}"
+
+      - name: Monitor coverage
+        uses: slavcodev/coverage-monitor-action@v1
         with:
-          pytest-xml-coverage-path: ./coverage.xml
-          create-new-comment: true
-          unique-id-for-comment: ${{ matrix.python-version }}
-          title: "Coverage report for Python ${{ matrix.python-version }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          coverage_path: "./coverage.xml"
+          threshold_alert: 10
+          threshold_warning: 50
+          threshold_metric: "lines"
