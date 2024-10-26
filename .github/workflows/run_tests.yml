@@ -54,6 +54,11 @@ jobs:
           echo "Coverage: $coverage%"
           if (( $(echo "$coverage < 100" | bc -l) )); then
             echo "Coverage is below 100%"
-            exit 1
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Coverage is below 100%, failing the action.`
+            });
           fi
         shell: bash
