@@ -42,7 +42,6 @@ jobs:
         uses: MishaKav/pytest-coverage-comment@main
         with:
           pytest-xml-coverage-path: ./coverage.xml
-          create-new-comment: true
           title: "Coverage report"
 
       - name: Check coverage
