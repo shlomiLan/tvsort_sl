@@ -54,11 +54,13 @@ jobs:
           unique-id-for-comment: ${{ matrix.python-version }}
           title: "Coverage report for Python ${{ matrix.python-version }}"
 
-      - name: Set coverage output
-        id: set_coverage
+      - name: Check coverage
         run: |
-          coverage=$(xmllint --xpath "string(//coverage/@line-rate)" coverage.xml)
-          coverage=$(echo "$coverage * 100" | bc)
-          echo "Coverage: $coverage%"
-          echo "::set-output name=coverage::$coverage"
+          coverage=${{ steps.set_coverage.outputs.coverage }}
+          coverage=${coverage%\%}  # Remove the % sign
+
+          if (( $(echo "$coverage < 100" | bc -l) )); then
+            echo "::error::Coverage: $coverage%"
+            echo "Coverage is below 100%" && exit 1
+          fi
         shell: bash
