@@ -16,7 +16,7 @@ jobs:
         with:
           status: "error"
           description: "this is my status check"
-          name: "Run Tests / Run Pytest (3.6.7)"
+          name: "Run Tests / Run Pytest (3.6.7) (pull_request)"
 
       - name: Check out source repository
         uses: actions/checkout@v4
