@@ -11,7 +11,7 @@ BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 
 @task()
-def init_app(c, env=None):
+def init_app(context, env=None):
     # Prevent execute this function more than once
     if not os.environ.get("APP_SETTINGS"):
         # Load the basic configs
@@ -21,35 +21,35 @@ def init_app(c, env=None):
 
         for name, data in env_vars.items():
             set_env_var(
-                c, name, data.get("value"), env, data.get("is_protected", False)
+                context, name, data.get("value"), env, data.get("is_protected", False)
             )
 
 
 @task(init_app)
-def run_app(c, env=None):
-    run(c, "python -m tvsort_sl.app", False)
+def run_app(context):
+    run(context, "python -m tvsort_sl.app", False)
 
 
-def run(c, command, with_venv=True):
+def run(context, command, with_venv=True):
     if with_venv:
-        command = "{} && {}".format(get_venv_action(), command)
+        command = f"{get_venv_action()} && {command}"
 
-    print("Running: {}".format(command))
-    c.run(command)
+    print(f"Running: {command}")
+    context.run(command)
 
 
-def set_env_var(c, name, value, env, is_protected=True):
+def set_env_var(context, name, value, env, is_protected=True):
     # env codes: t - Travis-CI , None - Dev
     if isinstance(value, dict):
         value = json.dumps(value)
 
     if env == "t":
-        command = "travis env set {} '{}'".format(name, value)
+        command = f"travis env set {name} '{value}'"
         if not is_protected:
-            command = "{} --public".format(command)
+            command = f"{command} --public"
 
         if command:
-            run(c, command, False)
+            run(context, command, False)
 
     else:
         print(f"Set local var: {name}={value}")
@@ -57,7 +57,7 @@ def set_env_var(c, name, value, env, is_protected=True):
 
 
 def load_yaml_from_file(file_path):
-    with open(file_path, "r") as stream:
+    with open(file_path, "r", encoding="utf-8") as stream:
         return yaml.safe_load(stream)
 
 
@@ -68,33 +68,32 @@ def is_unix():
 def get_venv_action():
     if is_unix():
         return f"source {BASEDIR}/venv/bin/activate"
-    else:
-        return f"{BASEDIR}\\venv\\Scripts\\activate"
+
+    return f"{BASEDIR}\\venv\\Scripts\\activate"
 
 
 @task(init_app)
-def test(c, cov=False, file=None):
+def test(context, cov=False, file=None):
     # cov - if to use coverage, file - if to run specific file
 
     command = "pytest -s -p no:warnings"
     if cov:
-        command = "{} --cov=slots_tracker_server --cov-report term-missing".format(
-            command
-        )
-    if file:
-        command = "{} {}".format(command, file)
+        command = f"{command} --cov=slots_tracker_server --cov-report term-missing"
 
-    run(c, command)
+    if file:
+        command = f"{command} {file}"
+
+    run(context, command)
 
 
 @task(init_app)
-def mutmut(c):
+def mutmut(context):
     command = "mutmut run"
-    run(c, command)
+    run(context, command)
 
 
 @task()
-def bump_version(c):
+def bump_version(context):
     files_to_update = ['setup.py', '.bumpversion.cfg']
 
     github_client = Github(os.environ['GITHUB_ACCESS_TOKEN'])
@@ -116,21 +115,21 @@ def bump_version(c):
     travis_pull_request = int(travis_pull_request)
 
     repo = github_client.get_repo(travis_pull_request_slug)
-    pr = repo.get_pull(travis_pull_request)
-    for pr_file in pr.get_files():
-        pr_filename = pr_file.filename
+    pull_request = repo.get_pull(travis_pull_request)
+    for pull_request_file in pull_request.get_files():
+        pr_filename = pull_request_file.filename
         if pr_filename in files_to_update:
             print('Version was already bumped, exiting')
             return
 
     print('Bumping version')
-    run(c, 'bumpversion --verbose patch  --allow-dirty', with_venv=False)
+    run(context, 'bumpversion --verbose patch  --allow-dirty', with_venv=False)
 
     # Updating GitHub with new changes
     for filename in files_to_update:
         # Separate commits so that Travis will only build the last one
         time.sleep(10)
         file_object = repo.get_contents(path=filename, ref=travis_pull_request_branch)
-        with open(filename) as f:
-            repo.update_file(file_object.path, "Update version, file: {}".format(filename), f.read(),
+        with open(filename, encoding="utf-8") as file:
+            repo.update_file(file_object.path, f"Update version, file: {filename}", file.read(),
                              file_object.sha, branch=travis_pull_request_branch)

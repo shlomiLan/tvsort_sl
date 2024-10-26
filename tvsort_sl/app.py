@@ -18,15 +18,15 @@ PROCESS_RUNNING = 'Proses already running'
 CONNECTION_ISSUE = 'HTTPConnectionPool'
 
 
-class TvSort(object):
+class TvSort:
     project_name = 'tvsort_sl'
-    settings: Dict[str, Union[str, bool]] = dict(
-        PROJECT_NAME=project_name, LOG_PATH=os.path.join(BASE_DIR, 'logs')
-    )
-    extensions: Dict[str, List[str]] = dict()
+    settings: Dict[str, Union[str, bool]] = {
+        "PROJECT_NAME": project_name, "LOG_PATH": os.path.join(BASE_DIR, "logs")
+    }
+    extensions: Dict[str, List[str]] = {}
     logger = None
 
-    report: Dict[str, Union[Counter, List[str]]] = dict(counters=Counter(), errors=[])
+    report: Dict[str, Union[Counter, List[str]]] = {"counters": Counter(), "errors": []}
 
     def __init__(self, is_test=False, **kwargs):
         self.create_logger(**kwargs)
@@ -64,9 +64,10 @@ class TvSort(object):
                 response = utils.delete_folder_if_empty(folder_path)
                 self.process_response(response)
 
-        except Exception as e:
+        # pylint: disable=broad-except
+        except Exception as exception:
             self.process_response([('error', traceback.print_exc())])
-            self.process_response([('error', str(e))])
+            self.process_response([('error', str(exception))])
 
         finally:
             response = utils.delete_file(self.settings.get('DUMMY_FILE_PATH'))
@@ -96,7 +97,7 @@ class TvSort(object):
                 patoolib.extract_archive(
                     file_path, outdir=self.unsorted_path, verbosity=-1
                 )
-                self.process_response(['info', f'Extracting {file_path}'])
+                self.process_response([('info', f'Extracting {file_path}')])
                 response = utils.delete_file(file_path)
                 self.process_response(response)
 
@@ -124,7 +125,7 @@ class TvSort(object):
                 show_name = utils.transform_to_path_name(title)
                 utils.add_missing_country(video, show_name)
                 if video.get('country'):
-                    show_name += '.{}'.format(video.get('country'))
+                    show_name += f'.{video.get("country")}'
 
                 new_path = os.path.join(self.settings.get('TV_PATH'), show_name)
                 response = utils.create_folder(new_path)
@@ -140,24 +141,38 @@ class TvSort(object):
             )
             self.process_response(response)
 
-    def process_response(self, response):
-        if response:
-            for messages in response:
-                msg_type = messages[0]
-                msg_text = messages[1]
+    @staticmethod
+    def if_info_log(msg_type):
+        return msg_type == 'info'
 
-                if msg_type == 'info':
-                    self.logger.info(msg_text)
-                    if 'Removing file' in msg_text:
-                        self.report.get('counters')['delete'] += 1
-                    elif any(
-                        text in msg_text for text in ['Moving file', 'Copying file']
-                    ):
-                        self.report.get('counters')['move_or_copy'] += 1
-                elif msg_type == 'error':
-                    self.logger.error(msg_text)
-                    if msg_text not in self.report.get('errors'):
-                        self.report.get('errors').append(msg_text)
+    @staticmethod
+    def if_error_log(msg_type):
+        return msg_type == 'error'
+
+    def process_info_messages(self, msg_text):
+        self.logger.info(msg_text)
+        if 'Removing file' in msg_text:
+            self.report.get('counters')['delete'] += 1
+        elif any(text in msg_text for text in ['Moving file', 'Copying file']):
+            self.report.get('counters')['move_or_copy'] += 1
+
+    def process_error_messages(self, msg_text):
+        self.logger.error(msg_text)
+        if msg_text not in self.report.get('errors'):
+            self.report.get('errors').append(msg_text)
+
+    def process_response(self, response):
+        if not response:
+            return
+
+        for messages in response:
+            msg_type, msg_text = messages
+
+            if self.if_info_log(msg_type):
+                self.process_info_messages(msg_text)
+
+            elif self.if_error_log(msg_type):
+                self.process_error_messages(msg_text)
 
     def is_send_report(self):
         if self.report.get('counters'):
@@ -174,6 +189,8 @@ class TvSort(object):
             subject = 'TV sort report'
             content = json.dumps(self.report)
             return send_email(subject=subject, content=content)
+
+        return None
 
 
 if __name__ == "__main__":

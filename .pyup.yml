@@ -1,4 +1,0 @@
-requirements:
-  - requirements.txt
-  - dev.txt
-schedule: "every month"

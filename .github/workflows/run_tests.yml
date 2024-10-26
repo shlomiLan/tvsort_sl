@@ -1,0 +1,56 @@
+name: Run Tests
+
+on: [pull_request]
+
+jobs:
+  pytest:
+    name: Run Pytest
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.6.7", "3.7", "3.8", "3.9", "3.10", "3.11"]
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip' # caching pip dependencies
+
+      - name: Install dependencies
+        run: pip install -r dev.txt
+
+      - name: Add local settings
+        run: |
+          mkdir logs
+          cp ./tvsort_sl/settings/templates/local.yml ./tvsort_sl/settings/local.yml
+          cp ./tvsort_sl/settings/templates/test.yml ./tvsort_sl/settings/test.yml
+
+      - uses: pavelzw/pytest-action@v2.2.0
+        with:
+          verbose: true
+          emoji: false
+          job-summary: false
+
+      - name: Generate coverage report
+        run: pytest --cov=./ --cov-report=xml
+
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-xml-coverage-path: ./coverage.xml
+          title: "Coverage report"
+
+      - name: Check coverage
+        run: |
+          coverage=${{ steps.set_coverage.outputs.coverage }}
+          coverage=${coverage%\%}  # Remove the % sign
+
+          if (( $(echo "$coverage < 100" | bc -l) )); then
+            echo "::error::Coverage: $coverage%"
+            echo "Coverage is below 100%" && exit 1
+          fi
+        shell: bash

@@ -36,8 +36,8 @@ def get_files(path: str) -> List[str]:
     files = []
 
     for root, _, walk_files in os.walk(path):
-        for f in walk_files:
-            files.append(os.path.join(root, f))
+        for file in walk_files:
+            files.append(os.path.join(root, file))
 
     return sorted(files)
 
@@ -46,8 +46,8 @@ def get_folders(path: str) -> List[str]:
     folders = []
 
     for root, dirs, _ in os.walk(path):
-        for d in dirs:
-            folders.append(os.path.join(root, d))
+        for directory in dirs:
+            folders.append(os.path.join(root, directory))
 
     return sorted(folders)
 
@@ -84,13 +84,15 @@ def delete_folder(folder_path: str, force: bool = False) -> List[Tuple[str, str]
             messages.extend(clean_folder(folder_path))
 
         if folder_empty(folder_path):
-            messages.append(('info', 'Deleting folder: {}'.format(folder_path)))
+            messages.append(('info', f'Deleting folder: {folder_path}'))
             os.rmdir(folder_path)
             return messages
-        else:
-            return [('error', 'Folder is not empty')]
-    except Exception as e:
-        return [('error', f"Folder can't be deleted, Unexpected error: {e}")]
+
+        return [('error', 'Folder is not empty')]
+
+    # pylint: disable=broad-except
+    except Exception as exception:
+        return [('error', f"Folder can't be deleted, Unexpected error: {exception}")]
 
 
 def delete_folder_if_empty(folder_path: str) -> List[Tuple[str, str]]:
@@ -127,23 +129,21 @@ def get_show_name(video: Dict[str, str]) -> Optional[str]:
 
 
 def add_missing_country(video: dict, show_name: str) -> None:
-    if show_name.lower() == 'house.of.cards':
-        if not video.get('country'):
-            video['country'] = 'US'
+    if show_name.lower() == 'house.of.cards' and not video.get('country'):
+        video['country'] = 'US'
 
 
 def create_file(file_path: str) -> List[Tuple[str, str]]:
-    dummy_file = open(file_path, str('w'))
-    dummy_file.close()
-    return [('info', f'File was created, in: {file_path}')]
-
+    with open(file_path, 'w', encoding="utf-8"):
+        return [('info', f'File was created, in: {file_path}')]
 
 def delete_file(file_path: str) -> List[Tuple[str, str]]:
     try:
         os.remove(file_path)
         return [('info', f'Removing file: {file_path}')]
-    except Exception as e:
-        return [('error', f'Unexpected error: {e}')]
+    # pylint: disable=broad-except
+    except Exception as exception:
+        return [('error', f'Unexpected error: {exception}')]
 
 
 def copy_file(
@@ -157,14 +157,15 @@ def copy_file(
         else:
             shutil.copy(old_path, new_path)
         return [('info', f'{action} file: FROM {old_path} TO {new_path}')]
-    except Exception as e:
+    # pylint: disable=broad-except
+    except Exception as exception:
         # If error because file already in new path delete the old file
-        if 'already exists' in str(e):
-            messages = [('error', str(e))]
+        if 'already exists' in str(exception):
+            messages = [('error', str(exception))]
             messages.extend(delete_file(old_path))
             return messages
-        else:
-            return [('error', f'Unexpected error: {e}')]
+
+        return [('error', f'Unexpected error: {exception}')]
 
 
 def folder_empty(folder_path: str) -> bool:
@@ -172,13 +173,13 @@ def folder_empty(folder_path: str) -> bool:
 
 
 def update_xbmc(kodi_ip: str) -> List[Tuple[str, str]]:
-    url = '{}/jsonrpc'.format(kodi_ip)
+    url = f'{kodi_ip}/jsonrpc'
     data = {"jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "1"}
-    response = requests.post(url, json=data)
+    response = requests.post(url, json=data, timeout=30)
     if response.status_code == 200:
         return [('info', 'Update XBMC successfully')]
 
-    return [('error', 'Invalid response: {}'.format(response))]
+    return [('error', f'Invalid response: {response}')]
 
 
 def check_project_setup(settings, conf_files):
