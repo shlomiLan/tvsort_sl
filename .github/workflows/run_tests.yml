@@ -16,13 +16,13 @@ jobs:
         with:
           status: "error"
           description: "this is my status check"
-          name: "Run Pytest (3.6.7)"
+          name: "Run Tests / Run Pytest (3.6.7) (pull_request)"
       - uses: ouzi-dev/commit-status-updater@v2
 #        if: ${{ steps.set_coverage.outputs.coverage < 100 }}
         with:
           status: "error"
           description: "this is my status check"
-          name: "Run Tests / Run Pytest (3.6.7) (pull_request)"
+          name: "Run Tests"
       - uses: ouzi-dev/commit-status-updater@v2
 #        if: ${{ steps.set_coverage.outputs.coverage < 100 }}
         with:
