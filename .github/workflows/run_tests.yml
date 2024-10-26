@@ -18,7 +18,7 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/statuses/${{github.event.pull_request.head.sha}} \
-            -d "{\"state\": \"failure\", \"description\": \"$message\", \"context\": \"Run Tests / Run Pytest (3.6.7)\"}"
+            -d "{\"state\": \"failure\", \"description\": \"$message\", \"context\": \"Run Tests / Run Pytest (3.6.7) (pull_request)\"}"
 
       - run: exit 1
 
