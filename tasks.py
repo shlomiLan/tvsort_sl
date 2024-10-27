@@ -1,11 +1,11 @@
 import json
 import os
 import time
-from distutils.util import strtobool
 
 import yaml
 from github import Github
 from invoke import task
+from str2bool import str2bool
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -105,7 +105,7 @@ def bump_version(context):
     try:
         travis_pull_request = int(travis_pull_request)
     except ValueError:
-        travis_pull_request = strtobool(travis_pull_request)
+        travis_pull_request = str2bool(travis_pull_request)
 
     if not travis_pull_request:
         print('Not running on PR')
